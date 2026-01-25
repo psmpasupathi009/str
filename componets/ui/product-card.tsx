@@ -12,6 +12,8 @@ interface Product {
   price: number;
   image: string;
   category?: string;
+  featured?: boolean;
+  bestSeller?: boolean;
 }
 
 interface ProductCardProps {
@@ -30,6 +32,22 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
     >
       <Link href={`/products/${product.id}`}>
         <div className="relative overflow-hidden bg-black border border-white/10 hover:border-white/20 transition-all duration-300">
+          {/* Badges */}
+          {(product.bestSeller || product.featured) && (
+            <div className="absolute top-3 right-3 z-10 flex flex-col gap-2">
+              {product.bestSeller && (
+                <span className="px-2 py-1 text-xs font-light tracking-wider bg-white text-black">
+                  BEST SELLER
+                </span>
+              )}
+              {product.featured && (
+                <span className="px-2 py-1 text-xs font-light tracking-wider bg-white/90 text-black">
+                  FEATURED
+                </span>
+              )}
+            </div>
+          )}
+
           {/* Image Container */}
           <div className="relative aspect-[4/3] overflow-hidden">
             <Image
