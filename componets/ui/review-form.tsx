@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Star, Send, Loader2, Sparkles } from "lucide-react";
+import { Star, Send, Loader2, Edit3, CheckCircle2, AlertCircle } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { useRouter } from "next/navigation";
 
@@ -24,7 +24,6 @@ export default function ReviewForm({ productId, onReviewSubmitted }: ReviewFormP
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    setSuccess(false);
 
     if (!user) {
       router.push("/home/signin");
@@ -64,7 +63,6 @@ export default function ReviewForm({ productId, onReviewSubmitted }: ReviewFormP
         throw new Error(data.error || "Failed to submit review");
       }
 
-      // Reset form
       setRating(0);
       setComment("");
       setHoveredRating(0);
@@ -86,59 +84,60 @@ export default function ReviewForm({ productId, onReviewSubmitted }: ReviewFormP
   if (!user) {
     return (
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="p-8 sm:p-10 bg-linear-to-br from-white via-sky-50/50 to-white rounded-3xl border border-sky-200/50 shadow-xl shadow-sky-100/50 text-center backdrop-blur-sm"
+        className="bg-linear-to-br from-sky-50 via-white to-sky-50/30 rounded-lg p-4 border border-sky-200/60 shadow-sm"
       >
-        <div className="mb-6">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-linear-to-br from-sky-100 to-sky-200 flex items-center justify-center">
-            <Sparkles className="w-8 h-8 text-sky-600" />
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-full bg-linear-to-br from-sky-400 to-sky-600 flex items-center justify-center shadow-sm shrink-0">
+            <Edit3 className="w-5 h-5 text-white" />
           </div>
-          <p className="text-slate-700 font-light text-lg mb-2">
-            Sign in to share your experience
-          </p>
-          <p className="text-slate-500 font-light text-sm">
-            Join our community and help others make better choices
-          </p>
+          <div className="flex-1">
+            <p className="text-sm font-semibold text-slate-900 mb-1">
+              Share Your Experience
+            </p>
+            <p className="text-xs text-slate-600 mb-3 font-light">
+              <button
+                onClick={() => router.push("/home/signin")}
+                className="text-sky-600 hover:text-sky-700 underline font-medium transition-colors"
+              >
+                Sign in
+              </button>
+              {" "}to write a review
+            </p>
+          </div>
         </div>
-        <motion.button
-          whileHover={{ scale: 1.02, y: -2 }}
-          whileTap={{ scale: 0.98 }}
-          onClick={() => router.push("/home/signin")}
-          className="px-8 py-4 bg-linear-to-r from-sky-600 to-sky-500 text-white rounded-xl shadow-lg shadow-sky-500/30 hover:shadow-xl hover:shadow-sky-500/40 transition-all text-sm font-light tracking-wider"
-        >
-          SIGN IN TO REVIEW
-        </motion.button>
       </motion.div>
     );
   }
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="relative overflow-hidden p-8 sm:p-10 bg-linear-to-br from-white via-sky-50/30 to-white rounded-3xl border border-sky-200/50 shadow-xl shadow-sky-100/50 backdrop-blur-sm"
+      className="bg-white rounded-lg border border-sky-200/60 shadow-sm"
     >
-      {/* Background decoration */}
-      <div className="absolute top-0 right-0 w-64 h-64 bg-linear-to-br from-sky-200/20 to-transparent rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-      <div className="absolute bottom-0 left-0 w-48 h-48 bg-linear-to-tr from-purple-200/20 to-transparent rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
-
-      <form onSubmit={handleSubmit} className="relative z-10">
-        <div className="mb-6">
-          <h3 className="text-2xl sm:text-3xl font-light tracking-wide mb-2 text-slate-900">
-            Share Your Experience
-          </h3>
-          <p className="text-slate-500 font-light text-sm">
-            Your feedback helps others make informed decisions
-          </p>
+      {/* Compact Header */}
+      <div className="bg-linear-to-r from-sky-50 to-white p-3 border-b border-sky-200/60">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-full bg-linear-to-br from-sky-400 to-sky-600 flex items-center justify-center shadow-sm shrink-0">
+            <Edit3 className="w-4 h-4 text-white" />
+          </div>
+          <div>
+            <h3 className="text-sm font-bold text-slate-900">Write Your Review</h3>
+            <p className="text-xs text-slate-600 font-light">Help others make informed decisions</p>
+          </div>
         </div>
+      </div>
 
-        {/* Star Rating */}
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-slate-700 mb-3">
-            How would you rate this product?
+      {/* Compact Form Content */}
+      <form onSubmit={handleSubmit} className="p-4 space-y-4">
+        {/* Star Rating Section */}
+        <div>
+          <label className="block text-xs font-semibold text-slate-900 mb-2">
+            Rate this product <span className="text-red-500">*</span>
           </label>
-          <div className="flex gap-2 sm:gap-3 justify-center sm:justify-start">
+          <div className="flex items-center gap-2">
             {[1, 2, 3, 4, 5].map((star) => (
               <motion.button
                 key={star}
@@ -146,14 +145,14 @@ export default function ReviewForm({ productId, onReviewSubmitted }: ReviewFormP
                 onClick={() => setRating(star)}
                 onMouseEnter={() => setHoveredRating(star)}
                 onMouseLeave={() => setHoveredRating(0)}
-                whileHover={{ scale: 1.15, rotate: 5 }}
+                whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
                 className="transition-all"
               >
                 <Star
-                  className={`w-10 h-10 sm:w-12 sm:h-12 transition-all duration-200 ${
+                  className={`w-7 h-7 transition-all duration-200 ${
                     star <= (hoveredRating || rating)
-                      ? "fill-yellow-400 text-yellow-400 drop-shadow-lg"
+                      ? "fill-yellow-400 text-yellow-400 drop-shadow-md"
                       : "text-slate-300 hover:text-slate-400"
                   }`}
                 />
@@ -164,53 +163,52 @@ export default function ReviewForm({ productId, onReviewSubmitted }: ReviewFormP
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="text-center sm:text-left mt-2 text-sm text-slate-600 font-light"
+              className="mt-2 text-xs font-medium text-slate-600"
             >
-              {rating === 5 && "Excellent! ⭐"}
-              {rating === 4 && "Great! 👍"}
-              {rating === 3 && "Good! ✓"}
-              {rating === 2 && "Fair"}
-              {rating === 1 && "Poor"}
+              {rating === 5 && "? Excellent"}
+              {rating === 4 && "?? Great"}
+              {rating === 3 && "? Good"}
+              {rating === 2 && "? Fair"}
+              {rating === 1 && "? Poor"}
             </motion.p>
           )}
         </div>
 
-        {/* Comment Textarea */}
-        <div className="mb-6">
+        {/* Comment Textarea Section */}
+        <div>
           <label
             htmlFor="comment"
-            className="block text-sm font-medium text-slate-700 mb-3"
+            className="block text-xs font-semibold text-slate-900 mb-2"
           >
-            Tell us more about your experience
+            Write your review <span className="text-red-500">*</span>
           </label>
-          <motion.div
-            whileFocus={{ scale: 1.01 }}
-            className="relative"
-          >
+          <div className="relative">
             <textarea
               id="comment"
               value={comment}
               onChange={(e) => setComment(e.target.value)}
-              placeholder="Share details about the product quality, delivery, packaging, or any other aspects that would help other customers..."
-              rows={5}
-              className="w-full px-5 py-4 border-2 border-sky-200 rounded-xl focus:outline-none focus:border-sky-400 focus:ring-4 focus:ring-sky-100 bg-white/80 text-slate-900 font-light resize-none transition-all placeholder:text-slate-400"
+              placeholder="Share your experience..."
+              rows={4}
+              maxLength={500}
+              className="w-full px-3 py-2 text-sm border border-sky-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 bg-white text-slate-900 resize-none transition-all placeholder:text-slate-400 font-light"
             />
-            <div className="absolute bottom-3 right-3 text-xs text-slate-400 font-light">
+            <div className="absolute bottom-2 right-2 text-xs text-slate-400 font-light bg-white px-1.5 py-0.5 rounded">
               {comment.length}/500
             </div>
-          </motion.div>
+          </div>
         </div>
 
         {/* Error Message */}
         <AnimatePresence>
           {error && (
             <motion.div
-              initial={{ opacity: 0, y: -10 }}
+              initial={{ opacity: 0, y: -5 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="mb-4 p-4 bg-red-50 border-2 border-red-200 rounded-xl text-red-700 text-sm"
+              exit={{ opacity: 0, y: -5 }}
+              className="p-2.5 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2"
             >
-              {error}
+              <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
+              <p className="text-xs text-red-700 font-medium">{error}</p>
             </motion.div>
           )}
         </AnimatePresence>
@@ -219,39 +217,51 @@ export default function ReviewForm({ productId, onReviewSubmitted }: ReviewFormP
         <AnimatePresence>
           {success && (
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
+              initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              className="mb-4 p-4 bg-green-50 border-2 border-green-200 rounded-xl text-green-700 text-sm flex items-center gap-2"
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="p-2.5 bg-green-50 border border-green-200 rounded-lg flex items-center gap-2"
             >
-              <div className="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center">
-                <span className="text-white text-xs">✓</span>
-              </div>
-              Review submitted successfully!
+              <CheckCircle2 className="w-4 h-4 text-green-600 shrink-0" />
+              <p className="text-xs text-green-700 font-medium">Review submitted successfully!</p>
             </motion.div>
           )}
         </AnimatePresence>
 
-        {/* Submit Button */}
-        <motion.button
-          type="submit"
-          disabled={isSubmitting || rating === 0 || !comment.trim()}
-          whileHover={{ scale: isSubmitting ? 1 : 1.02, y: -2 }}
-          whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
-          className="w-full px-8 py-4 bg-linear-to-r from-sky-600 to-sky-500 text-white rounded-xl shadow-lg shadow-sky-500/30 hover:shadow-xl hover:shadow-sky-500/40 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-lg flex items-center justify-center gap-3 text-sm font-light tracking-wider"
-        >
-          {isSubmitting ? (
-            <>
-              <Loader2 className="w-5 h-5 animate-spin" />
-              <span>SUBMITTING...</span>
-            </>
-          ) : (
-            <>
-              <Send className="w-5 h-5" />
-              <span>SUBMIT REVIEW</span>
-            </>
-          )}
-        </motion.button>
+        {/* Action Buttons */}
+        <div className="flex items-center gap-2 pt-2 border-t border-sky-200/60">
+          <motion.button
+            type="submit"
+            disabled={isSubmitting || rating === 0 || !comment.trim()}
+            whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
+            whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
+            className="flex-1 px-4 py-2 bg-linear-to-r from-sky-600 to-sky-500 text-white text-sm font-semibold rounded-lg hover:shadow-md hover:shadow-sky-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-none flex items-center justify-center gap-2"
+          >
+            {isSubmitting ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span>Submitting...</span>
+              </>
+            ) : (
+              <>
+                <Send className="w-4 h-4" />
+                <span>Submit</span>
+              </>
+            )}
+          </motion.button>
+          <button
+            type="button"
+            onClick={() => {
+              setRating(0);
+              setComment("");
+              setError("");
+              setSuccess(false);
+            }}
+            className="px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-all"
+          >
+            Clear
+          </button>
+        </div>
       </form>
     </motion.div>
   );

@@ -103,10 +103,22 @@ model Review {
   userEmail String
   rating    Int      // 1-5 stars
   comment   String
+  helpfulCount Int   @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@map("reviews")
   @@index([productId])
   @@index([userId])
+}
+
+model ReviewHelpful {
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  reviewId String   @db.ObjectId
+  userId   String   @db.ObjectId
+  createdAt DateTime @default(now())
+
+  @@map("review_helpful")
+  @@unique([reviewId, userId])
+  @@index([reviewId])
 }

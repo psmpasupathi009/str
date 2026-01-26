@@ -21,6 +21,18 @@ export async function GET(request: NextRequest) {
       orderBy: {
         createdAt: "desc",
       },
+      select: {
+        id: true,
+        productId: true,
+        userId: true,
+        userName: true,
+        userEmail: true,
+        rating: true,
+        comment: true,
+        helpfulCount: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     });
 
     return NextResponse.json({ reviews }, { status: 200 });
