@@ -2,11 +2,13 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { Menu, X, User, ShoppingCart } from "lucide-react";
+import { Menu, X, User, ShoppingCart, LogOut } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useAuth } from "@/lib/auth-context";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user, signOut } = useAuth();
 
   // Prevent body scroll when menu is open
   useEffect(() => {
@@ -48,12 +50,30 @@ export default function Navbar() {
 
             {/* Right Side Icons */}
             <div className="flex items-center gap-3 sm:gap-6">
-              <Link
-                href="/profile"
-                className="text-white hover:text-gray-300 transition-colors"
-              >
-                <User className="w-5 h-5 sm:w-6 sm:h-6" />
-              </Link>
+              {user ? (
+                <>
+                  <Link
+                    href="/profile"
+                    className="text-white hover:text-gray-300 transition-colors"
+                  >
+                    <User className="w-5 h-5 sm:w-6 sm:h-6" />
+                  </Link>
+                  <button
+                    onClick={signOut}
+                    className="text-white hover:text-gray-300 transition-colors"
+                    title="Sign Out"
+                  >
+                    <LogOut className="w-5 h-5 sm:w-6 sm:h-6" />
+                  </button>
+                </>
+              ) : (
+                <Link
+                  href="/signin"
+                  className="text-white hover:text-gray-300 transition-colors text-xs sm:text-sm font-light tracking-wider"
+                >
+                  SIGN IN
+                </Link>
+              )}
               <Link
                 href="/cart"
                 className="text-white hover:text-gray-300 transition-colors relative"
