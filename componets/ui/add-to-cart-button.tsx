@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ShoppingCart } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/lib/auth-context";
 
 interface AddToCartButtonProps {
   productId: string;
@@ -19,8 +20,15 @@ export default function AddToCartButton({
 }: AddToCartButtonProps) {
   const [isAdding, setIsAdding] = useState(false);
   const router = useRouter();
+  const { user, isLoading } = useAuth();
 
   const handleAddToCart = () => {
+    // Check if user is logged in
+    if (!user) {
+      router.push("/home/signin");
+      return;
+    }
+
     setIsAdding(true);
 
     try {

@@ -663,7 +663,7 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
               <p className="text-xs sm:text-sm text-slate-600 font-light tracking-wide">
                 {type === "signin" ? "Don't have an account? " : "Already have an account? "}
                 <Link
-                  href={type === "signin" ? "/signup" : "/signin"}
+                  href={type === "signin" ? "/home/signup" : "/home/signin"}
                   className="text-sky-600 font-light tracking-wider underline decoration-sky-400 underline-offset-4 hover:text-sky-700"
                 >
                   {type === "signin" ? "SIGN UP" : "SIGN IN"}

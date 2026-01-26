@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
+import ProductRating from "./product-rating";
 
 interface Product {
   id: string;
@@ -30,7 +31,7 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
       transition={{ delay: index * 0.1, duration: 0.5 }}
       className="group relative"
     >
-      <Link href={`/products/${product.id}`}>
+      <Link href={`/home/products/${product.id}`}>
         <div className="relative overflow-hidden bg-white border border-sky-200 hover:border-sky-400 shadow-lg hover:shadow-xl transition-all duration-300">
           {/* Badges */}
           {(product.bestSeller || product.featured) && (
@@ -67,6 +68,10 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
             <p className="text-xs sm:text-sm text-slate-600 font-light mb-3 sm:mb-4 line-clamp-2">
               {product.description}
             </p>
+            {/* Rating - Enhanced */}
+            <div className="mb-3 sm:mb-4 flex items-center gap-2">
+              <ProductRating productId={product.id} showCount size="sm" />
+            </div>
             <div className="flex items-center justify-between">
               <span className="text-base sm:text-lg font-light tracking-wide">
                 ${product.price.toLocaleString()}

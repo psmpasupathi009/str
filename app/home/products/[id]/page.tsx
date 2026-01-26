@@ -5,6 +5,8 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import BuyNowButton from "@/componets/ui/buy-now-button";
 import AddToCartButton from "@/componets/ui/add-to-cart-button";
+import ReviewsSection from "./reviews-section";
+import ProductRating from "@/componets/ui/product-rating";
 
 interface ProductPageProps {
   params: Promise<{ id: string }>;
@@ -29,7 +31,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         {/* Back Button */}
         <Link
-          href="/products"
+          href="/home/products"
           className="inline-flex items-center gap-2 text-slate-600 hover:text-sky-700 transition-colors mb-6 sm:mb-8"
         >
           <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -74,9 +76,13 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 {product.category.toUpperCase()}
               </span>
             </div>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light tracking-tight mb-4 sm:mb-6 text-slate-900">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light tracking-tight mb-3 sm:mb-4 text-slate-900">
               {product.name.toUpperCase()}
             </h1>
+            {/* Product Rating */}
+            <div className="mb-4 sm:mb-6">
+              <ProductRating productId={product.id} showCount size="md" />
+            </div>
             <p className="text-base sm:text-lg md:text-xl text-slate-700 font-light mb-6 sm:mb-8 leading-relaxed">
               {product.description}
             </p>
@@ -106,6 +112,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
             </div>
           </div>
         </div>
+
+        {/* Reviews Section */}
+        <ReviewsSection productId={product.id} />
       </div>
     </main>
   );

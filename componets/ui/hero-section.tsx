@@ -60,7 +60,7 @@ export default function HeroSection() {
             transition={{ delay: 0.6, duration: 0.8 }}
           >
             <Link
-              href="/products"
+              href="/home/products"
               className="inline-flex items-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 border border-white/20 hover:border-white/40 transition-all group"
             >
               <span className="text-xs sm:text-sm font-light tracking-widest">

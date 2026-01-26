@@ -18,7 +18,7 @@ export default function ProfilePage() {
 
   const handleLogout = () => {
     signOut();
-    router.push("/signin");
+    router.push("/home/signin");
   };
 
   const handleEdit = () => {

@@ -29,7 +29,7 @@ interface ShippingAddress {
 function CheckoutContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [total, setTotal] = useState(0);
   const [shippingAddress, setShippingAddress] = useState<ShippingAddress>({
@@ -51,6 +51,13 @@ function CheckoutContent() {
   const buyNowProductId = searchParams.get("productId");
   const buyNowProductName = searchParams.get("productName");
   const buyNowPrice = searchParams.get("price");
+
+  // Redirect to signin if not logged in
+  useEffect(() => {
+    if (!isLoading && !user) {
+      router.push("/home/signin");
+    }
+  }, [user, isLoading, router]);
 
   useEffect(() => {
     if (buyNowItem === "true" && buyNowProductId && buyNowProductName && buyNowPrice) {
@@ -77,7 +84,7 @@ function CheckoutContent() {
         }
       } else {
         // No items, redirect to products
-        router.push("/products");
+        router.push("/home/products");
       }
     }
   }, [buyNowItem, buyNowProductId, buyNowProductName, buyNowPrice, router]);
@@ -155,7 +162,7 @@ function CheckoutContent() {
     <main className="min-h-screen bg-linear-to-b from-sky-50 to-sky-100 text-slate-900 pt-16 sm:pt-20 pb-8 sm:pb-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         <Link
-          href={buyNowItem === "true" ? "/products" : "/cart"}
+          href={buyNowItem === "true" ? "/home/products" : "/home/cart"}
           className="inline-flex items-center gap-2 text-slate-600 hover:text-sky-700 transition-colors mb-6 sm:mb-8"
         >
           <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />

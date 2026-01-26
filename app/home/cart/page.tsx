@@ -85,7 +85,7 @@ export default function CartPage() {
               Your cart is empty
             </p>
             <Link
-              href="/products"
+              href="/home/products"
               className="px-6 sm:px-8 py-3 sm:py-4 border border-sky-600 hover:border-sky-700 bg-sky-600 text-white hover:bg-sky-700 transition-all"
             >
               <span className="text-xs sm:text-sm font-light tracking-widest">
@@ -139,7 +139,7 @@ export default function CartPage() {
                 <span className="text-xl sm:text-2xl font-light">${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
               </div>
               <Link
-                href="/checkout"
+                href="/home/checkout"
                 className="w-full px-6 sm:px-8 py-3 sm:py-4 bg-sky-600 text-white hover:bg-sky-700 transition-colors text-center block"
               >
                 <span className="text-xs sm:text-sm font-light tracking-widest">

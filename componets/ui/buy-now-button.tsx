@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/lib/auth-context";
 
 interface BuyNowButtonProps {
   productId: string;
@@ -16,8 +17,15 @@ export default function BuyNowButton({
   className = "",
 }: BuyNowButtonProps) {
   const router = useRouter();
+  const { user } = useAuth();
 
   const handleBuyNow = () => {
+    // Check if user is logged in
+    if (!user) {
+      router.push("/home/signin");
+      return;
+    }
+
     // Redirect to checkout with product details
     const params = new URLSearchParams({
       buyNow: "true",
@@ -25,7 +33,7 @@ export default function BuyNowButton({
       productName: encodeURIComponent(productName),
       price: price.toString(),
     });
-    router.push(`/checkout?${params.toString()}`);
+    router.push(`/home/checkout?${params.toString()}`);
   };
 
   return (

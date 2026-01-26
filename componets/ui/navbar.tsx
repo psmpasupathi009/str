@@ -108,7 +108,7 @@ export default function Navbar() {
             <div className="flex items-center gap-3 sm:gap-6">
               {user ? (
                 <Link
-                  href="/profile"
+                  href="/home/profile"
                   className="text-white hover:text-sky-100 transition-colors"
                   title="Profile"
                 >
@@ -116,14 +116,14 @@ export default function Navbar() {
                 </Link>
               ) : (
                 <Link
-                  href="/signin"
+                  href="/home/signin"
                   className="text-white hover:text-sky-100 transition-colors text-xs sm:text-sm font-light tracking-wider"
                 >
                   SIGN IN
                 </Link>
               )}
               <Link
-                href="/cart"
+                href="/home/cart"
                 className="text-white hover:text-sky-100 transition-colors relative"
               >
                 <ShoppingCart className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -183,21 +183,21 @@ export default function Navbar() {
                     HOME
                   </Link>
                   <Link
-                    href="/products"
+                    href="/home/products"
                     className="text-white text-sm sm:text-base md:text-lg lg:text-xl font-light tracking-wider hover:text-sky-100 transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     PRODUCTS
                   </Link>
                   <Link
-                    href="/about"
+                    href="/home/about"
                     className="text-white text-sm sm:text-base md:text-lg lg:text-xl font-light tracking-wider hover:text-sky-100 transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     ABOUT
                   </Link>
                   <Link
-                    href="/contact"
+                    href="/home/contact"
                     className="text-white text-sm sm:text-base md:text-lg lg:text-xl font-light tracking-wider hover:text-sky-100 transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >

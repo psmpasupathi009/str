@@ -121,7 +121,7 @@ export default function Footer() {
               COMPLAINTS
             </Link>
             <Link
-              href="/contact"
+              href="/home/contact"
               className="text-xs sm:text-sm font-light tracking-wider hover:text-white transition-colors"
             >
               CONTACT

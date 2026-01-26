@@ -94,3 +94,19 @@ model OrderItem {
   @@map("order_items")
   @@index([orderId])
 }
+
+model Review {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  productId String
+  userId    String   @db.ObjectId
+  userName  String
+  userEmail String
+  rating    Int      // 1-5 stars
+  comment   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("reviews")
+  @@index([productId])
+  @@index([userId])
+}

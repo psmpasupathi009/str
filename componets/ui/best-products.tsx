@@ -35,7 +35,7 @@ export default function BestProducts({ products }: BestProductsProps) {
             </p>
           </div>
           <Link
-            href="/products"
+            href="/home/products"
             className="inline-flex items-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 border border-sky-600 hover:border-sky-700 bg-sky-600 text-white hover:bg-sky-700 transition-all group"
           >
             <span className="text-xs sm:text-sm font-light tracking-widest">
