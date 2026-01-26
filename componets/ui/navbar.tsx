@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { Menu, X, User, ShoppingCart, LogOut } from "lucide-react";
+import { Menu, X, User, ShoppingCart } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
 
@@ -16,7 +16,7 @@ interface CartItem {
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [cartItemCount, setCartItemCount] = useState(0);
-  const { user, signOut } = useAuth();
+  const { user } = useAuth();
 
   // Load cart items count
   const loadCartCount = () => {
@@ -107,21 +107,13 @@ export default function Navbar() {
             {/* Right Side Icons */}
             <div className="flex items-center gap-3 sm:gap-6">
               {user ? (
-                <>
-                  <Link
-                    href="/profile"
-                    className="text-white hover:text-gray-300 transition-colors"
-                  >
-                    <User className="w-5 h-5 sm:w-6 sm:h-6" />
-                  </Link>
-                  <button
-                    onClick={signOut}
-                    className="text-white hover:text-gray-300 transition-colors"
-                    title="Sign Out"
-                  >
-                    <LogOut className="w-5 h-5 sm:w-6 sm:h-6" />
-                  </button>
-                </>
+                <Link
+                  href="/profile"
+                  className="text-white hover:text-gray-300 transition-colors"
+                  title="Profile"
+                >
+                  <User className="w-5 h-5 sm:w-6 sm:h-6" />
+                </Link>
               ) : (
                 <Link
                   href="/signin"

@@ -1,7 +1,6 @@
 "use client";
 
-import RazorpayButton from "./razorpay-button";
-import { useAuth } from "@/lib/auth-context";
+import { useRouter } from "next/navigation";
 
 interface BuyNowButtonProps {
   productId: string;
@@ -16,25 +15,27 @@ export default function BuyNowButton({
   price,
   className = "",
 }: BuyNowButtonProps) {
-  const { user } = useAuth();
+  const router = useRouter();
+
+  const handleBuyNow = () => {
+    // Redirect to checkout with product details
+    const params = new URLSearchParams({
+      buyNow: "true",
+      productId,
+      productName: encodeURIComponent(productName),
+      price: price.toString(),
+    });
+    router.push(`/checkout?${params.toString()}`);
+  };
 
   return (
-    <RazorpayButton
-      amount={price}
-      items={[
-        {
-          productId,
-          productName,
-          quantity: 1,
-          price,
-        },
-      ]}
-      customerName={user?.name || undefined}
-      customerEmail={user?.email || undefined}
-      customerPhone={user?.phoneNumber || undefined}
-      userId={user?.id || undefined}
-      buttonText="BUY NOW"
+    <button
+      onClick={handleBuyNow}
       className={className}
-    />
+    >
+      <span className="text-xs sm:text-sm font-light tracking-widest">
+        BUY NOW
+      </span>
+    </button>
   );
 }

@@ -138,16 +138,14 @@ export default function CartPage() {
                 <span className="text-lg sm:text-xl font-light tracking-wide">TOTAL</span>
                 <span className="text-xl sm:text-2xl font-light">${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
               </div>
-              <RazorpayButton
-                amount={total}
-                items={cartItems}
-                customerName={user?.name || undefined}
-                customerEmail={user?.email || undefined}
-                customerPhone={user?.phoneNumber || undefined}
-                userId={user?.id || undefined}
-                buttonText="PROCEED TO CHECKOUT"
-                className="w-full px-6 sm:px-8 py-3 sm:py-4 bg-white text-black hover:bg-gray-200 transition-colors"
-              />
+              <Link
+                href="/checkout"
+                className="w-full px-6 sm:px-8 py-3 sm:py-4 bg-white text-black hover:bg-gray-200 transition-colors text-center block"
+              >
+                <span className="text-xs sm:text-sm font-light tracking-widest">
+                  PROCEED TO CHECKOUT
+                </span>
+              </Link>
             </div>
           </div>
         )}

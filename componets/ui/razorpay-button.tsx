@@ -9,6 +9,18 @@ declare global {
   }
 }
 
+interface ShippingAddress {
+  fullName: string;
+  email: string;
+  phone: string;
+  addressLine1: string;
+  addressLine2: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  country: string;
+}
+
 interface RazorpayButtonProps {
   amount: number;
   items: Array<{
@@ -23,6 +35,7 @@ interface RazorpayButtonProps {
   userId?: string;
   buttonText?: string;
   className?: string;
+  shippingAddress?: ShippingAddress;
 }
 
 export default function RazorpayButton({
@@ -34,6 +47,7 @@ export default function RazorpayButton({
   userId,
   buttonText = "PAY NOW",
   className = "",
+  shippingAddress,
 }: RazorpayButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [razorpayLoaded, setRazorpayLoaded] = useState(false);
@@ -100,6 +114,7 @@ export default function RazorpayButton({
           customerEmail,
           customerPhone,
           userId,
+          shippingAddress,
         }),
       });
 

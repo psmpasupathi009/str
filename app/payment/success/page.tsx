@@ -3,12 +3,18 @@
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { CheckCircle } from "lucide-react";
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 
 function PaymentSuccessContent() {
   const searchParams = useSearchParams();
   const orderId = searchParams.get("orderId");
   const paymentId = searchParams.get("paymentId");
+
+  // Clear cart after successful payment
+  useEffect(() => {
+    localStorage.removeItem("cart");
+    window.dispatchEvent(new Event("cartUpdated"));
+  }, []);
 
   return (
     <main className="min-h-screen bg-black text-white pt-16 sm:pt-20">

@@ -5,7 +5,7 @@ import { PaymentStatus, OrderStatus } from "@prisma/client";
 
 export async function POST(request: NextRequest) {
   try {
-    const { amount, items, customerName, customerEmail, customerPhone, userId } = await request.json();
+    const { amount, items, customerName, customerEmail, customerPhone, userId, shippingAddress } = await request.json();
 
     // Validation
     if (!amount || amount <= 0) {
@@ -52,6 +52,17 @@ export async function POST(request: NextRequest) {
         customerName: customerName || null,
         customerEmail: customerEmail || null,
         customerPhone: customerPhone || null,
+        shippingAddress: shippingAddress ? {
+          fullName: shippingAddress.fullName,
+          email: shippingAddress.email,
+          phone: shippingAddress.phone,
+          addressLine1: shippingAddress.addressLine1,
+          addressLine2: shippingAddress.addressLine2 || "",
+          city: shippingAddress.city,
+          state: shippingAddress.state,
+          zipCode: shippingAddress.zipCode,
+          country: shippingAddress.country,
+        } : null,
         items: {
           create: items.map((item: any) => ({
             productId: item.productId,
