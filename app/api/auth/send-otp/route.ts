@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createOTP, getUserByEmail } from "@/lib/auth";
 import { sendOTPEmail } from "@/lib/email";
+import { OTPType } from "@prisma/client";
 
 const OTP_EXPIRY_SECONDS = 600; // 10 minutes
 
@@ -17,7 +18,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate user existence based on type
-    if (type === "SIGNUP") {
+    if (type === OTPType.SIGNUP) {
       const existingUser = await getUserByEmail(email);
       if (existingUser) {
         return NextResponse.json(
@@ -25,7 +26,7 @@ export async function POST(request: NextRequest) {
           { status: 400 }
         );
       }
-    } else if (type === "FORGOT_PASSWORD") {
+    } else if (type === OTPType.FORGOT_PASSWORD) {
       const user = await getUserByEmail(email);
       if (!user) {
         return NextResponse.json(

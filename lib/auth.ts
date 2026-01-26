@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs'
 import { prisma } from './prisma'
+import { OTPType } from '@prisma/client'
 
 export async function hashPassword(password: string): Promise<string> {
   return bcrypt.hash(password, 12)
@@ -16,7 +17,7 @@ export function generateOTP(): string {
   return Math.floor(100000 + Math.random() * 900000).toString()
 }
 
-export async function createOTP(email: string, type: 'SIGNUP' | 'FORGOT_PASSWORD') {
+export async function createOTP(email: string, type: OTPType) {
   const code = generateOTP()
   const expiresAt = new Date(Date.now() + 10 * 60 * 1000) // 10 minutes
 
@@ -38,7 +39,7 @@ export async function createOTP(email: string, type: 'SIGNUP' | 'FORGOT_PASSWORD
   })
 }
 
-export async function verifyOTP(email: string, code: string, type: 'SIGNUP' | 'FORGOT_PASSWORD') {
+export async function verifyOTP(email: string, code: string, type: OTPType) {
   const otp = await prisma.otp.findFirst({
     where: {
       email,

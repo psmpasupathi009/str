@@ -743,7 +743,10 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
           >
             <motion.h1
               className="text-4xl sm:text-5xl font-bold mb-3 bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text"
-              style={{ WebkitTextFillColor: 'transparent' }}
+              style={{
+                backgroundSize: "200% 200%",
+                WebkitTextFillColor: 'transparent',
+              }}
               animate={{
                 backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
               }}
@@ -751,10 +754,6 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
                 duration: 5,
                 repeat: Infinity,
                 ease: "linear",
-              }}
-              style={{
-                backgroundSize: "200% 200%",
-                WebkitTextFillColor: 'transparent',
               }}
             >
               {getStepTitle()}

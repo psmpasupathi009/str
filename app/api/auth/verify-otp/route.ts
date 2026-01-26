@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifyOTP, getUserByEmail } from "@/lib/auth";
+import { OTPType } from "@prisma/client";
 
 export async function POST(request: NextRequest) {
   try {
@@ -23,7 +24,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Handle different OTP types
-    if (type === "SIGNUP") {
+    if (type === OTPType.SIGNUP) {
       return NextResponse.json(
         {
           message: "OTP verified successfully. Please create your password.",
@@ -33,7 +34,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (type === "FORGOT_PASSWORD") {
+    if (type === OTPType.FORGOT_PASSWORD) {
       const user = await getUserByEmail(email);
       if (!user) {
         return NextResponse.json(

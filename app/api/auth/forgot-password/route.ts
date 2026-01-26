@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getUserByEmail } from "@/lib/auth";
 import { sendOTPEmail } from "@/lib/email";
 import { createOTP } from "@/lib/auth";
+import { OTPType } from "@prisma/client";
 
 export async function POST(request: NextRequest) {
   try {
@@ -24,8 +25,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Create and send OTP
-    const otp = await createOTP(email, "FORGOT_PASSWORD");
-    await sendOTPEmail(email, otp.code, "FORGOT_PASSWORD");
+    const otp = await createOTP(email, OTPType.FORGOT_PASSWORD);
+    await sendOTPEmail(email, otp.code, OTPType.FORGOT_PASSWORD);
 
     return NextResponse.json(
       {

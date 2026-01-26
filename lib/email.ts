@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import { OTPType } from '@prisma/client';
 
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST || 'smtp.gmail.com',
@@ -10,8 +11,8 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-export async function sendOTPEmail(email: string, otp: string, type: 'SIGNUP' | 'FORGOT_PASSWORD') {
-  const subject = type === 'SIGNUP' 
+export async function sendOTPEmail(email: string, otp: string, type: OTPType) {
+  const subject = type === OTPType.SIGNUP 
     ? 'Verify Your Email - STR E-Commerce'
     : 'Reset Your Password - STR E-Commerce';
   
@@ -24,11 +25,11 @@ export async function sendOTPEmail(email: string, otp: string, type: 'SIGNUP' | 
       
       <div style="background-color: #111; padding: 30px; border: 1px solid #333; border-radius: 8px;">
         <h2 style="color: #fff; font-weight: 300; margin-bottom: 20px;">
-          ${type === 'SIGNUP' ? 'Verify Your Email Address' : 'Reset Your Password'}
+          ${type === OTPType.SIGNUP ? 'Verify Your Email Address' : 'Reset Your Password'}
         </h2>
         
         <p style="color: #ccc; line-height: 1.6; margin-bottom: 30px;">
-          ${type === 'SIGNUP' 
+          ${type === OTPType.SIGNUP 
             ? 'Thank you for signing up! Please use the following OTP code to verify your email address:'
             : 'You requested to reset your password. Please use the following OTP code to proceed:'}
         </p>

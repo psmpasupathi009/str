@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getUserByEmail, createOTP } from "@/lib/auth";
 import { sendOTPEmail } from "@/lib/email";
+import { OTPType } from "@prisma/client";
 
 const OTP_EXPIRY_MINUTES = 10;
 
@@ -26,8 +27,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Create and send OTP
-    const otp = await createOTP(email, "SIGNUP");
-    await sendOTPEmail(email, otp.code, "SIGNUP");
+    const otp = await createOTP(email, OTPType.SIGNUP);
+    await sendOTPEmail(email, otp.code, OTPType.SIGNUP);
 
     return NextResponse.json(
       {
