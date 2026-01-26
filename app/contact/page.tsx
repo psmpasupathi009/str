@@ -1,6 +1,37 @@
+"use client";
+
+import { useState } from "react";
+
 export default function ContactPage() {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<"success" | "error" | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus(null);
+
+    try {
+      // Simulate form submission - you can replace this with actual API call
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      setSubmitStatus("success");
+      setFormData({ name: "", email: "", message: "" });
+      setTimeout(() => setSubmitStatus(null), 3000);
+    } catch (error) {
+      setSubmitStatus("error");
+      setTimeout(() => setSubmitStatus(null), 3000);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
-    <main className="min-h-screen bg-black text-white pt-16 sm:pt-20">
+    <main className="min-h-screen bg-linear-to-b from-sky-50 to-sky-100 text-slate-900 pt-16 sm:pt-20">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20">
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light tracking-wider mb-8 sm:mb-12">
           CONTACT US
@@ -10,15 +41,15 @@ export default function ContactPage() {
             <h2 className="text-xl sm:text-2xl font-light tracking-wide mb-4 sm:mb-6">
               GET IN TOUCH
             </h2>
-            <div className="space-y-3 sm:space-y-4 text-sm sm:text-base text-gray-300 font-light">
+            <div className="space-y-3 sm:space-y-4 text-sm sm:text-base text-slate-700 font-light">
               <p>
-                <span className="text-gray-500">Email:</span> contact@str.com
+                <span className="text-slate-600">Email:</span> contact@str.com
               </p>
               <p>
-                <span className="text-gray-500">Phone:</span> +1 (555) 123-4567
+                <span className="text-slate-600">Phone:</span> +1 (555) 123-4567
               </p>
               <p>
-                <span className="text-gray-500">Address:</span>
+                <span className="text-slate-600">Address:</span>
                 <br />
                 123 Luxury Avenue
                 <br />
@@ -30,28 +61,47 @@ export default function ContactPage() {
             <h2 className="text-xl sm:text-2xl font-light tracking-wide mb-4 sm:mb-6">
               SEND A MESSAGE
             </h2>
-            <form className="space-y-3 sm:space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
               <input
                 type="text"
                 placeholder="Your Name"
-                className="w-full bg-black border border-white/10 px-4 py-3 text-sm sm:text-base text-white focus:outline-none focus:border-white/30 transition-colors"
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                required
+                className="w-full bg-white border border-sky-300 px-4 py-3 text-sm sm:text-base text-slate-900 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-colors"
+                style={{ color: 'rgb(15 23 42)', caretColor: 'rgb(14 165 233)' }}
               />
               <input
                 type="email"
                 placeholder="Your Email"
-                className="w-full bg-black border border-white/10 px-4 py-3 text-sm sm:text-base text-white focus:outline-none focus:border-white/30 transition-colors"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                required
+                className="w-full bg-white border border-sky-300 px-4 py-3 text-sm sm:text-base text-slate-900 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-colors"
+                style={{ color: 'rgb(15 23 42)', caretColor: 'rgb(14 165 233)' }}
               />
               <textarea
                 placeholder="Your Message"
                 rows={6}
-                className="w-full bg-black border border-white/10 px-4 py-3 text-sm sm:text-base text-white focus:outline-none focus:border-white/30 transition-colors resize-none"
+                value={formData.message}
+                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                required
+                className="w-full bg-white border border-sky-300 px-4 py-3 text-sm sm:text-base text-slate-900 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-colors resize-none"
+                style={{ color: 'rgb(15 23 42)', caretColor: 'rgb(14 165 233)' }}
               />
+              {submitStatus === "success" && (
+                <p className="text-green-600 text-sm">Message sent successfully!</p>
+              )}
+              {submitStatus === "error" && (
+                <p className="text-red-600 text-sm">Failed to send message. Please try again.</p>
+              )}
               <button
                 type="submit"
-                className="w-full px-6 sm:px-8 py-3 sm:py-4 border border-white/20 hover:border-white/40 transition-all"
+                disabled={isSubmitting}
+                className="w-full px-6 sm:px-8 py-3 sm:py-4 border border-sky-600 hover:border-sky-700 bg-sky-600 text-white hover:bg-sky-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <span className="text-xs sm:text-sm font-light tracking-widest">
-                  SEND MESSAGE
+                  {isSubmitting ? "SENDING..." : "SEND MESSAGE"}
                 </span>
               </button>
             </form>

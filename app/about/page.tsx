@@ -58,31 +58,37 @@ export default function AboutPage() {
     : galleryImages.filter(img => img.category === selectedCategory);
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-white pt-20 sm:pt-24">
+    <main className="min-h-screen bg-linear-to-br from-sky-50 via-sky-100 to-sky-200 text-slate-900 pt-20 sm:pt-24">
       {/* Hero Section */}
       <section className="relative overflow-hidden py-20 sm:py-28">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-size-[24px_24px]" />
         
         {/* Animated Background Blobs */}
         <div className="absolute inset-0 overflow-hidden">
-          {[0, 2, 4].map((delay, i) => (
+          {[
+            { delay: 0, color: 'purple', left: '-10%', top: '10%', x: [0, 100, 0], y: [0, 100, 100] },
+            { delay: 2, color: 'blue', left: '50%', top: '20%', x: [0, -100, 0], y: [0, 100, 100] },
+            { delay: 4, color: 'pink', left: '80%', top: '60%', x: [0, 100, 0], y: [0, 100, -100] },
+          ].map((blob, i) => (
             <motion.div
               key={i}
-              className={`absolute w-96 h-96 bg-${i === 0 ? 'purple' : i === 1 ? 'blue' : 'pink'}-500 rounded-full mix-blend-screen opacity-10 filter blur-3xl`}
+              className={`absolute w-96 h-96 rounded-full mix-blend-screen opacity-10 filter blur-3xl ${
+                blob.color === 'purple' ? 'bg-purple-500' : blob.color === 'blue' ? 'bg-blue-500' : 'bg-pink-500'
+              }`}
               animate={{
-                x: [0, i === 1 ? -100 : 100, 0],
-                y: [0, 100, i === 2 ? -100 : 100],
+                x: blob.x,
+                y: blob.y,
                 scale: [1, 1.2, 1],
               }}
               transition={{
                 duration: 20,
                 repeat: Infinity,
                 repeatType: "reverse",
-                delay,
+                delay: blob.delay,
               }}
               style={{
-                left: i === 0 ? '-10%' : i === 1 ? '50%' : '80%',
-                top: i === 0 ? '10%' : i === 1 ? '20%' : '60%',
+                left: blob.left,
+                top: blob.top,
               }}
             />
           ))}
@@ -95,7 +101,7 @@ export default function AboutPage() {
           className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center"
         >
           <motion.h1
-            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold mb-6 bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text"
+            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold mb-6 bg-linear-to-r from-white via-purple-200 to-white bg-clip-text"
             style={{ WebkitTextFillColor: 'transparent', backgroundSize: '200% 200%' }}
             animate={{
               backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
@@ -108,7 +114,7 @@ export default function AboutPage() {
           >
             About STR
           </motion.h1>
-          <p className="text-xl sm:text-2xl text-white/70 font-light max-w-3xl mx-auto">
+          <p className="text-xl sm:text-2xl text-slate-700 font-light max-w-3xl mx-auto">
             Premium Quality Food Products - Oil, Idly, Masala Powders & Ready-to-Eat Items
           </p>
         </motion.div>
@@ -124,10 +130,10 @@ export default function AboutPage() {
             transition={{ duration: 0.6 }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl sm:text-5xl font-bold mb-4 bg-gradient-to-r from-purple-300 to-blue-300 bg-clip-text" style={{ WebkitTextFillColor: 'transparent' }}>
+            <h2 className="text-4xl sm:text-5xl font-bold mb-4 bg-linear-to-r from-sky-600 to-sky-400 bg-clip-text" style={{ WebkitTextFillColor: 'transparent' }}>
               Our Story
             </h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-purple-500 to-blue-500 mx-auto rounded-full" />
+            <div className="w-24 h-1 bg-linear-to-r from-sky-600 to-sky-400 mx-auto rounded-full" />
           </motion.div>
 
           <motion.div
@@ -146,15 +152,15 @@ export default function AboutPage() {
               <motion.div
                 key={i}
                 variants={itemVariants}
-                className="relative group p-8 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 hover:border-purple-500/50 transition-all duration-300"
+                className="relative group p-8 bg-white/80 backdrop-blur-xl rounded-2xl border border-sky-200 hover:border-sky-400 shadow-lg hover:shadow-xl transition-all duration-300"
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl" />
+                <div className="absolute inset-0 bg-linear-to-br from-sky-100/50 to-sky-200/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl" />
                 <div className="relative z-10">
-                  <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-purple-500/20 to-blue-500/20 flex items-center justify-center border border-purple-500/30">
-                    <item.icon className="w-8 h-8 text-purple-300" />
+                  <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-linear-to-br from-sky-400 to-sky-600 flex items-center justify-center border border-sky-300">
+                    <item.icon className="w-8 h-8 text-sky-700" />
                   </div>
-                  <h3 className="text-xl font-semibold mb-2 text-center">{item.title}</h3>
-                  <p className="text-white/60 text-sm text-center">{item.desc}</p>
+                  <h3 className="text-xl font-semibold mb-2 text-center text-slate-900">{item.title}</h3>
+                  <p className="text-slate-600 text-sm text-center">{item.desc}</p>
                 </div>
               </motion.div>
             ))}
@@ -165,7 +171,7 @@ export default function AboutPage() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="max-w-4xl mx-auto space-y-6 text-lg text-white/80 leading-relaxed"
+            className="max-w-4xl mx-auto space-y-6 text-lg text-slate-700 leading-relaxed"
           >
             <motion.p variants={itemVariants}>
               STR is a premium food products company dedicated to bringing you the finest quality 
@@ -190,7 +196,7 @@ export default function AboutPage() {
       </section>
 
       {/* Section 2: Gallery */}
-      <section className="relative py-20 sm:py-28 bg-white/5">
+      <section className="relative py-20 sm:py-28 bg-white/40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0 }}
@@ -199,10 +205,10 @@ export default function AboutPage() {
             transition={{ duration: 0.6 }}
             className="text-center mb-12"
           >
-            <h2 className="text-4xl sm:text-5xl font-bold mb-4 bg-gradient-to-r from-purple-300 to-blue-300 bg-clip-text" style={{ WebkitTextFillColor: 'transparent' }}>
+            <h2 className="text-4xl sm:text-5xl font-bold mb-4 bg-linear-to-r from-purple-300 to-blue-300 bg-clip-text" style={{ WebkitTextFillColor: 'transparent' }}>
               Product Gallery
             </h2>
-            <p className="text-white/60 mb-8">Explore our premium product range</p>
+            <p className="text-slate-600 mb-8">Explore our premium product range</p>
             
             {/* Category Filter */}
             <div className="flex flex-wrap justify-center gap-3 mb-12">
@@ -212,8 +218,8 @@ export default function AboutPage() {
                   onClick={() => setSelectedCategory(category)}
                   className={`px-6 py-2.5 rounded-full font-medium transition-all duration-300 ${
                     selectedCategory === category
-                      ? "bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg shadow-purple-500/30"
-                      : "bg-white/5 text-white/70 hover:bg-white/10 border border-white/10"
+                      ? "bg-linear-to-r from-sky-600 to-sky-500 text-white shadow-lg shadow-sky-500/30"
+                      : "bg-white/80 text-slate-700 hover:bg-white border border-sky-200"
                   }`}
                 >
                   {category}
@@ -236,7 +242,7 @@ export default function AboutPage() {
                 className="relative group cursor-pointer overflow-hidden rounded-xl aspect-square"
                 onClick={() => setSelectedImage(image.src)}
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-blue-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" />
+                <div className="absolute inset-0 bg-linear-to-br from-purple-500/20 to-blue-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" />
                 <div className="absolute inset-0 flex items-center justify-center z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   <ImageIcon className="w-8 h-8 text-white" />
                 </div>
@@ -251,14 +257,14 @@ export default function AboutPage() {
                       unoptimized
                     />
                   ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-purple-500/30 to-blue-500/30 flex items-center justify-center rounded-xl">
-                      <span className="text-white/60 text-sm font-medium text-center px-2">{image.alt}</span>
+                    <div className="w-full h-full bg-linear-to-br from-sky-200 to-sky-300 flex items-center justify-center rounded-xl">
+                      <span className="text-slate-600 text-sm font-medium text-center px-2">{image.alt}</span>
                     </div>
                   )}
                 </div>
-                <div className="absolute bottom-0 left-0 right-0 p-3 bg-black/60 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-30">
+                <div className="absolute bottom-0 left-0 right-0 p-3 bg-sky-600/90 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-30">
                   <p className="text-white text-xs font-medium">{image.alt}</p>
-                  <p className="text-white/60 text-xs">{image.category}</p>
+                  <p className="text-sky-100 text-xs">{image.category}</p>
                 </div>
               </motion.div>
             ))}
@@ -284,12 +290,12 @@ export default function AboutPage() {
               >
                 <button
                   onClick={() => setSelectedImage(null)}
-                  className="absolute -top-12 right-0 text-white hover:text-purple-300 transition-colors flex items-center gap-2 z-10"
+                  className="absolute -top-12 right-0 text-white hover:text-sky-300 transition-colors flex items-center gap-2 z-10"
                 >
                   <X className="w-5 h-5" />
                   Close
                 </button>
-                <div className="relative w-full h-96 rounded-2xl overflow-hidden bg-gradient-to-br from-purple-500/30 to-blue-500/30">
+                <div className="relative w-full h-96 rounded-2xl overflow-hidden bg-linear-to-br from-purple-500/30 to-blue-500/30">
                   {selectedImage && !imageErrors.has(selectedImage) ? (
                     <Image
                       src={selectedImage}
@@ -301,7 +307,7 @@ export default function AboutPage() {
                     />
                   ) : (
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="text-white/60">Image not found. Please add image to public/images/gallery/</span>
+                      <span className="text-white/90">Image not found. Please add image to public/images/gallery/</span>
                     </div>
                   )}
                 </div>
@@ -321,11 +327,11 @@ export default function AboutPage() {
             transition={{ duration: 0.6 }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl sm:text-5xl font-bold mb-4 bg-gradient-to-r from-purple-300 to-blue-300 bg-clip-text" style={{ WebkitTextFillColor: 'transparent' }}>
+            <h2 className="text-4xl sm:text-5xl font-bold mb-4 bg-linear-to-r from-purple-300 to-blue-300 bg-clip-text" style={{ WebkitTextFillColor: 'transparent' }}>
               Certifications & Quality Assurance
             </h2>
-            <p className="text-white/60 mb-2">Our commitment to healthy, safe, and quality food products</p>
-            <div className="w-24 h-1 bg-gradient-to-r from-purple-500 to-blue-500 mx-auto rounded-full" />
+            <p className="text-slate-600 mb-2">Our commitment to healthy, safe, and quality food products</p>
+            <div className="w-24 h-1 bg-linear-to-r from-purple-500 to-blue-500 mx-auto rounded-full" />
           </motion.div>
 
           <motion.div
@@ -339,14 +345,14 @@ export default function AboutPage() {
               <motion.div
                 key={cert.id}
                 variants={itemVariants}
-                className="group relative p-6 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 hover:border-purple-500/50 transition-all duration-300"
+                className="group relative p-6 bg-white/80 backdrop-blur-xl rounded-2xl border border-sky-200 hover:border-sky-400 shadow-lg hover:shadow-xl transition-all duration-300"
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl" />
+                <div className="absolute inset-0 bg-linear-to-br from-sky-100/50 to-sky-200/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl" />
                 <div className="relative z-10">
-                  <div className="w-20 h-20 mx-auto mb-4 rounded-xl bg-gradient-to-br from-purple-500/20 to-blue-500/20 flex items-center justify-center border border-purple-500/30">
-                    <FileCheck className="w-10 h-10 text-purple-300" />
+                  <div className="w-20 h-20 mx-auto mb-4 rounded-xl bg-linear-to-br from-sky-400 to-sky-600 flex items-center justify-center border border-sky-300">
+                    <FileCheck className="w-10 h-10 text-white" />
                   </div>
-                  <div className="relative w-full h-48 mb-4 rounded-xl overflow-hidden bg-gradient-to-br from-purple-500/20 to-blue-500/20 border border-purple-500/20">
+                  <div className="relative w-full h-48 mb-4 rounded-xl overflow-hidden bg-linear-to-br from-sky-100 to-sky-200 border border-sky-200">
                     {!certErrors.has(cert.image) ? (
                       <Image
                         src={cert.image}
@@ -358,12 +364,12 @@ export default function AboutPage() {
                       />
                     ) : (
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <CheckCircle2 className="w-12 h-12 text-purple-300" />
+                        <CheckCircle2 className="w-12 h-12 text-sky-600" />
                       </div>
                     )}
                   </div>
-                  <h3 className="text-lg font-semibold mb-2 text-center">{cert.title}</h3>
-                  <p className="text-white/60 text-sm text-center">{cert.description}</p>
+                  <h3 className="text-lg font-semibold mb-2 text-center text-slate-900">{cert.title}</h3>
+                  <p className="text-slate-600 text-sm text-center">{cert.description}</p>
                 </div>
               </motion.div>
             ))}
@@ -376,12 +382,12 @@ export default function AboutPage() {
             transition={{ delay: 0.3 }}
             className="mt-12 max-w-3xl mx-auto text-center"
           >
-            <div className="p-8 bg-gradient-to-br from-purple-500/10 to-blue-500/10 rounded-2xl border border-purple-500/20 backdrop-blur-xl">
-              <h3 className="text-2xl font-semibold mb-4 flex items-center justify-center gap-2">
-                <Shield className="w-6 h-6 text-purple-300" />
+            <div className="p-8 bg-linear-to-br from-sky-100 to-sky-200 rounded-2xl border border-sky-300 backdrop-blur-xl">
+              <h3 className="text-2xl font-semibold mb-4 flex items-center justify-center gap-2 text-slate-900">
+                <Shield className="w-6 h-6 text-sky-700" />
                 Quality Guaranteed
               </h3>
-              <p className="text-white/80 leading-relaxed">
+              <p className="text-slate-700 leading-relaxed">
                 All our products undergo rigorous quality checks and are certified by leading 
                 food safety authorities. We ensure that every product meets the highest standards 
                 of hygiene, safety, and nutritional value. Your health and satisfaction are our 

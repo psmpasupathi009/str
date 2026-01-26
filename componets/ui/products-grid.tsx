@@ -17,7 +17,7 @@ interface ProductsGridProps {
 
 export default function ProductsGrid({ products }: ProductsGridProps) {
   return (
-    <section className="py-12 sm:py-16 md:py-20 bg-black text-white">
+    <section className="py-12 sm:py-16 md:py-20 bg-linear-to-b from-sky-50 to-sky-100 text-slate-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8 sm:mb-12 md:mb-16 text-center">
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light tracking-wider mb-3 sm:mb-4">
@@ -25,7 +25,7 @@ export default function ProductsGrid({ products }: ProductsGridProps) {
             <br />
             <span className="font-extralight">COLLECTION</span>
           </h2>
-          <p className="text-sm sm:text-base text-gray-400 font-light tracking-wide max-w-2xl mx-auto px-4">
+          <p className="text-sm sm:text-base text-slate-600 font-light tracking-wide max-w-2xl mx-auto px-4">
             With flawless performance and superior craftsmanship, each piece was
             designed to exhilarate.
           </p>

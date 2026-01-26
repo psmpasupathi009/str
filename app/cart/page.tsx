@@ -64,11 +64,11 @@ export default function CartPage() {
   };
 
   return (
-    <main className="min-h-screen bg-black text-white pt-16 sm:pt-20">
+    <main className="min-h-screen bg-gradient-to-b from-sky-50 to-sky-100 text-slate-900 pt-16 sm:pt-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-6 sm:mb-8"
+          className="inline-flex items-center gap-2 text-slate-600 hover:text-sky-700 transition-colors mb-6 sm:mb-8"
         >
           <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
           <span className="text-xs sm:text-sm font-light tracking-wider">CONTINUE SHOPPING</span>
@@ -80,13 +80,13 @@ export default function CartPage() {
 
         {cartItems.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 sm:py-20">
-            <ShoppingCart className="w-16 h-16 sm:w-24 sm:h-24 text-gray-600 mb-4 sm:mb-6" />
-            <p className="text-lg sm:text-xl text-gray-400 font-light tracking-wide mb-4 sm:mb-6">
+            <ShoppingCart className="w-16 h-16 sm:w-24 sm:h-24 text-sky-400 mb-4 sm:mb-6" />
+            <p className="text-lg sm:text-xl text-slate-600 font-light tracking-wide mb-4 sm:mb-6">
               Your cart is empty
             </p>
             <Link
               href="/products"
-              className="px-6 sm:px-8 py-3 sm:py-4 border border-white/20 hover:border-white/40 transition-all"
+              className="px-6 sm:px-8 py-3 sm:py-4 border border-sky-600 hover:border-sky-700 bg-sky-600 text-white hover:bg-sky-700 transition-all"
             >
               <span className="text-xs sm:text-sm font-light tracking-widest">
                 BROWSE PRODUCTS
@@ -98,24 +98,24 @@ export default function CartPage() {
             {cartItems.map((item) => (
               <div
                 key={item.productId}
-                className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 sm:p-6 border border-white/10"
+                className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 sm:p-6 border border-sky-200 bg-white shadow-sm hover:shadow-md transition-shadow"
               >
                 <div className="flex-1">
                   <h3 className="text-lg sm:text-xl font-light mb-2">{item.productName}</h3>
-                  <p className="text-sm sm:text-base text-gray-400">${item.price.toLocaleString()} each</p>
+                  <p className="text-sm sm:text-base text-slate-600">${item.price.toLocaleString()} each</p>
                 </div>
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-3">
                     <button
                       onClick={() => updateQuantity(item.productId, item.quantity - 1)}
-                      className="w-8 h-8 flex items-center justify-center border border-white/20 hover:border-white/40 transition-all"
+                      className="w-8 h-8 flex items-center justify-center border border-sky-300 hover:border-sky-500 bg-sky-50 hover:bg-sky-100 text-sky-700 transition-all"
                     >
                       <span className="text-sm">−</span>
                     </button>
                     <span className="text-base sm:text-lg font-light w-8 text-center">{item.quantity}</span>
                     <button
                       onClick={() => updateQuantity(item.productId, item.quantity + 1)}
-                      className="w-8 h-8 flex items-center justify-center border border-white/20 hover:border-white/40 transition-all"
+                      className="w-8 h-8 flex items-center justify-center border border-sky-300 hover:border-sky-500 bg-sky-50 hover:bg-sky-100 text-sky-700 transition-all"
                     >
                       <span className="text-sm">+</span>
                     </button>
@@ -125,7 +125,7 @@ export default function CartPage() {
                   </div>
                   <button
                     onClick={() => removeFromCart(item.productId)}
-                    className="p-2 text-gray-400 hover:text-red-400 transition-colors"
+                    className="p-2 text-slate-500 hover:text-red-500 transition-colors"
                     title="Remove item"
                   >
                     <Trash2 className="w-5 h-5" />
@@ -133,14 +133,14 @@ export default function CartPage() {
                 </div>
               </div>
             ))}
-            <div className="border-t border-white/10 pt-6 sm:pt-8">
+            <div className="border-t border-sky-200 pt-6 sm:pt-8">
               <div className="flex justify-between items-center mb-6 sm:mb-8">
                 <span className="text-lg sm:text-xl font-light tracking-wide">TOTAL</span>
                 <span className="text-xl sm:text-2xl font-light">${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
               </div>
               <Link
                 href="/checkout"
-                className="w-full px-6 sm:px-8 py-3 sm:py-4 bg-white text-black hover:bg-gray-200 transition-colors text-center block"
+                className="w-full px-6 sm:px-8 py-3 sm:py-4 bg-sky-600 text-white hover:bg-sky-700 transition-colors text-center block"
               >
                 <span className="text-xs sm:text-sm font-light tracking-widest">
                   PROCEED TO CHECKOUT

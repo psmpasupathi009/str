@@ -31,7 +31,7 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
       className="group relative"
     >
       <Link href={`/products/${product.id}`}>
-        <div className="relative overflow-hidden bg-black border border-white/10 hover:border-white/20 transition-all duration-300">
+        <div className="relative overflow-hidden bg-white border border-sky-200 hover:border-sky-400 shadow-lg hover:shadow-xl transition-all duration-300">
           {/* Badges */}
           {(product.bestSeller || product.featured) && (
             <div className="absolute top-3 right-3 z-10 flex flex-col gap-2">
@@ -49,22 +49,22 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
           )}
 
           {/* Image Container */}
-          <div className="relative aspect-[4/3] overflow-hidden">
+          <div className="relative aspect-4/3 overflow-hidden">
             <Image
               src={product.image}
               alt={product.name}
               fill
               className="object-cover group-hover:scale-110 transition-transform duration-500"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <div className="absolute inset-0 bg-linear-to-t from-sky-600/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           </div>
 
           {/* Content */}
-          <div className="p-4 sm:p-6 text-white">
-            <h3 className="text-base sm:text-lg md:text-xl font-light tracking-wider mb-2 group-hover:text-gray-300 transition-colors">
+          <div className="p-4 sm:p-6 text-slate-900">
+            <h3 className="text-base sm:text-lg md:text-xl font-light tracking-wider mb-2 group-hover:text-sky-700 transition-colors">
               {product.name.toUpperCase()}
             </h3>
-            <p className="text-xs sm:text-sm text-gray-400 font-light mb-3 sm:mb-4 line-clamp-2">
+            <p className="text-xs sm:text-sm text-slate-600 font-light mb-3 sm:mb-4 line-clamp-2">
               {product.description}
             </p>
             <div className="flex items-center justify-between">

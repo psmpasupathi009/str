@@ -6,9 +6,9 @@ import Link from "next/link";
 
 export default function HeroSection() {
   return (
-    <section className="relative min-h-screen flex items-center justify-center bg-black text-white overflow-hidden">
+    <section className="relative min-h-screen flex items-center justify-center bg-linear-to-br from-sky-600 via-sky-500 to-sky-700 text-white overflow-hidden">
       {/* Animated Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-black">
+      <div className="absolute inset-0 bg-linear-to-br from-sky-600 via-sky-500 to-sky-700">
         <motion.div
           className="absolute inset-0 opacity-20"
           animate={{
@@ -46,7 +46,7 @@ export default function HeroSection() {
           </motion.h1>
 
           <motion.p
-            className="text-base sm:text-lg md:text-xl text-gray-400 font-light tracking-wider mb-8 sm:mb-12 px-4"
+            className="text-base sm:text-lg md:text-xl text-sky-100 font-light tracking-wider mb-8 sm:mb-12 px-4"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.8 }}
@@ -78,7 +78,7 @@ export default function HeroSection() {
         animate={{ y: [0, 10, 0] }}
         transition={{ duration: 2, repeat: Infinity }}
       >
-        <div className="w-px h-8 sm:h-12 bg-white/30"></div>
+        <div className="w-px h-8 sm:h-12 bg-white/40"></div>
       </motion.div>
     </section>
   );

@@ -114,32 +114,32 @@ export default function ProfilePage() {
 
   if (!user) {
     return (
-      <main className="min-h-screen bg-black text-white pt-16 sm:pt-20">
+      <main className="min-h-screen bg-linear-to-b from-sky-50 to-sky-100 text-slate-900 pt-16 sm:pt-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-          <p className="text-center text-gray-400">Please sign in to view your profile.</p>
+          <p className="text-center text-slate-600">Please sign in to view your profile.</p>
         </div>
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen bg-black text-white pt-16 sm:pt-20">
+    <main className="min-h-screen bg-linear-to-b from-sky-50 to-sky-100 text-slate-900 pt-16 sm:pt-20">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         <div className="flex items-center justify-between mb-8 sm:mb-12">
           <div className="flex items-center gap-3 sm:gap-4">
-            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white/10 flex items-center justify-center">
-              <User className="w-8 h-8 sm:w-10 sm:h-10 text-gray-400" />
+            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-sky-600 flex items-center justify-center">
+              <User className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl sm:text-3xl font-light tracking-wider mb-1 sm:mb-2">
+              <h1 className="text-2xl sm:text-3xl font-light tracking-wider mb-1 sm:mb-2 text-slate-900">
                 PROFILE
               </h1>
-              <p className="text-sm sm:text-base text-gray-400 font-light">Manage your account</p>
+              <p className="text-sm sm:text-base text-slate-600 font-light">Manage your account</p>
             </div>
           </div>
           <button
             onClick={handleLogout}
-            className="flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 border border-white/20 hover:border-white/40 transition-all"
+            className="flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 border border-sky-600 hover:border-sky-700 bg-sky-600 text-white hover:bg-sky-700 transition-all"
           >
             <LogOut className="w-4 h-4 sm:w-5 sm:h-5" />
             <span className="text-xs sm:text-sm font-light tracking-wider">LOGOUT</span>
@@ -147,7 +147,7 @@ export default function ProfilePage() {
         </div>
 
         <div className="space-y-6 sm:space-y-8">
-          <div className="border border-white/10 p-4 sm:p-6">
+          <div className="border border-sky-200 bg-white shadow-sm p-4 sm:p-6">
             <div className="flex items-center justify-between mb-3 sm:mb-4">
               <h2 className="text-lg sm:text-xl font-light tracking-wide">
                 ACCOUNT INFORMATION
@@ -155,7 +155,7 @@ export default function ProfilePage() {
               {!isEditing ? (
                 <button
                   onClick={handleEdit}
-                  className="flex items-center gap-2 px-3 sm:px-4 py-2 border border-white/20 hover:border-white/40 transition-all"
+                  className="flex items-center gap-2 px-3 sm:px-4 py-2 border border-sky-300 hover:border-sky-500 bg-white hover:bg-sky-50 transition-all"
                 >
                   <Edit2 className="w-4 h-4" />
                   <span className="text-xs sm:text-sm font-light tracking-wider">EDIT</span>
@@ -165,7 +165,7 @@ export default function ProfilePage() {
                   <button
                     onClick={handleSave}
                     disabled={isSaving}
-                    className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-white text-black hover:bg-gray-200 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-sky-600 text-white hover:bg-sky-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <Save className="w-4 h-4" />
                     <span className="text-xs sm:text-sm font-light tracking-wider">
@@ -175,7 +175,7 @@ export default function ProfilePage() {
                   <button
                     onClick={handleCancel}
                     disabled={isSaving}
-                    className="flex items-center gap-2 px-3 sm:px-4 py-2 border border-white/20 hover:border-white/40 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex items-center gap-2 px-3 sm:px-4 py-2 border border-sky-300 hover:border-sky-500 bg-white hover:bg-sky-50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <X className="w-4 h-4" />
                     <span className="text-xs sm:text-sm font-light tracking-wider">CANCEL</span>
@@ -185,19 +185,19 @@ export default function ProfilePage() {
             </div>
             <div className="space-y-3 sm:space-y-4">
               <div>
-                <label className="text-xs sm:text-sm text-gray-400 font-light tracking-wider block mb-2">
+                <label className="text-xs sm:text-sm text-slate-600 font-light tracking-wider block mb-2">
                   EMAIL
                 </label>
                 <input
                   type="email"
                   value={user.email || ""}
                   readOnly
-                  className="w-full bg-black border border-white/10 px-4 py-3 text-sm sm:text-base text-white focus:outline-none focus:border-white/30 transition-colors cursor-not-allowed opacity-70"
+                  className="w-full bg-slate-100 border border-sky-300 px-4 py-3 text-sm sm:text-base text-slate-600 focus:outline-none focus:border-sky-500 transition-colors cursor-not-allowed opacity-70"
                 />
-                <p className="text-xs text-gray-500 mt-1">Email cannot be changed</p>
+                <p className="text-xs text-slate-500 mt-1">Email cannot be changed</p>
               </div>
               <div>
-                <label className="text-xs sm:text-sm text-gray-400 font-light tracking-wider block mb-2">
+                <label className="text-xs sm:text-sm text-slate-600 font-light tracking-wider block mb-2">
                   FULL NAME *
                 </label>
                 <input
@@ -205,16 +205,16 @@ export default function ProfilePage() {
                   value={formData.name}
                   onChange={(e) => handleInputChange("name", e.target.value)}
                   disabled={!isEditing}
-                  className={`w-full bg-black border border-white/10 px-4 py-3 text-sm sm:text-base text-white focus:outline-none focus:border-white/30 transition-colors ${
-                    !isEditing ? "cursor-not-allowed opacity-70" : ""
+                  className={`w-full bg-white border border-sky-300 px-4 py-3 text-sm sm:text-base text-slate-900 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-colors ${
+                    !isEditing ? "cursor-not-allowed opacity-70 bg-slate-100" : ""
                   }`}
                   placeholder="Enter your full name"
-                  style={{ color: isEditing ? 'white' : 'white', caretColor: isEditing ? 'white' : 'transparent' }}
+                  style={{ color: isEditing ? 'rgb(15 23 42)' : 'rgb(15 23 42)', caretColor: isEditing ? 'rgb(14 165 233)' : 'transparent' }}
                 />
                 {errors.name && <p className="text-red-400 text-xs mt-1">{errors.name}</p>}
               </div>
               <div>
-                <label className="text-xs sm:text-sm text-gray-400 font-light tracking-wider block mb-2">
+                <label className="text-xs sm:text-sm text-slate-600 font-light tracking-wider block mb-2">
                   PHONE NUMBER
                 </label>
                 <input
@@ -222,25 +222,25 @@ export default function ProfilePage() {
                   value={formData.phoneNumber}
                   onChange={(e) => handleInputChange("phoneNumber", e.target.value.replace(/\D/g, ""))}
                   disabled={!isEditing}
-                  className={`w-full bg-black border border-white/10 px-4 py-3 text-sm sm:text-base text-white focus:outline-none focus:border-white/30 transition-colors ${
-                    !isEditing ? "cursor-not-allowed opacity-70" : ""
+                  className={`w-full bg-white border border-sky-300 px-4 py-3 text-sm sm:text-base text-slate-900 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-colors ${
+                    !isEditing ? "cursor-not-allowed opacity-70 bg-slate-100" : ""
                   }`}
                   placeholder="Enter your phone number"
-                  style={{ color: isEditing ? 'white' : 'white', caretColor: isEditing ? 'white' : 'transparent' }}
+                  style={{ color: isEditing ? 'rgb(15 23 42)' : 'rgb(15 23 42)', caretColor: isEditing ? 'rgb(14 165 233)' : 'transparent' }}
                 />
                 {errors.phoneNumber && <p className="text-red-400 text-xs mt-1">{errors.phoneNumber}</p>}
                 {!errors.phoneNumber && (
-                  <p className="text-xs text-gray-500 mt-1">Optional - Enter 10 or more digits</p>
+                  <p className="text-xs text-slate-500 mt-1">Optional - Enter 10 or more digits</p>
                 )}
               </div>
             </div>
           </div>
 
-          <div className="border border-white/10 p-4 sm:p-6">
-            <h2 className="text-lg sm:text-xl font-light tracking-wide mb-3 sm:mb-4">
+          <div className="border border-sky-200 bg-white shadow-sm p-4 sm:p-6">
+            <h2 className="text-lg sm:text-xl font-light tracking-wide mb-3 sm:mb-4 text-slate-900">
               ORDER HISTORY
             </h2>
-            <p className="text-sm sm:text-base text-gray-400 font-light">
+            <p className="text-sm sm:text-base text-slate-600 font-light">
               No orders yet. Start shopping to see your order history here.
             </p>
           </div>

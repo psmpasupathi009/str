@@ -143,20 +143,20 @@ function CheckoutContent() {
 
   if (cartItems.length === 0) {
     return (
-      <main className="min-h-screen bg-black text-white pt-16 sm:pt-20">
+      <main className="min-h-screen bg-linear-to-b from-sky-50 to-sky-100 text-slate-900 pt-16 sm:pt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-          <p className="text-center text-gray-400">Loading...</p>
+          <p className="text-center text-slate-600">Loading...</p>
         </div>
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen bg-black text-white pt-16 sm:pt-20 pb-8 sm:pb-12">
+    <main className="min-h-screen bg-linear-to-b from-sky-50 to-sky-100 text-slate-900 pt-16 sm:pt-20 pb-8 sm:pb-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         <Link
           href={buyNowItem === "true" ? "/products" : "/cart"}
-          className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-6 sm:mb-8"
+          className="inline-flex items-center gap-2 text-slate-600 hover:text-sky-700 transition-colors mb-6 sm:mb-8"
         >
           <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
           <span className="text-xs sm:text-sm font-light tracking-wider">
@@ -171,7 +171,7 @@ function CheckoutContent() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 sm:gap-12">
           {/* Shipping Address Form */}
           <div className="lg:col-span-2 space-y-6 sm:space-y-8">
-            <div className="border border-white/10 p-4 sm:p-6">
+            <div className="border border-sky-200 bg-white shadow-sm p-4 sm:p-6">
               <h2 className="text-xl sm:text-2xl font-light tracking-wide mb-6 sm:mb-8 flex items-center gap-2">
                 <MapPin className="w-5 h-5 sm:w-6 sm:h-6" />
                 SHIPPING ADDRESS
@@ -179,7 +179,7 @@ function CheckoutContent() {
 
               <div className="space-y-4 sm:space-y-5">
                 <div>
-                  <label className="text-xs sm:text-sm text-gray-400 font-light tracking-wider uppercase block mb-2">
+                  <label className="text-xs sm:text-sm text-slate-600 font-light tracking-wider uppercase block mb-2">
                     Full Name *
                   </label>
                   <div className="relative">
@@ -188,9 +188,9 @@ function CheckoutContent() {
                       type="text"
                       value={shippingAddress.fullName}
                       onChange={(e) => handleInputChange("fullName", e.target.value)}
-                      className="w-full bg-black border border-white/10 pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base text-white placeholder-gray-500 focus:outline-none focus:border-white/30 transition-all duration-200"
+                      className="w-full bg-white border border-sky-300 pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-all duration-200"
                       placeholder="John Doe"
-                      style={{ color: 'white', caretColor: 'white' }}
+                      style={{ color: 'rgb(15 23 42)', caretColor: 'rgb(14 165 233)' }}
                     />
                   </div>
                   {errors.fullName && <p className="text-red-400 text-xs mt-1">{errors.fullName}</p>}
@@ -198,36 +198,36 @@ function CheckoutContent() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
                   <div>
-                    <label className="text-xs sm:text-sm text-gray-400 font-light tracking-wider uppercase block mb-2">
+                    <label className="text-xs sm:text-sm text-slate-600 font-light tracking-wider uppercase block mb-2">
                       Email *
                     </label>
                     <div className="relative">
-                      <Mail className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-gray-500 w-4 h-4 sm:w-5 sm:h-5 pointer-events-none" />
+                      <Mail className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4 sm:w-5 sm:h-5 pointer-events-none" />
                       <input
                         type="email"
                         value={shippingAddress.email}
                         onChange={(e) => handleInputChange("email", e.target.value)}
-                        className="w-full bg-black border border-white/10 pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base text-white placeholder-gray-500 focus:outline-none focus:border-white/30 transition-all duration-200"
+                        className="w-full bg-white border border-sky-300 pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-all duration-200"
                         placeholder="you@example.com"
-                        style={{ color: 'white', caretColor: 'white' }}
+                        style={{ color: 'rgb(15 23 42)', caretColor: 'rgb(14 165 233)' }}
                       />
                     </div>
                     {errors.email && <p className="text-red-400 text-xs mt-1">{errors.email}</p>}
                   </div>
 
                   <div>
-                    <label className="text-xs sm:text-sm text-gray-400 font-light tracking-wider uppercase block mb-2">
+                    <label className="text-xs sm:text-sm text-slate-600 font-light tracking-wider uppercase block mb-2">
                       Phone *
                     </label>
                     <div className="relative">
-                      <Phone className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-gray-500 w-4 h-4 sm:w-5 sm:h-5 pointer-events-none" />
+                      <Phone className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4 sm:w-5 sm:h-5 pointer-events-none" />
                       <input
                         type="tel"
                         value={shippingAddress.phone}
                         onChange={(e) => handleInputChange("phone", e.target.value.replace(/\D/g, ""))}
-                        className="w-full bg-black border border-white/10 pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base text-white placeholder-gray-500 focus:outline-none focus:border-white/30 transition-all duration-200"
+                        className="w-full bg-white border border-sky-300 pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-all duration-200"
                         placeholder="1234567890"
-                        style={{ color: 'white', caretColor: 'white' }}
+                        style={{ color: 'rgb(15 23 42)', caretColor: 'rgb(14 165 233)' }}
                       />
                     </div>
                     {errors.phone && <p className="text-red-400 text-xs mt-1">{errors.phone}</p>}
@@ -235,92 +235,92 @@ function CheckoutContent() {
                 </div>
 
                 <div>
-                  <label className="text-xs sm:text-sm text-gray-400 font-light tracking-wider uppercase block mb-2">
+                  <label className="text-xs sm:text-sm text-slate-600 font-light tracking-wider uppercase block mb-2">
                     Address Line 1 *
                   </label>
                   <input
                     type="text"
                     value={shippingAddress.addressLine1}
                     onChange={(e) => handleInputChange("addressLine1", e.target.value)}
-                    className="w-full bg-black border border-white/10 px-3 sm:px-4 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base text-white placeholder-gray-500 focus:outline-none focus:border-white/30 transition-all duration-200"
+                    className="w-full bg-white border border-sky-300 px-3 sm:px-4 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-all duration-200"
                     placeholder="Street address, P.O. box"
-                    style={{ color: 'white', caretColor: 'white' }}
+                    style={{ color: 'rgb(15 23 42)', caretColor: 'rgb(14 165 233)' }}
                   />
                   {errors.addressLine1 && <p className="text-red-400 text-xs mt-1">{errors.addressLine1}</p>}
                 </div>
 
                 <div>
-                  <label className="text-xs sm:text-sm text-gray-400 font-light tracking-wider uppercase block mb-2">
+                  <label className="text-xs sm:text-sm text-slate-600 font-light tracking-wider uppercase block mb-2">
                     Address Line 2
                   </label>
                   <input
                     type="text"
                     value={shippingAddress.addressLine2}
                     onChange={(e) => handleInputChange("addressLine2", e.target.value)}
-                    className="w-full bg-black border border-white/10 px-3 sm:px-4 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base text-white placeholder-gray-500 focus:outline-none focus:border-white/30 transition-all duration-200"
+                    className="w-full bg-white border border-sky-300 px-3 sm:px-4 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-all duration-200"
                     placeholder="Apartment, suite, unit, building, floor, etc."
-                    style={{ color: 'white', caretColor: 'white' }}
+                    style={{ color: 'rgb(15 23 42)', caretColor: 'rgb(14 165 233)' }}
                   />
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
                   <div>
-                    <label className="text-xs sm:text-sm text-gray-400 font-light tracking-wider uppercase block mb-2">
+                    <label className="text-xs sm:text-sm text-slate-600 font-light tracking-wider uppercase block mb-2">
                       City *
                     </label>
                     <input
                       type="text"
                       value={shippingAddress.city}
                       onChange={(e) => handleInputChange("city", e.target.value)}
-                      className="w-full bg-black border border-white/10 px-3 sm:px-4 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base text-white placeholder-gray-500 focus:outline-none focus:border-white/30 transition-all duration-200"
+                      className="w-full bg-white border border-sky-300 px-3 sm:px-4 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-all duration-200"
                       placeholder="City"
-                      style={{ color: 'white', caretColor: 'white' }}
+                      style={{ color: 'rgb(15 23 42)', caretColor: 'rgb(14 165 233)' }}
                     />
                     {errors.city && <p className="text-red-400 text-xs mt-1">{errors.city}</p>}
                   </div>
 
                   <div>
-                    <label className="text-xs sm:text-sm text-gray-400 font-light tracking-wider uppercase block mb-2">
+                    <label className="text-xs sm:text-sm text-slate-600 font-light tracking-wider uppercase block mb-2">
                       State *
                     </label>
                     <input
                       type="text"
                       value={shippingAddress.state}
                       onChange={(e) => handleInputChange("state", e.target.value)}
-                      className="w-full bg-black border border-white/10 px-3 sm:px-4 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base text-white placeholder-gray-500 focus:outline-none focus:border-white/30 transition-all duration-200"
+                      className="w-full bg-white border border-sky-300 px-3 sm:px-4 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-all duration-200"
                       placeholder="State"
-                      style={{ color: 'white', caretColor: 'white' }}
+                      style={{ color: 'rgb(15 23 42)', caretColor: 'rgb(14 165 233)' }}
                     />
                     {errors.state && <p className="text-red-400 text-xs mt-1">{errors.state}</p>}
                   </div>
 
                   <div>
-                    <label className="text-xs sm:text-sm text-gray-400 font-light tracking-wider uppercase block mb-2">
+                    <label className="text-xs sm:text-sm text-slate-600 font-light tracking-wider uppercase block mb-2">
                       ZIP Code *
                     </label>
                     <input
                       type="text"
                       value={shippingAddress.zipCode}
                       onChange={(e) => handleInputChange("zipCode", e.target.value)}
-                      className="w-full bg-black border border-white/10 px-3 sm:px-4 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base text-white placeholder-gray-500 focus:outline-none focus:border-white/30 transition-all duration-200"
+                      className="w-full bg-white border border-sky-300 px-3 sm:px-4 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-all duration-200"
                       placeholder="ZIP"
-                      style={{ color: 'white', caretColor: 'white' }}
+                      style={{ color: 'rgb(15 23 42)', caretColor: 'rgb(14 165 233)' }}
                     />
                     {errors.zipCode && <p className="text-red-400 text-xs mt-1">{errors.zipCode}</p>}
                   </div>
                 </div>
 
                 <div>
-                  <label className="text-xs sm:text-sm text-gray-400 font-light tracking-wider uppercase block mb-2">
+                  <label className="text-xs sm:text-sm text-slate-600 font-light tracking-wider uppercase block mb-2">
                     Country *
                   </label>
                   <input
                     type="text"
                     value={shippingAddress.country}
                     onChange={(e) => handleInputChange("country", e.target.value)}
-                    className="w-full bg-black border border-white/10 px-3 sm:px-4 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base text-white placeholder-gray-500 focus:outline-none focus:border-white/30 transition-all duration-200"
+                    className="w-full bg-white border border-sky-300 px-3 sm:px-4 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-all duration-200"
                     placeholder="Country"
-                    style={{ color: 'white', caretColor: 'white' }}
+                    style={{ color: 'rgb(15 23 42)', caretColor: 'rgb(14 165 233)' }}
                   />
                   {errors.country && <p className="text-red-400 text-xs mt-1">{errors.country}</p>}
                 </div>
@@ -330,7 +330,7 @@ function CheckoutContent() {
 
           {/* Order Summary */}
           <div className="lg:col-span-1">
-            <div className="border border-white/10 p-4 sm:p-6 sticky top-24">
+            <div className="border border-sky-200 bg-white shadow-sm p-4 sm:p-6 sticky top-24">
               <h2 className="text-xl sm:text-2xl font-light tracking-wide mb-6 sm:mb-8 flex items-center gap-2">
                 <Package className="w-5 h-5 sm:w-6 sm:h-6" />
                 ORDER SUMMARY
@@ -338,30 +338,30 @@ function CheckoutContent() {
 
               <div className="space-y-4 sm:space-y-5 mb-6 sm:mb-8">
                 {cartItems.map((item) => (
-                  <div key={item.productId} className="flex justify-between items-start border-b border-white/10 pb-3 sm:pb-4">
+                  <div key={item.productId} className="flex justify-between items-start border-b border-sky-200 pb-3 sm:pb-4">
                     <div className="flex-1">
-                      <p className="text-sm sm:text-base font-light mb-1">{item.productName}</p>
-                      <p className="text-xs sm:text-sm text-gray-400">Qty: {item.quantity}</p>
+                      <p className="text-sm sm:text-base font-light mb-1 text-slate-900">{item.productName}</p>
+                      <p className="text-xs sm:text-sm text-slate-600">Qty: {item.quantity}</p>
                     </div>
-                    <p className="text-sm sm:text-base font-light">
+                    <p className="text-sm sm:text-base font-light text-slate-900">
                       ${(item.price * item.quantity).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </p>
                   </div>
                 ))}
               </div>
 
-              <div className="border-t border-white/10 pt-4 sm:pt-5 space-y-3 sm:space-y-4">
+              <div className="border-t border-sky-200 pt-4 sm:pt-5 space-y-3 sm:space-y-4">
                 <div className="flex justify-between items-center">
-                  <span className="text-sm sm:text-base text-gray-400 font-light">Subtotal</span>
-                  <span className="text-sm sm:text-base font-light">${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                  <span className="text-sm sm:text-base text-slate-600 font-light">Subtotal</span>
+                  <span className="text-sm sm:text-base font-light text-slate-900">${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm sm:text-base text-gray-400 font-light">Shipping</span>
-                  <span className="text-sm sm:text-base font-light">Free</span>
+                  <span className="text-sm sm:text-base text-slate-600 font-light">Shipping</span>
+                  <span className="text-sm sm:text-base font-light text-slate-900">Free</span>
                 </div>
-                <div className="border-t border-white/10 pt-3 sm:pt-4 flex justify-between items-center">
-                  <span className="text-lg sm:text-xl font-light tracking-wide">TOTAL</span>
-                  <span className="text-xl sm:text-2xl font-light">${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                <div className="border-t border-sky-200 pt-3 sm:pt-4 flex justify-between items-center">
+                  <span className="text-lg sm:text-xl font-light tracking-wide text-slate-900">TOTAL</span>
+                  <span className="text-xl sm:text-2xl font-light text-slate-900">${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                 </div>
               </div>
 
@@ -375,7 +375,7 @@ function CheckoutContent() {
                     customerPhone={shippingAddress.phone}
                     userId={user?.id || undefined}
                     buttonText="PROCEED TO PAYMENT"
-                    className="w-full px-6 sm:px-8 py-3 sm:py-4 bg-white text-black transition-opacity duration-200"
+                    className="w-full px-6 sm:px-8 py-3 sm:py-4 bg-sky-600 text-white hover:bg-sky-700 transition-opacity duration-200"
                     shippingAddress={shippingAddress}
                   />
                 </div>
@@ -398,9 +398,9 @@ function CheckoutContent() {
 export default function CheckoutPage() {
   return (
     <Suspense fallback={
-      <main className="min-h-screen bg-black text-white pt-16 sm:pt-20">
+      <main className="min-h-screen bg-linear-to-b from-sky-50 to-sky-100 text-slate-900 pt-16 sm:pt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-          <p className="text-center text-gray-400">Loading...</p>
+          <p className="text-center text-slate-600">Loading...</p>
         </div>
       </main>
     }>

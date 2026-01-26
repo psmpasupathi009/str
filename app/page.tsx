@@ -14,7 +14,7 @@ export default function Home() {
   const categories = getAllCategories();
 
   return (
-    <main className="min-h-screen bg-black">
+    <main className="min-h-screen bg-linear-to-b from-sky-50 to-sky-100">
       <HeroSection />
       <BestProducts products={bestProducts} />
       {categories.map((category) => {

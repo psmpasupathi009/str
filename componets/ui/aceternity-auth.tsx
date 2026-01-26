@@ -41,14 +41,14 @@ const InputField = ({
     <div className="space-y-2">
       <label 
         htmlFor={fieldName} 
-        className="text-xs sm:text-sm text-gray-400 font-light tracking-wider uppercase block"
+        className="text-xs sm:text-sm text-slate-600 font-light tracking-wider uppercase block"
       >
         {label}
       </label>
       <div className="relative" style={{ zIndex: 60 }}>
         <div 
           className={`absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 pointer-events-none transition-colors duration-200 ${
-            isFocused ? 'text-white' : 'text-gray-500'
+            isFocused ? 'text-sky-600' : 'text-slate-400'
           }`}
           style={{ zIndex: 1 }}
         >
@@ -62,11 +62,11 @@ const InputField = ({
           required={required}
           maxLength={maxLength}
           autoComplete={type === "email" ? "email" : type === "password" ? "current-password" : "off"}
-          className="w-full bg-black border border-white/10 pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base text-white placeholder-gray-500 focus:outline-none focus:border-white/30 transition-all duration-200"
+          className="w-full bg-white border border-sky-300 pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-all duration-200"
           placeholder={placeholder}
           style={{
-            color: 'white',
-            caretColor: 'white',
+            color: 'rgb(15 23 42)',
+            caretColor: 'rgb(14 165 233)',
             position: 'relative',
             zIndex: 60,
           }}
@@ -333,7 +333,7 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
             <button
               type="button"
               onClick={handleForgotPassword}
-              className="text-xs sm:text-sm text-gray-400 font-light tracking-wider uppercase"
+              className="text-xs sm:text-sm text-slate-600 font-light tracking-wider uppercase"
             >
               Forgot Password?
             </button>
@@ -381,13 +381,13 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
   const renderOTPStep = () => (
     <div className="space-y-4 sm:space-y-5 md:space-y-6" style={{ position: 'relative', zIndex: 50 }}>
       <div className="text-center mb-6 sm:mb-8">
-        <div className="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 mx-auto mb-3 sm:mb-4 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
-          <Shield className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 text-white" />
+        <div className="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 mx-auto mb-3 sm:mb-4 rounded-full bg-sky-100 border border-sky-300 flex items-center justify-center">
+          <Shield className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 text-sky-600" />
         </div>
-        <p className="text-xs sm:text-sm md:text-base text-gray-400 font-light">
+        <p className="text-xs sm:text-sm md:text-base text-slate-600 font-light">
           Enter the 6-digit code sent to
         </p>
-        <p className="text-xs sm:text-sm md:text-base text-white font-light mt-1">
+        <p className="text-xs sm:text-sm md:text-base text-slate-900 font-light mt-1">
           {formData.email}
         </p>
       </div>
@@ -398,14 +398,14 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
           value={formData.otp}
           onChange={handleOtpChange}
           maxLength={6}
-          className="w-full bg-black border border-white/10 focus:border-white/30 px-4 sm:px-6 py-3 sm:py-4 md:py-5 text-2xl sm:text-3xl md:text-4xl text-center text-white tracking-[0.3em] sm:tracking-[0.5em] focus:outline-none transition-all duration-200 font-mono font-light"
+          className="w-full bg-white border border-sky-300 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 px-4 sm:px-6 py-3 sm:py-4 md:py-5 text-2xl sm:text-3xl md:text-4xl text-center text-slate-900 tracking-[0.3em] sm:tracking-[0.5em] focus:outline-none transition-all duration-200 font-mono font-light"
           placeholder="000000"
           autoFocus
           onFocus={() => setFocusedField("otp")}
           onBlur={() => setFocusedField(null)}
           style={{
-            color: 'white',
-            caretColor: 'white',
+            color: 'rgb(15 23 42)',
+            caretColor: 'rgb(14 165 233)',
             position: 'relative',
             zIndex: 60,
           }}
@@ -434,7 +434,7 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
             setError("");
             setForgotPassword(false);
           }}
-          className="flex-1 bg-black border border-white/10 text-white py-2.5 sm:py-3 md:py-4 px-4 sm:px-6 font-light tracking-widest text-xs sm:text-sm uppercase transition-all duration-200"
+          className="flex-1 bg-white border border-sky-300 text-slate-700 hover:bg-sky-50 hover:border-sky-400 py-2.5 sm:py-3 md:py-4 px-4 sm:px-6 font-light tracking-widest text-xs sm:text-sm uppercase transition-all duration-200"
         >
           BACK
         </button>
@@ -447,7 +447,7 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
           {isLoading ? (
             <span className="flex items-center justify-center gap-2">
               <motion.div
-                className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full"
+                className="w-4 h-4 border-2 border-sky-200 border-t-sky-600 rounded-full"
                 animate={{ rotate: 360 }}
                 transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
               />
@@ -477,7 +477,7 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
         fieldName="password"
         isFocused={focusedField === "password"}
       />
-      <div className="flex items-center gap-2 text-xs text-gray-500 font-light">
+      <div className="flex items-center gap-2 text-xs text-slate-600 font-light">
         <Shield className="w-3 h-3 sm:w-4 sm:h-4" />
         <span>Password must be at least 6 characters long</span>
       </div>
@@ -503,7 +503,7 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
             setFormData(prev => ({ ...prev, password: "" }));
             setError("");
           }}
-          className="flex-1 bg-black border border-white/10 text-white py-2.5 sm:py-3 md:py-4 px-4 sm:px-6 font-light tracking-widest text-xs sm:text-sm uppercase transition-all duration-200"
+          className="flex-1 bg-white border border-sky-300 text-slate-700 hover:bg-sky-50 hover:border-sky-400 py-2.5 sm:py-3 md:py-4 px-4 sm:px-6 font-light tracking-widest text-xs sm:text-sm uppercase transition-all duration-200"
         >
           BACK
         </button>
@@ -516,7 +516,7 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
           {isLoading ? (
             <span className="flex items-center justify-center gap-2">
               <motion.div
-                className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full"
+                className="w-4 h-4 border-2 border-sky-200 border-t-sky-600 rounded-full"
                 animate={{ rotate: 360 }}
                 transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
               />
@@ -546,7 +546,7 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
         fieldName="password"
         isFocused={focusedField === "password"}
       />
-      <div className="flex items-center gap-2 text-xs text-gray-500 font-light">
+      <div className="flex items-center gap-2 text-xs text-slate-600 font-light">
         <Shield className="w-3 h-3 sm:w-4 sm:h-4" />
         <span>Password must be at least 6 characters long</span>
       </div>
@@ -590,13 +590,13 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
   );
 
   return (
-    <div className="min-h-screen bg-black text-white pt-20 sm:pt-24 md:pt-28 pb-6 sm:pb-8 md:pb-12 relative" style={{ zIndex: 1 }}>
+    <div className="min-h-screen bg-linear-to-b from-sky-50 to-sky-100 text-slate-900 pt-20 sm:pt-24 md:pt-28 pb-6 sm:pb-8 md:pb-12 relative" style={{ zIndex: 1 }}>
       <div className="max-w-md mx-auto px-3 sm:px-4 md:px-6 relative" style={{ zIndex: 40 }}>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="border border-white/10 bg-black p-4 sm:p-6 md:p-8 lg:p-10 relative"
+          className="border border-sky-200 bg-white shadow-xl p-4 sm:p-6 md:p-8 lg:p-10 relative"
           style={{ zIndex: 40 }}
         >
           {/* Header */}
@@ -604,7 +604,7 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light tracking-wider mb-2 sm:mb-3 md:mb-4">
               {getStepTitle()}
             </h1>
-            <p className="text-xs sm:text-sm md:text-base text-gray-400 font-light tracking-wide">
+            <p className="text-xs sm:text-sm md:text-base text-slate-600 font-light tracking-wide">
               {getStepDescription()}
             </p>
           </div>
@@ -660,11 +660,11 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
           {/* Footer Link */}
           {step === "form" && (
             <div className="mt-6 sm:mt-8 text-center">
-              <p className="text-xs sm:text-sm text-gray-400 font-light tracking-wide">
+              <p className="text-xs sm:text-sm text-slate-600 font-light tracking-wide">
                 {type === "signin" ? "Don't have an account? " : "Already have an account? "}
                 <Link
                   href={type === "signin" ? "/signup" : "/signin"}
-                  className="text-white font-light tracking-wider underline decoration-white/50 underline-offset-4"
+                  className="text-sky-600 font-light tracking-wider underline decoration-sky-400 underline-offset-4 hover:text-sky-700"
                 >
                   {type === "signin" ? "SIGN UP" : "SIGN IN"}
                 </Link>
