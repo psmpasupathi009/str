@@ -1,7 +1,6 @@
 import HeroSection from "@/componets/ui/hero-section";
 import BestProducts from "@/componets/ui/best-products";
 import CategorySection from "@/componets/ui/category-section";
-import Testimonials from "@/componets/ui/testimonials";
 import {
   products,
   getBestSellerProducts,
@@ -31,7 +30,6 @@ export default function Home() {
         }
         return null;
       })}
-      <Testimonials />
     </main>
   );
 }
