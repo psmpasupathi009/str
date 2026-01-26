@@ -2,7 +2,9 @@ import Image from "next/image";
 import { getProductById, products } from "@/lib/products";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, ShoppingCart } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
+import BuyNowButton from "@/componets/ui/buy-now-button";
+import AddToCartButton from "@/componets/ui/add-to-cart-button";
 
 interface ProductPageProps {
   params: Promise<{ id: string }>;
@@ -89,17 +91,18 @@ export default async function ProductPage({ params }: ProductPageProps) {
               </span>
             </div>
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-              <button className="flex-1 flex items-center justify-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 border border-white/20 hover:border-white/40 transition-all group">
-                <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5" />
-                <span className="text-xs sm:text-sm font-light tracking-widest">
-                  ADD TO CART
-                </span>
-              </button>
-              <button className="flex-1 sm:flex-none px-6 sm:px-8 py-3 sm:py-4 border border-white/20 hover:border-white/40 transition-all">
-                <span className="text-xs sm:text-sm font-light tracking-widest">
-                  BUY NOW
-                </span>
-              </button>
+              <AddToCartButton
+                productId={product.id}
+                productName={product.name}
+                price={product.price}
+                className="flex-1 flex items-center justify-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 border border-white/20 hover:border-white/40 transition-all group"
+              />
+              <BuyNowButton
+                productId={product.id}
+                productName={product.name}
+                price={product.price}
+                className="flex-1 sm:flex-none px-6 sm:px-8 py-3 sm:py-4 border border-white/20 hover:border-white/40 transition-all"
+              />
             </div>
           </div>
         </div>

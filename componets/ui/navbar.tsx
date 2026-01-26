@@ -6,9 +6,36 @@ import { Menu, X, User, ShoppingCart, LogOut } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
 
+interface CartItem {
+  productId: string;
+  productName: string;
+  quantity: number;
+  price: number;
+}
+
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [cartItemCount, setCartItemCount] = useState(0);
   const { user, signOut } = useAuth();
+
+  // Load cart items count
+  const loadCartCount = () => {
+    if (typeof window !== "undefined") {
+      const storedCart = localStorage.getItem("cart");
+      if (storedCart) {
+        try {
+          const items: CartItem[] = JSON.parse(storedCart);
+          const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
+          setCartItemCount(totalItems);
+        } catch (e) {
+          console.error("Error loading cart:", e);
+          setCartItemCount(0);
+        }
+      } else {
+        setCartItemCount(0);
+      }
+    }
+  };
 
   // Prevent body scroll when menu is open
   useEffect(() => {
@@ -21,6 +48,35 @@ export default function Navbar() {
       document.body.style.overflow = "unset";
     };
   }, [isMenuOpen]);
+
+  // Load cart count on mount and listen for changes
+  useEffect(() => {
+    loadCartCount();
+
+    // Listen for storage events (cart updates from other tabs/windows)
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === "cart") {
+        loadCartCount();
+      }
+    };
+
+    // Listen for custom cart update events (same tab)
+    const handleCartUpdate = () => {
+      loadCartCount();
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    window.addEventListener("cartUpdated", handleCartUpdate);
+
+    // Poll for cart changes (in case storage event doesn't fire in same tab)
+    const interval = setInterval(loadCartCount, 500);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener("cartUpdated", handleCartUpdate);
+      clearInterval(interval);
+    };
+  }, []);
 
   return (
     <>
@@ -79,9 +135,11 @@ export default function Navbar() {
                 className="text-white hover:text-gray-300 transition-colors relative"
               >
                 <ShoppingCart className="w-5 h-5 sm:w-6 sm:h-6" />
-                <span className="absolute -top-2 -right-2 bg-white text-black text-[10px] sm:text-xs rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center font-semibold">
-                  0
-                </span>
+                {cartItemCount > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-white text-black text-[10px] sm:text-xs rounded-full min-w-[16px] sm:min-w-[20px] h-4 sm:h-5 flex items-center justify-center font-semibold px-1">
+                    {cartItemCount > 99 ? "99+" : cartItemCount}
+                  </span>
+                )}
               </Link>
             </div>
           </div>

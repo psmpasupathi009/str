@@ -1,9 +1,9 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { Mail, Lock, User, Phone, Shield, ArrowRight, CheckCircle2, Sparkles } from "lucide-react";
+import { Mail, Lock, User, Phone, Shield, CheckCircle2, ArrowRight } from "lucide-react";
 
 interface AuthFormProps {
   type: "signin" | "signup";
@@ -12,6 +12,69 @@ interface AuthFormProps {
 }
 
 type Step = "form" | "otp" | "password" | "reset";
+
+// Move InputField outside to prevent recreation
+const InputField = ({ 
+  label, 
+  type, 
+  value, 
+  onChange, 
+  placeholder, 
+  icon: Icon, 
+  required = false,
+  fieldName,
+  maxLength,
+  isFocused,
+}: {
+  label: string;
+  type: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  placeholder: string;
+  icon: any;
+  required?: boolean;
+  fieldName: string;
+  maxLength?: number;
+  isFocused: boolean;
+}) => {
+  return (
+    <div className="space-y-2">
+      <label 
+        htmlFor={fieldName} 
+        className="text-xs sm:text-sm text-gray-400 font-light tracking-wider uppercase block"
+      >
+        {label}
+      </label>
+      <div className="relative" style={{ zIndex: 60 }}>
+        <div 
+          className={`absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 pointer-events-none transition-colors duration-200 ${
+            isFocused ? 'text-white' : 'text-gray-500'
+          }`}
+          style={{ zIndex: 1 }}
+        >
+          <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
+        </div>
+        <input
+          id={fieldName}
+          type={type}
+          value={value}
+          onChange={onChange}
+          required={required}
+          maxLength={maxLength}
+          autoComplete={type === "email" ? "email" : type === "password" ? "current-password" : "off"}
+          className="w-full bg-black border border-white/10 pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base text-white placeholder-gray-500 focus:outline-none focus:border-white/30 transition-all duration-200"
+          placeholder={placeholder}
+          style={{
+            color: 'white',
+            caretColor: 'white',
+            position: 'relative',
+            zIndex: 60,
+          }}
+        />
+      </div>
+    </div>
+  );
+};
 
 export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps) {
   const [step, setStep] = useState<Step>("form");
@@ -26,20 +89,6 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
   const [isSendingOTP, setIsSendingOTP] = useState(false);
   const [forgotPassword, setForgotPassword] = useState(false);
   const [focusedField, setFocusedField] = useState<string | null>(null);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, []);
-
-  const updateField = (field: keyof typeof formData, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-    setError("");
-  };
 
   const handleAPIError = (err: any, defaultMessage: string) => {
     setError(err.message || defaultMessage);
@@ -163,7 +212,11 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
+    e.stopPropagation();
+    
+    if (error) {
+      setError("");
+    }
 
     if (step === "form" && type === "signup") {
       if (!formData.email || !formData.name) {
@@ -190,96 +243,51 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
   };
 
   const getStepTitle = () => {
-    if (step === "otp") return "Verify Your Email";
-    if (step === "password") return "Create Password";
-    if (step === "reset") return "Reset Password";
-    return type === "signin" ? "Welcome Back" : "Get Started";
+    if (step === "otp") return "VERIFY EMAIL";
+    if (step === "password") return "CREATE PASSWORD";
+    if (step === "reset") return "RESET PASSWORD";
+    return type === "signin" ? "SIGN IN" : "SIGN UP";
   };
 
   const getStepDescription = () => {
-    if (step === "otp") return "We've sent a 6-digit code to your email";
+    if (step === "otp") return "Enter the 6-digit code sent to your email";
     if (step === "password") return "Choose a strong password to secure your account";
     if (step === "reset") return "Enter your new password";
-    return type === "signin" ? "Sign in to continue to STR" : "Create your account in seconds";
+    return type === "signin" ? "Welcome back to STR" : "Create your account to get started";
   };
 
-  const InputField = ({ 
-    label, 
-    type, 
-    value, 
-    onChange, 
-    placeholder, 
-    icon: Icon, 
-    required = false,
-    fieldName,
-    maxLength,
-  }: {
-    label: string;
-    type: string;
-    value: string;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    placeholder: string;
-    icon: any;
-    required?: boolean;
-    fieldName: string;
-    maxLength?: number;
-  }) => {
-    const isFocused = focusedField === fieldName;
-    
-    return (
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="relative group"
-      >
-        <label className="text-xs font-semibold text-white/80 mb-2.5 tracking-wide uppercase">
-          {label}
-        </label>
-        <div className="relative">
-          <div className={`absolute left-4 top-1/2 -translate-y-1/2 transition-colors duration-300 ${isFocused ? 'text-purple-400' : 'text-white/40'}`}>
-            <Icon className="w-5 h-5" />
-          </div>
-          <input
-            type={type}
-            value={value}
-            onChange={onChange}
-            onFocus={() => setFocusedField(fieldName)}
-            onBlur={() => setFocusedField(null)}
-            required={required}
-            maxLength={maxLength}
-            className={`w-full bg-white/5 border-2 ${isFocused ? 'border-purple-500/50 bg-white/10' : 'border-white/10 bg-white/5'} px-12 py-4 text-base text-white placeholder-white/30 focus:outline-none transition-all duration-300 rounded-2xl backdrop-blur-xl shadow-xl`}
-            placeholder={placeholder}
-          />
-          {isFocused && (
-            <motion.div
-              className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-500/10 via-blue-500/10 to-purple-500/10 pointer-events-none"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            />
-          )}
-        </div>
-      </motion.div>
-    );
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData(prev => ({ ...prev, email: e.target.value }));
+  };
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData(prev => ({ ...prev, name: e.target.value }));
+  };
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData(prev => ({ ...prev, phoneNumber: e.target.value.replace(/\D/g, "") }));
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData(prev => ({ ...prev, password: e.target.value }));
+  };
+
+  const handleOtpChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData(prev => ({ ...prev, otp: e.target.value.replace(/\D/g, "").slice(0, 6) }));
   };
 
   const renderFormStep = () => (
-    <motion.form
-      onSubmit={handleSubmit}
-      className="space-y-5"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.4 }}
-    >
+    <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5 md:space-y-6" style={{ position: 'relative', zIndex: 50 }}>
       <InputField
         label="Email Address"
         type="email"
         value={formData.email}
-        onChange={(e) => updateField("email", e.target.value)}
+        onChange={handleEmailChange}
         placeholder="you@example.com"
         icon={Mail}
         required
         fieldName="email"
+        isFocused={focusedField === "email"}
       />
 
       {type === "signup" && (
@@ -288,20 +296,22 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
             label="Full Name"
             type="text"
             value={formData.name}
-            onChange={(e) => updateField("name", e.target.value)}
+            onChange={handleNameChange}
             placeholder="John Doe"
             icon={User}
             required
             fieldName="name"
+            isFocused={focusedField === "name"}
           />
           <InputField
             label="Phone Number"
             type="tel"
             value={formData.phoneNumber}
-            onChange={(e) => updateField("phoneNumber", e.target.value.replace(/\D/g, ""))}
+            onChange={handlePhoneChange}
             placeholder="1234567890"
             icon={Phone}
             fieldName="phoneNumber"
+            isFocused={focusedField === "phoneNumber"}
           />
         </>
       )}
@@ -312,17 +322,18 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
             label="Password"
             type="password"
             value={formData.password}
-            onChange={(e) => updateField("password", e.target.value)}
+            onChange={handlePasswordChange}
             placeholder="Enter your password"
             icon={Lock}
             required
             fieldName="password"
+            isFocused={focusedField === "password"}
           />
           <div className="text-right -mt-2">
             <button
               type="button"
               onClick={handleForgotPassword}
-              className="text-sm text-purple-300 hover:text-purple-200 transition-colors font-medium"
+              className="text-xs sm:text-sm text-gray-400 font-light tracking-wider uppercase"
             >
               Forgot Password?
             </button>
@@ -333,103 +344,72 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
       <AnimatePresence>
         {error && (
           <motion.div
-            initial={{ opacity: 0, y: -10, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            className="p-4 bg-red-500/10 border-2 border-red-500/30 rounded-2xl text-red-300 text-sm backdrop-blur-xl"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            className="p-3 sm:p-4 bg-red-500/10 border border-red-500/30 text-red-300 text-xs sm:text-sm font-light"
           >
             {error}
           </motion.div>
         )}
       </AnimatePresence>
 
-      <motion.button
+      <button
         type="submit"
         disabled={isLoading || isSendingOTP}
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
-        className="w-full relative overflow-hidden bg-gradient-to-r from-purple-600 via-blue-600 to-purple-600 text-white py-4 px-6 rounded-2xl font-semibold text-base tracking-wide transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed shadow-2xl shadow-purple-500/30 group"
+        className="w-full bg-white text-black py-2.5 sm:py-3 md:py-4 px-4 sm:px-6 md:px-8 font-light tracking-widest text-xs sm:text-sm uppercase transition-opacity duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        <motion.div
-          className="absolute inset-0 bg-gradient-to-r from-purple-500 via-blue-500 to-purple-500"
-          animate={{
-            backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-          }}
-          transition={{
-            duration: 3,
-            repeat: Infinity,
-            ease: "linear",
-          }}
-          style={{
-            backgroundSize: "200% 200%",
-          }}
-        />
-        <span className="relative z-10 flex items-center justify-center gap-2">
-          {isLoading || isSendingOTP ? (
-            <>
-              <motion.div
-                className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full"
-                animate={{ rotate: 360 }}
-                transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
-              />
-              Processing...
-            </>
-          ) : (
-            <>
-              {type === "signup" ? "Send Verification Code" : "Sign In"}
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </>
-          )}
-        </span>
-      </motion.button>
-    </motion.form>
+        {isLoading || isSendingOTP ? (
+          <span className="flex items-center justify-center gap-2">
+            <motion.div
+              className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full"
+              animate={{ rotate: 360 }}
+              transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
+            />
+            PROCESSING...
+          </span>
+        ) : (
+          <span className="flex items-center justify-center gap-2">
+            {type === "signin" ? "SIGN IN" : "CONTINUE"}
+            <ArrowRight className="w-4 h-4" />
+          </span>
+        )}
+      </button>
+    </form>
   );
 
   const renderOTPStep = () => (
-    <motion.div
-      className="space-y-6"
-      initial={{ opacity: 0, x: 20 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -20 }}
-      transition={{ duration: 0.4, ease: "easeOut" }}
-    >
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-        className="text-center mb-8"
-      >
-        <motion.div
-          className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-purple-500/20 to-blue-500/20 flex items-center justify-center border-2 border-purple-500/30"
-          animate={{ rotate: [0, 360] }}
-          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-        >
-          <Shield className="w-10 h-10 text-purple-300" />
-        </motion.div>
-        <p className="text-white/60 text-sm mt-4">
-          Enter the 6-digit code sent to<br />
-          <span className="text-purple-300 font-semibold">{formData.email}</span>
+    <div className="space-y-4 sm:space-y-5 md:space-y-6" style={{ position: 'relative', zIndex: 50 }}>
+      <div className="text-center mb-6 sm:mb-8">
+        <div className="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 mx-auto mb-3 sm:mb-4 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
+          <Shield className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 text-white" />
+        </div>
+        <p className="text-xs sm:text-sm md:text-base text-gray-400 font-light">
+          Enter the 6-digit code sent to
         </p>
-      </motion.div>
+        <p className="text-xs sm:text-sm md:text-base text-white font-light mt-1">
+          {formData.email}
+        </p>
+      </div>
 
-      <div className="relative">
+      <div className="relative" style={{ zIndex: 60 }}>
         <input
           type="text"
           value={formData.otp}
-          onChange={(e) => updateField("otp", e.target.value.replace(/\D/g, "").slice(0, 6))}
+          onChange={handleOtpChange}
           maxLength={6}
-          className="w-full bg-white/5 border-2 border-white/10 focus:border-purple-500/50 focus:bg-white/10 px-6 py-5 text-4xl text-center text-white tracking-[0.5em] focus:outline-none transition-all duration-300 rounded-2xl backdrop-blur-xl shadow-xl font-mono font-bold"
+          className="w-full bg-black border border-white/10 focus:border-white/30 px-4 sm:px-6 py-3 sm:py-4 md:py-5 text-2xl sm:text-3xl md:text-4xl text-center text-white tracking-[0.3em] sm:tracking-[0.5em] focus:outline-none transition-all duration-200 font-mono font-light"
           placeholder="000000"
           autoFocus
+          onFocus={() => setFocusedField("otp")}
+          onBlur={() => setFocusedField(null)}
+          style={{
+            color: 'white',
+            caretColor: 'white',
+            position: 'relative',
+            zIndex: 60,
+          }}
         />
-        {focusedField === "otp" && (
-          <motion.div
-            className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-500/10 via-blue-500/10 to-purple-500/10 pointer-events-none"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          />
-        )}
       </div>
 
       <AnimatePresence>
@@ -438,92 +418,67 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            className="p-4 bg-red-500/10 border-2 border-red-500/30 rounded-2xl text-red-300 text-sm backdrop-blur-xl"
+            className="p-3 sm:p-4 bg-red-500/10 border border-red-500/30 text-red-300 text-xs sm:text-sm font-light"
           >
             {error}
           </motion.div>
         )}
       </AnimatePresence>
 
-      <div className="flex gap-3">
-        <motion.button
+      <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 md:gap-4">
+        <button
           type="button"
           onClick={() => {
             setStep("form");
-            updateField("otp", "");
+            setFormData(prev => ({ ...prev, otp: "" }));
             setError("");
             setForgotPassword(false);
           }}
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          className="flex-1 bg-white/5 hover:bg-white/10 text-white py-4 px-6 rounded-2xl font-semibold transition-all duration-300 border-2 border-white/10 hover:border-white/20 backdrop-blur-xl"
+          className="flex-1 bg-black border border-white/10 text-white py-2.5 sm:py-3 md:py-4 px-4 sm:px-6 font-light tracking-widest text-xs sm:text-sm uppercase transition-all duration-200"
         >
-          Back
-        </motion.button>
-        <motion.button
+          BACK
+        </button>
+        <button
           type="button"
           onClick={() => verifyOTP(type === "signup" ? "SIGNUP" : "FORGOT_PASSWORD")}
           disabled={isLoading || formData.otp.length !== 6}
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          className="flex-1 relative overflow-hidden bg-gradient-to-r from-purple-600 via-blue-600 to-purple-600 text-white py-4 px-6 rounded-2xl font-semibold transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed shadow-2xl shadow-purple-500/30"
+          className="flex-1 bg-white text-black py-2.5 sm:py-3 md:py-4 px-4 sm:px-6 font-light tracking-widest text-xs sm:text-sm uppercase transition-opacity duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          <motion.div
-            className="absolute inset-0 bg-gradient-to-r from-purple-500 via-blue-500 to-purple-500"
-            animate={{
-              backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-            }}
-            transition={{
-              duration: 3,
-              repeat: Infinity,
-              ease: "linear",
-            }}
-            style={{
-              backgroundSize: "200% 200%",
-            }}
-          />
-          <span className="relative z-10 flex items-center justify-center gap-2">
-            {isLoading ? (
-              <>
-                <motion.div
-                  className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full"
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
-                />
-                Verifying...
-              </>
-            ) : (
-              <>
-                Verify
-                <CheckCircle2 className="w-5 h-5" />
-              </>
-            )}
-          </span>
-        </motion.button>
+          {isLoading ? (
+            <span className="flex items-center justify-center gap-2">
+              <motion.div
+                className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full"
+                animate={{ rotate: 360 }}
+                transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
+              />
+              VERIFYING...
+            </span>
+          ) : (
+            <span className="flex items-center justify-center gap-2">
+              VERIFY
+              <CheckCircle2 className="w-4 h-4" />
+            </span>
+          )}
+        </button>
       </div>
-    </motion.div>
+    </div>
   );
 
   const renderPasswordStep = () => (
-    <motion.div
-      className="space-y-6"
-      initial={{ opacity: 0, x: 20 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -20 }}
-      transition={{ duration: 0.4 }}
-    >
+    <div className="space-y-4 sm:space-y-5 md:space-y-6" style={{ position: 'relative', zIndex: 50 }}>
       <InputField
         label="Create Password"
         type="password"
         value={formData.password}
-        onChange={(e) => updateField("password", e.target.value)}
+        onChange={handlePasswordChange}
         placeholder="Enter a strong password"
         icon={Lock}
         required
         fieldName="password"
+        isFocused={focusedField === "password"}
       />
-      <div className="flex items-center gap-2 text-xs text-white/50">
-        <Shield className="w-4 h-4" />
+      <div className="flex items-center gap-2 text-xs text-gray-500 font-light">
+        <Shield className="w-3 h-3 sm:w-4 sm:h-4" />
         <span>Password must be at least 6 characters long</span>
       </div>
 
@@ -533,91 +488,66 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            className="p-4 bg-red-500/10 border-2 border-red-500/30 rounded-2xl text-red-300 text-sm backdrop-blur-xl"
+            className="p-3 sm:p-4 bg-red-500/10 border border-red-500/30 text-red-300 text-xs sm:text-sm font-light"
           >
             {error}
           </motion.div>
         )}
       </AnimatePresence>
 
-      <div className="flex gap-3">
-        <motion.button
+      <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 md:gap-4">
+        <button
           type="button"
           onClick={() => {
             setStep("otp");
-            updateField("password", "");
+            setFormData(prev => ({ ...prev, password: "" }));
             setError("");
           }}
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          className="flex-1 bg-white/5 hover:bg-white/10 text-white py-4 px-6 rounded-2xl font-semibold transition-all duration-300 border-2 border-white/10 hover:border-white/20 backdrop-blur-xl"
+          className="flex-1 bg-black border border-white/10 text-white py-2.5 sm:py-3 md:py-4 px-4 sm:px-6 font-light tracking-widest text-xs sm:text-sm uppercase transition-all duration-200"
         >
-          Back
-        </motion.button>
-        <motion.button
+          BACK
+        </button>
+        <button
           type="button"
           onClick={createAccount}
           disabled={isLoading || !formData.password || formData.password.length < 6}
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          className="flex-1 relative overflow-hidden bg-gradient-to-r from-purple-600 via-blue-600 to-purple-600 text-white py-4 px-6 rounded-2xl font-semibold transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed shadow-2xl shadow-purple-500/30"
+          className="flex-1 bg-white text-black py-2.5 sm:py-3 md:py-4 px-4 sm:px-6 font-light tracking-widest text-xs sm:text-sm uppercase transition-opacity duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          <motion.div
-            className="absolute inset-0 bg-gradient-to-r from-purple-500 via-blue-500 to-purple-500"
-            animate={{
-              backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-            }}
-            transition={{
-              duration: 3,
-              repeat: Infinity,
-              ease: "linear",
-            }}
-            style={{
-              backgroundSize: "200% 200%",
-            }}
-          />
-          <span className="relative z-10 flex items-center justify-center gap-2">
-            {isLoading ? (
-              <>
-                <motion.div
-                  className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full"
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
-                />
-                Creating...
-              </>
-            ) : (
-              <>
-                Create Account
-                <Sparkles className="w-5 h-5" />
-              </>
-            )}
-          </span>
-        </motion.button>
+          {isLoading ? (
+            <span className="flex items-center justify-center gap-2">
+              <motion.div
+                className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full"
+                animate={{ rotate: 360 }}
+                transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
+              />
+              CREATING...
+            </span>
+          ) : (
+            <span className="flex items-center justify-center gap-2">
+              CREATE ACCOUNT
+              <CheckCircle2 className="w-4 h-4" />
+            </span>
+          )}
+        </button>
       </div>
-    </motion.div>
+    </div>
   );
 
   const renderResetStep = () => (
-    <motion.div
-      className="space-y-6"
-      initial={{ opacity: 0, x: 20 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -20 }}
-      transition={{ duration: 0.4 }}
-    >
+    <div className="space-y-4 sm:space-y-5 md:space-y-6" style={{ position: 'relative', zIndex: 50 }}>
       <InputField
         label="New Password"
         type="password"
         value={formData.password}
-        onChange={(e) => updateField("password", e.target.value)}
+        onChange={handlePasswordChange}
         placeholder="Enter your new password"
         icon={Lock}
         required
         fieldName="password"
+        isFocused={focusedField === "password"}
       />
-      <div className="flex items-center gap-2 text-xs text-white/50">
-        <Shield className="w-4 h-4" />
+      <div className="flex items-center gap-2 text-xs text-gray-500 font-light">
+        <Shield className="w-3 h-3 sm:w-4 sm:h-4" />
         <span>Password must be at least 6 characters long</span>
       </div>
 
@@ -627,141 +557,57 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            className="p-4 bg-red-500/10 border-2 border-red-500/30 rounded-2xl text-red-300 text-sm backdrop-blur-xl"
+            className="p-3 sm:p-4 bg-red-500/10 border border-red-500/30 text-red-300 text-xs sm:text-sm font-light"
           >
             {error}
           </motion.div>
         )}
       </AnimatePresence>
 
-      <motion.button
+      <button
         type="button"
         onClick={resetPassword}
         disabled={isLoading || !formData.password || formData.password.length < 6}
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
-        className="w-full relative overflow-hidden bg-gradient-to-r from-purple-600 via-blue-600 to-purple-600 text-white py-4 px-6 rounded-2xl font-semibold transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed shadow-2xl shadow-purple-500/30"
+        className="w-full bg-white text-black py-2.5 sm:py-3 md:py-4 px-4 sm:px-6 md:px-8 font-light tracking-widest text-xs sm:text-sm uppercase transition-opacity duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        <motion.div
-          className="absolute inset-0 bg-gradient-to-r from-purple-500 via-blue-500 to-purple-500"
-          animate={{
-            backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-          }}
-          transition={{
-            duration: 3,
-            repeat: Infinity,
-            ease: "linear",
-          }}
-          style={{
-            backgroundSize: "200% 200%",
-          }}
-        />
-        <span className="relative z-10 flex items-center justify-center gap-2">
-          {isLoading ? (
-            <>
-              <motion.div
-                className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full"
-                animate={{ rotate: 360 }}
-                transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
-              />
-              Resetting...
-            </>
-          ) : (
-            <>
-              Reset Password
-              <CheckCircle2 className="w-5 h-5" />
-            </>
-          )}
-        </span>
-      </motion.button>
-    </motion.div>
+        {isLoading ? (
+          <span className="flex items-center justify-center gap-2">
+            <motion.div
+              className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full"
+              animate={{ rotate: 360 }}
+              transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
+            />
+            RESETTING...
+          </span>
+        ) : (
+          <span className="flex items-center justify-center gap-2">
+            RESET PASSWORD
+            <CheckCircle2 className="w-4 h-4" />
+          </span>
+        )}
+      </button>
+    </div>
   );
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-black via-gray-900 to-black">
-      {/* Enhanced Animated Background */}
-      <div className="absolute inset-0 overflow-hidden">
-        {/* Animated Gradient Blobs */}
-        {[
-          { delay: 0, color: "purple", pos: "top-0 -left-4", size: "w-96 h-96" },
-          { delay: 2, color: "blue", pos: "top-0 -right-4", size: "w-96 h-96" },
-          { delay: 4, color: "pink", pos: "-bottom-8 left-20", size: "w-96 h-96" },
-        ].map((config, i) => (
-          <motion.div
-            key={i}
-            className={`absolute ${config.pos} ${config.size} bg-${config.color}-500 rounded-full mix-blend-screen opacity-20 filter blur-3xl`}
-            animate={{
-              x: [0, i === 1 ? -100 : 100, 0],
-              y: [0, 100, i === 2 ? -100 : 100],
-              scale: [1, 1.3, 1],
-            }}
-            transition={{
-              duration: 20,
-              repeat: Infinity,
-              repeatType: "reverse",
-              delay: config.delay,
-            }}
-          />
-        ))}
-        
-        {/* Grid Pattern */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-size-[24px_24px] mask-[radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]" />
-        
-        {/* Animated Spotlight */}
+    <div className="min-h-screen bg-black text-white pt-20 sm:pt-24 md:pt-28 pb-6 sm:pb-8 md:pb-12 relative" style={{ zIndex: 1 }}>
+      <div className="max-w-md mx-auto px-3 sm:px-4 md:px-6 relative" style={{ zIndex: 40 }}>
         <motion.div
-          className="absolute w-96 h-96 bg-purple-500/10 rounded-full filter blur-3xl"
-          animate={{
-            x: mousePosition.x - 192,
-            y: mousePosition.y - 192,
-          }}
-          transition={{
-            type: "spring",
-            stiffness: 50,
-            damping: 20,
-          }}
-        />
-      </div>
-
-      {/* Main Card */}
-      <motion.div
-        initial={{ opacity: 0, y: 30, scale: 0.95 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        className="relative z-10 w-full max-w-md mx-4 p-8 sm:p-10 bg-white/[0.03] backdrop-blur-2xl rounded-3xl border border-white/10 shadow-2xl"
-      >
-        {/* Glow Effects */}
-        <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-purple-500/10 via-blue-500/10 to-purple-500/10 opacity-50 blur-2xl" />
-        <div className="absolute -inset-0.5 rounded-3xl bg-gradient-to-r from-purple-600/20 via-blue-600/20 to-purple-600/20 opacity-20 blur-xl" />
-        
-        <div className="relative z-10">
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="border border-white/10 bg-black p-4 sm:p-6 md:p-8 lg:p-10 relative"
+          style={{ zIndex: 40 }}
+        >
           {/* Header */}
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.5 }}
-            className="mb-10 text-center"
-          >
-            <motion.h1
-              className="text-4xl sm:text-5xl font-bold mb-3 bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text"
-              style={{
-                backgroundSize: "200% 200%",
-                WebkitTextFillColor: 'transparent',
-              }}
-              animate={{
-                backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-              }}
-              transition={{
-                duration: 5,
-                repeat: Infinity,
-                ease: "linear",
-              }}
-            >
+          <div className="mb-6 sm:mb-8 md:mb-10 text-center">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light tracking-wider mb-2 sm:mb-3 md:mb-4">
               {getStepTitle()}
-            </motion.h1>
-            <p className="text-white/60 text-base font-light">
+            </h1>
+            <p className="text-xs sm:text-sm md:text-base text-gray-400 font-light tracking-wide">
               {getStepDescription()}
             </p>
-          </motion.div>
+          </div>
 
           {/* Form Content */}
           <AnimatePresence mode="wait">
@@ -771,7 +617,7 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
-                transition={{ duration: 0.4 }}
+                transition={{ duration: 0.3 }}
               >
                 {renderFormStep()}
               </motion.div>
@@ -782,7 +628,7 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
-                transition={{ duration: 0.4 }}
+                transition={{ duration: 0.3 }}
               >
                 {renderOTPStep()}
               </motion.div>
@@ -793,7 +639,7 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
-                transition={{ duration: 0.4 }}
+                transition={{ duration: 0.3 }}
               >
                 {renderPasswordStep()}
               </motion.div>
@@ -804,7 +650,7 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
-                transition={{ duration: 0.4 }}
+                transition={{ duration: 0.3 }}
               >
                 {renderResetStep()}
               </motion.div>
@@ -813,25 +659,20 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
 
           {/* Footer Link */}
           {step === "form" && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
-              className="mt-8 text-center"
-            >
-              <p className="text-white/60 text-sm font-light">
+            <div className="mt-6 sm:mt-8 text-center">
+              <p className="text-xs sm:text-sm text-gray-400 font-light tracking-wide">
                 {type === "signin" ? "Don't have an account? " : "Already have an account? "}
                 <Link
                   href={type === "signin" ? "/signup" : "/signin"}
-                  className="text-purple-300 hover:text-purple-200 transition-colors font-semibold underline decoration-2 underline-offset-4"
+                  className="text-white font-light tracking-wider underline decoration-white/50 underline-offset-4"
                 >
-                  {type === "signin" ? "Sign Up" : "Sign In"}
+                  {type === "signin" ? "SIGN UP" : "SIGN IN"}
                 </Link>
               </p>
-            </motion.div>
+            </div>
           )}
-        </div>
-      </motion.div>
+        </motion.div>
+      </div>
     </div>
   );
 }

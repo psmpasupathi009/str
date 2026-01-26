@@ -45,3 +45,52 @@ enum OTPType {
   SIGNUP
   FORGOT_PASSWORD
 }
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+model Order {
+  id            String        @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String?       @db.ObjectId
+  razorpayOrderId String      @unique
+  razorpayPaymentId String?
+  amount        Float
+  currency      String        @default("INR")
+  paymentStatus PaymentStatus @default(PENDING)
+  orderStatus   OrderStatus   @default(PENDING)
+  items         OrderItem[]
+  customerName  String?
+  customerEmail String?
+  customerPhone String?
+  shippingAddress Json?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@map("orders")
+  @@index([userId])
+}
+
+model OrderItem {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  orderId     String   @db.ObjectId
+  productId   String
+  productName String
+  quantity    Int      @default(1)
+  price       Float
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@map("order_items")
+  @@index([orderId])
+}
