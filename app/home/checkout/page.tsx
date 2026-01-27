@@ -351,7 +351,7 @@ function CheckoutContent() {
                       <p className="text-xs sm:text-sm text-slate-600">Qty: {item.quantity}</p>
                     </div>
                     <p className="text-sm sm:text-base font-light text-slate-900">
-                      ${(item.price * item.quantity).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      ₹{(item.price * item.quantity).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </p>
                   </div>
                 ))}
@@ -360,7 +360,7 @@ function CheckoutContent() {
               <div className="border-t border-sky-200 pt-4 sm:pt-5 space-y-3 sm:space-y-4">
                 <div className="flex justify-between items-center">
                   <span className="text-sm sm:text-base text-slate-600 font-light">Subtotal</span>
-                  <span className="text-sm sm:text-base font-light text-slate-900">${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                  <span className="text-sm sm:text-base font-light text-slate-900">₹{total.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-sm sm:text-base text-slate-600 font-light">Shipping</span>
@@ -368,7 +368,7 @@ function CheckoutContent() {
                 </div>
                 <div className="border-t border-sky-200 pt-3 sm:pt-4 flex justify-between items-center">
                   <span className="text-lg sm:text-xl font-light tracking-wide text-slate-900">TOTAL</span>
-                  <span className="text-xl sm:text-2xl font-light text-slate-900">${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                  <span className="text-xl sm:text-2xl font-light text-slate-900">₹{total.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                 </div>
               </div>
 

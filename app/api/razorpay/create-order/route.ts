@@ -23,10 +23,25 @@ export async function POST(request: NextRequest) {
     }
 
     // Convert amount to paise (Razorpay uses smallest currency unit)
-    // Assuming amount is in dollars, convert to INR paise
-    // 1 USD = ~83 INR (adjust as needed)
-    const USD_TO_INR = 83;
-    const amountInPaise = Math.round(amount * USD_TO_INR * 100);
+    // Amount is already in INR, so just multiply by 100 to convert to paise
+    const amountInPaise = Math.round(amount * 100);
+    
+    // Validate amount doesn't exceed Razorpay's maximum (typically 99,99,999 paise = ₹9,99,999.99)
+    const MAX_AMOUNT_PAISE = 99999999; // ₹9,99,999.99
+    if (amountInPaise > MAX_AMOUNT_PAISE) {
+      return NextResponse.json(
+        { error: `Amount exceeds maximum allowed. Maximum amount is ₹${(MAX_AMOUNT_PAISE / 100).toLocaleString('en-IN')}` },
+        { status: 400 }
+      );
+    }
+    
+    // Validate minimum amount (Razorpay minimum is typically 1 paise = ₹0.01)
+    if (amountInPaise < 1) {
+      return NextResponse.json(
+        { error: "Amount must be at least ₹0.01" },
+        { status: 400 }
+      );
+    }
 
     // Create Razorpay order
     const razorpayOrder = await createRazorpayOrder({
