@@ -1,5 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { requireAdmin, createErrorResponse, createSuccessResponse, handleApiError } from "@/lib/auth-utils";
+import type { Prisma } from "@prisma/client";
 
 // GET /api/products/[id] - Get a single product
 export async function GET(
@@ -39,24 +41,8 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Get user email from request headers
-    const userEmail = request.headers.get("x-user-email");
-    
-    if (!userEmail) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-
-    // Check if user is admin
-    const adminEmail = process.env.ADMIN_EMAIL;
-    if (!adminEmail || userEmail.toLowerCase() !== adminEmail.toLowerCase()) {
-      return NextResponse.json(
-        { error: "Forbidden: Admin access required" },
-        { status: 403 }
-      );
-    }
+    // Require admin access
+    requireAdmin(request);
 
     const { id } = await params;
     const body = await request.json();
@@ -101,22 +87,39 @@ export async function PUT(
       }
     }
 
-    // Prepare update data
-    const updateData: any = {};
-    if (body.name !== undefined) updateData.name = body.name;
+    // Prepare update data with proper typing and validation
+    const updateData: Prisma.ProductUpdateInput = {};
+    
+    if (body.name !== undefined) updateData.name = String(body.name).trim();
     if (body.categoryId !== undefined) updateData.categoryId = body.categoryId;
-    if (body.itemCode !== undefined) updateData.itemCode = body.itemCode;
-    if (body.weight !== undefined) updateData.weight = body.weight;
-    if (body.mrp !== undefined) updateData.mrp = body.mrp;
-    if (body.salePrice !== undefined) updateData.salePrice = body.salePrice;
-    if (body.gst !== undefined) updateData.gst = body.gst;
-    if (body.hsnCode !== undefined) updateData.hsnCode = String(body.hsnCode);
-    if (body.image !== undefined) updateData.image = body.image;
-    if (body.images !== undefined) updateData.images = Array.isArray(body.images) ? body.images : [];
-    if (body.description !== undefined) updateData.description = body.description;
-    if (body.featured !== undefined) updateData.featured = body.featured;
-    if (body.bestSeller !== undefined) updateData.bestSeller = body.bestSeller;
-    if (body.inStock !== undefined) updateData.inStock = body.inStock;
+    if (body.itemCode !== undefined) updateData.itemCode = String(body.itemCode).trim();
+    if (body.weight !== undefined) updateData.weight = String(body.weight).trim();
+    if (body.mrp !== undefined) {
+      if (typeof body.mrp !== "number" || body.mrp < 0) {
+        return createErrorResponse("MRP must be a valid positive number", 400);
+      }
+      updateData.mrp = body.mrp;
+    }
+    if (body.salePrice !== undefined) {
+      if (typeof body.salePrice !== "number" || body.salePrice < 0) {
+        return createErrorResponse("Sale price must be a valid positive number", 400);
+      }
+      updateData.salePrice = body.salePrice;
+    }
+    if (body.gst !== undefined) {
+      updateData.gst = Math.max(0, Math.min(1, Number(body.gst)));
+    }
+    if (body.hsnCode !== undefined) updateData.hsnCode = String(body.hsnCode).trim();
+    if (body.image !== undefined) updateData.image = body.image?.trim() || null;
+    if (body.images !== undefined) {
+      updateData.images = Array.isArray(body.images) 
+        ? body.images.filter((img): img is string => typeof img === "string" && img.trim().length > 0)
+        : [];
+    }
+    if (body.description !== undefined) updateData.description = body.description?.trim() || null;
+    if (body.featured !== undefined) updateData.featured = Boolean(body.featured);
+    if (body.bestSeller !== undefined) updateData.bestSeller = Boolean(body.bestSeller);
+    if (body.inStock !== undefined) updateData.inStock = Boolean(body.inStock);
 
     // Update product
     const product = await prisma.product.update({
@@ -127,16 +130,12 @@ export async function PUT(
       },
     });
 
-    return NextResponse.json(
-      { product, message: "Product updated successfully" },
-      { status: 200 }
+    return createSuccessResponse(
+      { product },
+      "Product updated successfully"
     );
-  } catch (error: any) {
-    console.error("Update product error:", error);
-    return NextResponse.json(
-      { error: error.message || "Failed to update product" },
-      { status: 500 }
-    );
+  } catch (error) {
+    return handleApiError(error, "Failed to update product");
   }
 }
 
@@ -184,15 +183,11 @@ export async function DELETE(
       where: { id },
     });
 
-    return NextResponse.json(
-      { message: "Product deleted successfully" },
-      { status: 200 }
+    return createSuccessResponse(
+      {},
+      "Product deleted successfully"
     );
-  } catch (error: any) {
-    console.error("Delete product error:", error);
-    return NextResponse.json(
-      { error: error.message || "Failed to delete product" },
-      { status: 500 }
-    );
+  } catch (error) {
+    return handleApiError(error, "Failed to delete product");
   }
 }

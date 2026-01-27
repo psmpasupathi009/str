@@ -1,89 +1,43 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { uploadImageToCloudinary } from "@/lib/cloudinary";
+import { requireAdmin, createErrorResponse, createSuccessResponse, handleApiError } from "@/lib/auth-utils";
 
-// Check if Cloudinary is configured
-function isCloudinaryConfigured(): boolean {
-  const cloudinaryUrl = process.env.CLOUDINARY_URL;
-  if (cloudinaryUrl && cloudinaryUrl.startsWith('cloudinary://')) {
-    return true;
-  }
-  return !!(
-    process.env.CLOUDINARY_CLOUD_NAME && 
-    process.env.CLOUDINARY_API_KEY && 
-    process.env.CLOUDINARY_API_SECRET
-  );
-}
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
 // POST /api/upload/image - Upload image to Cloudinary (admin only)
 export async function POST(request: NextRequest) {
   try {
-    // Get user email from request headers
-    const userEmail = request.headers.get("x-user-email");
-    
-    if (!userEmail) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-
-    // Check if user is admin
-    const adminEmail = process.env.ADMIN_EMAIL;
-    if (!adminEmail || userEmail.toLowerCase() !== adminEmail.toLowerCase()) {
-      return NextResponse.json(
-        { error: "Forbidden: Admin access required" },
-        { status: 403 }
-      );
-    }
-
-    // Check if Cloudinary is configured
-    if (!isCloudinaryConfigured()) {
-      return NextResponse.json(
-        { error: "Cloudinary is not configured. Please set CLOUDINARY_URL or individual Cloudinary environment variables." },
-        { status: 500 }
-      );
-    }
+    // Require admin access
+    requireAdmin(request);
 
     const formData = await request.formData();
-    const file = formData.get("file") as File;
-    const folder = formData.get("folder") as string || "products";
+    const file = formData.get("file") as File | null;
+    const folder = (formData.get("folder") as string) || "products";
 
+    // Validate file exists
     if (!file) {
-      return NextResponse.json(
-        { error: "No file provided" },
-        { status: 400 }
-      );
+      return createErrorResponse("No file provided", 400);
     }
 
     // Validate file type
     if (!file.type.startsWith("image/")) {
-      return NextResponse.json(
-        { error: "File must be an image" },
-        { status: 400 }
-      );
+      return createErrorResponse("File must be an image", 400);
     }
 
-    // Validate file size (max 10MB)
-    const maxSize = 10 * 1024 * 1024; // 10MB
-    if (file.size > maxSize) {
-      return NextResponse.json(
-        { error: "File size must be less than 10MB" },
-        { status: 400 }
-      );
+    // Validate file size
+    if (file.size > MAX_FILE_SIZE) {
+      return createErrorResponse("File size must be less than 10MB", 400);
     }
 
     // Upload to Cloudinary
     const imageUrl = await uploadImageToCloudinary(file, folder);
 
-    return NextResponse.json(
-      { url: imageUrl, message: "Image uploaded successfully" },
-      { status: 200 }
+    return createSuccessResponse(
+      { url: imageUrl },
+      "Image uploaded successfully",
+      200
     );
-  } catch (error: any) {
-    console.error("Upload image error:", error);
-    return NextResponse.json(
-      { error: error.message || "Failed to upload image" },
-      { status: 500 }
-    );
+  } catch (error) {
+    return handleApiError(error, "Failed to upload image");
   }
 }

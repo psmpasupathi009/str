@@ -1,5 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { requireAdmin, createErrorResponse, createSuccessResponse, handleApiError } from "@/lib/auth-utils";
+import type { Prisma } from "@prisma/client";
 
 // GET /api/products - Get all products with optional filters
 export async function GET(request: NextRequest) {
@@ -11,12 +13,12 @@ export async function GET(request: NextRequest) {
     const bestSeller = searchParams.get("bestSeller");
     const inStock = searchParams.get("inStock");
     const search = searchParams.get("search");
-    const page = parseInt(searchParams.get("page") || "1");
-    const limit = parseInt(searchParams.get("limit") || "100");
+    const page = Math.max(1, parseInt(searchParams.get("page") || "1", 10));
+    const limit = Math.min(100, Math.max(1, parseInt(searchParams.get("limit") || "100", 10)));
     const skip = (page - 1) * limit;
 
-    // Build where clause
-    const where: any = {};
+    // Build where clause with proper typing
+    const where: Prisma.ProductWhereInput = {};
     
     if (categoryId) {
       where.categoryId = categoryId;
@@ -69,48 +71,25 @@ export async function GET(request: NextRequest) {
       prisma.product.count({ where }),
     ]);
 
-    return NextResponse.json(
-      {
-        products,
-        pagination: {
-          page,
-          limit,
-          total,
-          totalPages: Math.ceil(total / limit),
-        },
+    return createSuccessResponse({
+      products,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
       },
-      { status: 200 }
-    );
-  } catch (error: any) {
-    console.error("Get products error:", error);
-    return NextResponse.json(
-      { error: error.message || "Failed to fetch products" },
-      { status: 500 }
-    );
+    });
+  } catch (error) {
+    return handleApiError(error, "Failed to fetch products");
   }
 }
 
 // POST /api/products - Create a new product (admin only)
 export async function POST(request: NextRequest) {
   try {
-    // Get user email from request headers
-    const userEmail = request.headers.get("x-user-email");
-    
-    if (!userEmail) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-
-    // Check if user is admin
-    const adminEmail = process.env.ADMIN_EMAIL;
-    if (!adminEmail || userEmail.toLowerCase() !== adminEmail.toLowerCase()) {
-      return NextResponse.json(
-        { error: "Forbidden: Admin access required" },
-        { status: 403 }
-      );
-    }
+    // Require admin access
+    requireAdmin(request);
 
     const body = await request.json();
     const {
@@ -132,10 +111,15 @@ export async function POST(request: NextRequest) {
 
     // Validation
     if (!name || !categoryId || !itemCode || !weight || mrp === undefined || salePrice === undefined || !hsnCode) {
-      return NextResponse.json(
-        { error: "Missing required fields: name, categoryId, itemCode, weight, mrp, salePrice, hsnCode" },
-        { status: 400 }
+      return createErrorResponse(
+        "Missing required fields: name, categoryId, itemCode, weight, mrp, salePrice, hsnCode",
+        400
       );
+    }
+
+    // Validate numeric values
+    if (typeof mrp !== "number" || mrp < 0 || typeof salePrice !== "number" || salePrice < 0) {
+      return createErrorResponse("MRP and sale price must be valid positive numbers", 400);
     }
 
     // Check if item code already exists
@@ -144,10 +128,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (existingProduct) {
-      return NextResponse.json(
-        { error: "Product with this item code already exists" },
-        { status: 400 }
-      );
+      return createErrorResponse("Product with this item code already exists", 400);
     }
 
     // Verify category exists
@@ -156,44 +137,38 @@ export async function POST(request: NextRequest) {
     });
 
     if (!category) {
-      return NextResponse.json(
-        { error: "Category not found" },
-        { status: 404 }
-      );
+      return createErrorResponse("Category not found", 404);
     }
 
     // Create product
     const product = await prisma.product.create({
       data: {
-        name,
+        name: name.trim(),
         categoryId,
-        itemCode,
-        weight,
+        itemCode: itemCode.trim(),
+        weight: weight.trim(),
         mrp,
         salePrice,
-        gst,
-        hsnCode: String(hsnCode),
-        image,
-        images: Array.isArray(images) ? images : [],
-        description,
-        featured,
-        bestSeller,
-        inStock,
+        gst: Math.max(0, Math.min(1, gst)), // Clamp between 0 and 1
+        hsnCode: String(hsnCode).trim(),
+        image: image?.trim() || null,
+        images: Array.isArray(images) ? images.filter((img): img is string => typeof img === "string" && img.trim().length > 0) : [],
+        description: description?.trim() || null,
+        featured: Boolean(featured),
+        bestSeller: Boolean(bestSeller),
+        inStock: Boolean(inStock),
       },
       include: {
         category: true,
       },
     });
 
-    return NextResponse.json(
-      { product, message: "Product created successfully" },
-      { status: 201 }
+    return createSuccessResponse(
+      { product },
+      "Product created successfully",
+      201
     );
-  } catch (error: any) {
-    console.error("Create product error:", error);
-    return NextResponse.json(
-      { error: error.message || "Failed to create product" },
-      { status: 500 }
-    );
+  } catch (error) {
+    return handleApiError(error, "Failed to create product");
   }
 }

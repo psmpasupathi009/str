@@ -1,6 +1,14 @@
+import type { UploadApiResponse } from 'cloudinary';
+
 // Lazy load Cloudinary to prevent auto-configuration errors
-let cloudinaryInstance: any = null;
+let cloudinaryInstance: typeof import('cloudinary').v2 | null = null;
 let isConfigured = false;
+
+interface CloudinaryConfig {
+  cloud_name: string;
+  api_key: string;
+  api_secret: string;
+}
 
 // Validate CLOUDINARY_URL format before importing Cloudinary
 function validateCloudinaryUrl(): boolean {
@@ -11,7 +19,7 @@ function validateCloudinaryUrl(): boolean {
   return cloudinaryUrl.startsWith('cloudinary://');
 }
 
-async function getCloudinary() {
+async function getCloudinary(): Promise<typeof import('cloudinary').v2> {
   if (!cloudinaryInstance) {
     // Temporarily unset invalid CLOUDINARY_URL to prevent auto-configuration errors
     const originalUrl = process.env.CLOUDINARY_URL;
@@ -43,10 +51,11 @@ async function getCloudinary() {
   return cloudinaryInstance;
 }
 
-function configureCloudinary() {
+function configureCloudinary(): void {
   if (isConfigured || !cloudinaryInstance) return;
 
   const cloudinaryUrl = process.env.CLOUDINARY_URL?.trim();
+  let config: CloudinaryConfig | null = null;
 
   // Only process if URL starts with cloudinary://
   if (cloudinaryUrl && cloudinaryUrl.startsWith('cloudinary://')) {
@@ -58,13 +67,11 @@ function configureCloudinary() {
       const cloudName = url.hostname;
 
       if (cloudName && apiKey && apiSecret) {
-        cloudinaryInstance.config({
+        config = {
           cloud_name: cloudName,
           api_key: apiKey,
           api_secret: apiSecret,
-        });
-        isConfigured = true;
-        return;
+        };
       }
     } catch (error) {
       console.warn('Error parsing CLOUDINARY_URL, falling back to individual env vars:', error);
@@ -72,16 +79,22 @@ function configureCloudinary() {
   }
 
   // Use individual environment variables (or fallback)
-  const cloudName = process.env.CLOUDINARY_CLOUD_NAME?.trim();
-  const apiKey = process.env.CLOUDINARY_API_KEY?.trim();
-  const apiSecret = process.env.CLOUDINARY_API_SECRET?.trim();
+  if (!config) {
+    const cloudName = process.env.CLOUDINARY_CLOUD_NAME?.trim();
+    const apiKey = process.env.CLOUDINARY_API_KEY?.trim();
+    const apiSecret = process.env.CLOUDINARY_API_SECRET?.trim();
 
-  if (cloudName && apiKey && apiSecret) {
-    cloudinaryInstance.config({
-      cloud_name: cloudName,
-      api_key: apiKey,
-      api_secret: apiSecret,
-    });
+    if (cloudName && apiKey && apiSecret) {
+      config = {
+        cloud_name: cloudName,
+        api_key: apiKey,
+        api_secret: apiSecret,
+      };
+    }
+  }
+
+  if (config && cloudinaryInstance) {
+    cloudinaryInstance.config(config);
     isConfigured = true;
   }
 }
@@ -98,7 +111,10 @@ export async function uploadImageToCloudinary(
   }
 
   if (!isConfigured) {
-    throw new Error('Cloudinary is not configured. Please set CLOUDINARY_URL (format: cloudinary://api_key:api_secret@cloud_name) or individual Cloudinary environment variables (CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET).');
+    throw new Error(
+      'Cloudinary is not configured. Please set CLOUDINARY_URL (format: cloudinary://api_key:api_secret@cloud_name) ' +
+      'or individual Cloudinary environment variables (CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET).'
+    );
   }
 
   try {
@@ -109,7 +125,7 @@ export async function uploadImageToCloudinary(
     const dataURI = `data:${file.type || 'image/jpeg'};base64,${base64}`;
 
     // Upload to Cloudinary
-    const result = await new Promise<any>((resolve, reject) => {
+    const result = await new Promise<UploadApiResponse>((resolve, reject) => {
       cloudinary.uploader.upload(
         dataURI,
         {
@@ -121,15 +137,21 @@ export async function uploadImageToCloudinary(
         },
         (error, result) => {
           if (error) reject(error);
-          else resolve(result);
+          else if (result) resolve(result);
+          else reject(new Error('Upload failed: No result returned'));
         }
       );
     });
 
+    if (!result.secure_url) {
+      throw new Error('Upload failed: No secure URL returned');
+    }
+
     return result.secure_url;
-  } catch (error: any) {
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Failed to upload image to Cloudinary';
     console.error('Cloudinary upload error:', error);
-    throw new Error(error.message || 'Failed to upload image to Cloudinary');
+    throw new Error(errorMessage);
   }
 }
 
@@ -146,13 +168,14 @@ export async function deleteImageFromCloudinary(publicId: string): Promise<void>
 
   try {
     await cloudinary.uploader.destroy(publicId);
-  } catch (error: any) {
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Failed to delete image from Cloudinary';
     console.error('Cloudinary delete error:', error);
-    throw new Error(error.message || 'Failed to delete image from Cloudinary');
+    throw new Error(errorMessage);
   }
 }
 
 // Export a getter for cloudinary instance (for advanced usage)
-export async function getCloudinaryInstance() {
+export async function getCloudinaryInstance(): Promise<typeof import('cloudinary').v2> {
   return await getCloudinary();
 }
