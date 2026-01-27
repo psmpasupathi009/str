@@ -24,6 +24,7 @@ import {
   ShoppingBag,
   Tag,
 } from "lucide-react";
+import ImageUpload from "@/componets/ui/image-upload";
 import { useAuth } from "@/lib/auth-context";
 import { useToast } from "@/lib/toast-context";
 
@@ -384,6 +385,11 @@ export default function AdminDashboardPage() {
 
   const handleEditProduct = (product: any) => {
     setEditingProduct(product);
+    // Combine main image with additional images, ensuring main image is first
+    const allImages = product.image 
+      ? [product.image, ...(product.images || []).filter((img: string) => img !== product.image)]
+      : (product.images || []);
+    
     setProductFormData({
       name: product.name,
       categoryId: product.categoryId,
@@ -393,8 +399,8 @@ export default function AdminDashboardPage() {
       salePrice: product.salePrice.toString(),
       gst: product.gst.toString(),
       hsnCode: product.hsnCode,
-      image: product.image || "",
-      images: product.images || [],
+      image: allImages[0] || "",
+      images: allImages,
       description: product.description || "",
       featured: product.featured || false,
       bestSeller: product.bestSeller || false,
@@ -1068,14 +1074,49 @@ export default function AdminDashboardPage() {
                     />
                   </div>
                   <div className="sm:col-span-2">
-                    <label className="block text-sm text-slate-600 font-light mb-1">Image URL</label>
-                    <input
-                      type="url"
-                      value={productFormData.image}
-                      onChange={(e) => setProductFormData({ ...productFormData, image: e.target.value })}
-                      placeholder="https://example.com/image.jpg"
-                      className="w-full px-3 py-2 border border-sky-300 focus:outline-none focus:border-sky-500 text-sm"
+                    <ImageUpload
+                      images={productFormData.images.length > 0 
+                        ? productFormData.images 
+                        : (productFormData.image ? [productFormData.image] : [])
+                      }
+                      maxImages={5}
+                      onChange={(uploadedImages) => {
+                        // First image becomes main image
+                        setProductFormData({
+                          ...productFormData,
+                          image: uploadedImages[0] || "",
+                          images: uploadedImages,
+                        });
+                      }}
+                      folder="products"
+                      userEmail={user?.email}
                     />
+                    <p className="text-xs text-slate-500 font-light mt-2">
+                      Note: First image will be used as the main product image. You can also enter image URLs manually below.
+                    </p>
+                    <div className="mt-2 space-y-2">
+                      <label className="block text-xs text-slate-600 font-light">Main Image URL (optional):</label>
+                      <input
+                        type="url"
+                        value={productFormData.image}
+                        onChange={(e) => {
+                          const newImage = e.target.value;
+                          const currentImages = productFormData.images.length > 0 
+                            ? productFormData.images 
+                            : (productFormData.image ? [productFormData.image] : []);
+                          const updatedImages = newImage 
+                            ? [newImage, ...currentImages.filter(img => img !== newImage && img !== productFormData.image)]
+                            : currentImages;
+                          setProductFormData({
+                            ...productFormData,
+                            image: newImage,
+                            images: updatedImages,
+                          });
+                        }}
+                        placeholder="https://res.cloudinary.com/your-cloud/image/upload/..."
+                        className="w-full px-3 py-2 border border-sky-300 focus:outline-none focus:border-sky-500 text-sm"
+                      />
+                    </div>
                   </div>
                   <div className="sm:col-span-2">
                     <label className="block text-sm text-slate-600 font-light mb-1">Description</label>
