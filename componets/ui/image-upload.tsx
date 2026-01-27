@@ -127,10 +127,10 @@ export default function ImageUpload({
         {/* Existing Images */}
         {images.map((url, index) => (
           <div key={index} className="relative group">
-            <div className="relative aspect-square border border-sky-200 rounded overflow-hidden bg-slate-100">
+            <div className="relative aspect-square border border-green-200 rounded overflow-hidden bg-slate-100">
               {uploadingIndex === index ? (
                 <div className="w-full h-full flex items-center justify-center bg-slate-200">
-                  <div className="w-8 h-8 border-4 border-sky-600 border-t-transparent rounded-full animate-spin"></div>
+                  <div className="w-8 h-8 border-4 border-green-600 border-t-transparent rounded-full animate-spin"></div>
                 </div>
               ) : (
                 <>
@@ -166,7 +166,7 @@ export default function ImageUpload({
               )}
             </div>
             {index === 0 && (
-              <span className="absolute -top-2 -left-2 px-2 py-0.5 text-xs bg-sky-600 text-white rounded">
+              <span className="absolute -top-2 -left-2 px-2 py-0.5 text-xs bg-green-600 text-white rounded">
                 Main
               </span>
             )}
@@ -175,12 +175,12 @@ export default function ImageUpload({
 
         {/* Upload Button */}
         {canAddMore && (
-          <label className="relative aspect-square border-2 border-dashed border-sky-300 rounded flex flex-col items-center justify-center cursor-pointer hover:border-sky-500 hover:bg-sky-50 transition-colors">
+          <label className="relative aspect-square border-2 border-dashed border-green-300 rounded flex flex-col items-center justify-center cursor-pointer hover:border-green-500 hover:bg-green-50 transition-colors">
             {uploading && uploadingIndex === null ? (
-              <div className="w-8 h-8 border-4 border-sky-600 border-t-transparent rounded-full animate-spin"></div>
+              <div className="w-8 h-8 border-4 border-green-600 border-t-transparent rounded-full animate-spin"></div>
             ) : (
               <>
-                <Upload className="w-6 h-6 text-sky-600 mb-2" />
+                <Upload className="w-6 h-6 text-green-600 mb-2" />
                 <span className="text-xs text-slate-600 font-light text-center px-2">
                   Add Image{maxImages - images.length > 1 ? "s" : ""}
                 </span>

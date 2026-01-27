@@ -27,7 +27,7 @@ export default function CategorySection({
   const displayProducts = products.slice(0, limit);
 
   return (
-    <section className="py-12 sm:py-16 md:py-20 bg-linear-to-b from-sky-50 to-sky-100 text-slate-900 border-t border-sky-200/50">
+    <section className="py-12 sm:py-16 md:py-20 bg-linear-to-b from-green-100 to-green-200 text-slate-900 border-t border-green-200/30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 sm:mb-12 gap-4">
           <div>
@@ -40,7 +40,7 @@ export default function CategorySection({
           </div>
           <Link
             href={`/home/products?category=${category.toLowerCase()}`}
-            className="inline-flex items-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 border border-sky-600 hover:border-sky-700 bg-sky-600 text-white hover:bg-sky-700 transition-all group"
+            className="inline-flex items-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 border border-green-600 hover:border-green-700 bg-green-600 text-white hover:bg-green-700 transition-all group"
           >
             <span className="text-xs sm:text-sm font-light tracking-widest">
               VIEW ALL

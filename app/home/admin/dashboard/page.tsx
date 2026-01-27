@@ -695,7 +695,7 @@ export default function AdminDashboardPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
           <div className="flex items-center justify-center min-h-[400px]">
             <div className="text-center">
-              <div className="w-16 h-16 border-4 border-sky-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+              <div className="w-16 h-16 border-4 border-green-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
               <p className="text-slate-600 font-light">Loading dashboard...</p>
             </div>
           </div>
@@ -715,7 +715,7 @@ export default function AdminDashboardPage() {
           <div className="flex items-center gap-4">
             <Link
               href="/home/profile"
-              className="inline-flex items-center gap-2 text-slate-600 hover:text-sky-700 transition-colors"
+              className="inline-flex items-center gap-2 text-slate-600 hover:text-green-700 transition-colors"
             >
               <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
               <span className="text-xs sm:text-sm font-light tracking-wider">
@@ -732,7 +732,7 @@ export default function AdminDashboardPage() {
               className={`px-4 py-2 text-xs sm:text-sm font-light tracking-wider border transition-all ${
                 autoRefresh
                   ? "bg-green-50 border-green-300 text-green-700"
-                  : "bg-white border-sky-300 text-slate-700 hover:bg-sky-50"
+                  : "bg-white border-green-300 text-slate-700 hover:bg-green-50"
               }`}
             >
               {autoRefresh ? "AUTO-REFRESH ON" : "AUTO-REFRESH OFF"}
@@ -740,7 +740,7 @@ export default function AdminDashboardPage() {
             <button
               onClick={() => fetchData()}
               disabled={refreshing}
-              className="flex items-center gap-2 px-4 py-2 bg-sky-600 text-white hover:bg-sky-700 transition-colors disabled:opacity-50"
+              className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white hover:bg-green-700 transition-colors disabled:opacity-50"
             >
               <RefreshCw className={`w-4 h-4 ${refreshing ? "animate-spin" : ""}`} />
               <span className="text-xs sm:text-sm font-light tracking-wider">
@@ -757,13 +757,13 @@ export default function AdminDashboardPage() {
         )}
 
         {/* Tabs */}
-        <div className="flex gap-4 mb-6 border-b border-sky-200">
+        <div className="flex gap-4 mb-6 border-b border-green-200">
           <button
             onClick={() => setActiveTab("orders")}
             className={`px-6 py-3 text-sm font-light tracking-wider border-b-2 transition-colors ${
               activeTab === "orders"
-                ? "border-sky-600 text-sky-600"
-                : "border-transparent text-slate-600 hover:text-sky-600"
+                ? "border-green-600 text-green-600"
+                : "border-transparent text-slate-600 hover:text-green-600"
             }`}
           >
             ORDERS
@@ -772,8 +772,8 @@ export default function AdminDashboardPage() {
             onClick={() => setActiveTab("products")}
             className={`px-6 py-3 text-sm font-light tracking-wider border-b-2 transition-colors ${
               activeTab === "products"
-                ? "border-sky-600 text-sky-600"
-                : "border-transparent text-slate-600 hover:text-sky-600"
+                ? "border-green-600 text-green-600"
+                : "border-transparent text-slate-600 hover:text-green-600"
             }`}
           >
             PRODUCTS
@@ -782,8 +782,8 @@ export default function AdminDashboardPage() {
             onClick={() => setActiveTab("gallery")}
             className={`px-6 py-3 text-sm font-light tracking-wider border-b-2 transition-colors ${
               activeTab === "gallery"
-                ? "border-sky-600 text-sky-600"
-                : "border-transparent text-slate-600 hover:text-sky-600"
+                ? "border-green-600 text-green-600"
+                : "border-transparent text-slate-600 hover:text-green-600"
             }`}
           >
             GALLERY
@@ -795,16 +795,16 @@ export default function AdminDashboardPage() {
             {/* Statistics Cards */}
         {stats && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
-            <div className="border border-sky-200 bg-white shadow-sm p-4 sm:p-6">
+            <div className="border border-green-200 bg-white shadow-sm p-4 sm:p-6">
               <div className="flex items-center justify-between mb-2">
                 <p className="text-xs sm:text-sm text-slate-600 font-light">Total Orders</p>
-                <Package className="w-4 h-4 sm:w-5 sm:h-5 text-sky-600" />
+                <Package className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />
               </div>
               <p className="text-2xl sm:text-3xl font-light text-slate-900">{stats.totalOrders}</p>
               <p className="text-xs text-slate-500 mt-1">{stats.todayOrders} today</p>
             </div>
 
-            <div className="border border-sky-200 bg-white shadow-sm p-4 sm:p-6">
+            <div className="border border-green-200 bg-white shadow-sm p-4 sm:p-6">
               <div className="flex items-center justify-between mb-2">
                 <p className="text-xs sm:text-sm text-slate-600 font-light">Total Revenue</p>
                 <DollarSign className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />
@@ -817,7 +817,7 @@ export default function AdminDashboardPage() {
               </p>
             </div>
 
-            <div className="border border-sky-200 bg-white shadow-sm p-4 sm:p-6">
+            <div className="border border-green-200 bg-white shadow-sm p-4 sm:p-6">
               <div className="flex items-center justify-between mb-2">
                 <p className="text-xs sm:text-sm text-slate-600 font-light">Pending</p>
                 <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-600" />
@@ -826,7 +826,7 @@ export default function AdminDashboardPage() {
               <p className="text-xs text-slate-500 mt-1">Processing: {stats.processingOrders}</p>
             </div>
 
-            <div className="border border-sky-200 bg-white shadow-sm p-4 sm:p-6">
+            <div className="border border-green-200 bg-white shadow-sm p-4 sm:p-6">
               <div className="flex items-center justify-between mb-2">
                 <p className="text-xs sm:text-sm text-slate-600 font-light">Shipped</p>
                 <Truck className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600" />
@@ -838,7 +838,7 @@ export default function AdminDashboardPage() {
         )}
 
         {/* Filters and Search */}
-        <div className="border border-sky-200 bg-white shadow-sm p-4 sm:p-6 mb-6">
+        <div className="border border-green-200 bg-white shadow-sm p-4 sm:p-6 mb-6">
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1 relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -847,7 +847,7 @@ export default function AdminDashboardPage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search by Order ID, Email, or Name..."
-                className="w-full pl-10 pr-4 py-2 border border-sky-300 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 text-sm"
+                className="w-full pl-10 pr-4 py-2 border border-green-300 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 text-sm"
                 style={{ color: 'rgb(15 23 42)', caretColor: 'rgb(14 165 233)' }}
               />
             </div>
@@ -855,7 +855,7 @@ export default function AdminDashboardPage() {
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-4 py-2 border border-sky-300 focus:outline-none focus:border-sky-500 text-sm"
+                className="px-4 py-2 border border-green-300 focus:outline-none focus:border-green-500 text-sm"
               >
                 <option value="all">All Status</option>
                 <option value="PENDING">Pending</option>
@@ -867,7 +867,7 @@ export default function AdminDashboardPage() {
               <select
                 value={paymentFilter}
                 onChange={(e) => setPaymentFilter(e.target.value)}
-                className="px-4 py-2 border border-sky-300 focus:outline-none focus:border-sky-500 text-sm"
+                className="px-4 py-2 border border-green-300 focus:outline-none focus:border-green-500 text-sm"
               >
                 <option value="all">All Payment</option>
                 <option value="PENDING">Pending</option>
@@ -879,10 +879,10 @@ export default function AdminDashboardPage() {
         </div>
 
         {/* Orders Table */}
-        <div className="border border-sky-200 bg-white shadow-sm overflow-x-auto">
+        <div className="border border-green-200 bg-white shadow-sm overflow-x-auto">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-sky-50 border-b border-sky-200">
+              <thead className="bg-green-50 border-b border-green-200">
                 <tr>
                   <th className="px-4 py-3 text-left text-xs sm:text-sm font-light tracking-wider text-slate-600">
                     Order ID
@@ -907,7 +907,7 @@ export default function AdminDashboardPage() {
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-sky-100">
+              <tbody className="divide-y divide-green-100">
                 {orders.length === 0 ? (
                   <tr>
                     <td colSpan={7} className="px-4 py-8 text-center text-slate-500 font-light">
@@ -916,7 +916,7 @@ export default function AdminDashboardPage() {
                   </tr>
                 ) : (
                   orders.map((order) => (
-                    <tr key={order.id} className="hover:bg-sky-50 transition-colors">
+                    <tr key={order.id} className="hover:bg-green-50 transition-colors">
                       <td className="px-4 py-3 text-xs sm:text-sm font-light text-slate-900">
                         #{order.id.slice(-8).toUpperCase()}
                       </td>
@@ -957,7 +957,7 @@ export default function AdminDashboardPage() {
                         <div className="flex items-center gap-2">
                           <button
                             onClick={() => setSelectedOrder(order)}
-                            className="p-1.5 text-sky-600 hover:bg-sky-100 rounded transition-colors"
+                            className="p-1.5 text-green-600 hover:bg-green-100 rounded transition-colors"
                             title="View Details"
                           >
                             <Eye className="w-4 h-4" />
@@ -965,7 +965,7 @@ export default function AdminDashboardPage() {
                           <select
                             value={order.orderStatus}
                             onChange={(e) => updateOrderStatus(order.id, e.target.value)}
-                            className="text-xs px-2 py-1 border border-sky-300 focus:outline-none focus:border-sky-500 rounded"
+                            className="text-xs px-2 py-1 border border-green-300 focus:outline-none focus:border-green-500 rounded"
                           >
                             <option value="PENDING">Pending</option>
                             <option value="PROCESSING">Processing</option>
@@ -1051,7 +1051,7 @@ export default function AdminDashboardPage() {
         {activeTab === "products" && (
           <div className="space-y-6">
             {/* Categories Section */}
-            <div className="border border-sky-200 bg-white shadow-sm p-6">
+            <div className="border border-green-200 bg-white shadow-sm p-6">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-light tracking-wide flex items-center gap-2">
                   <Tag className="w-5 h-5" />
@@ -1063,7 +1063,7 @@ export default function AdminDashboardPage() {
                     setCategoryFormData({ name: "", description: "", image: "" });
                     setShowCategoryForm(true);
                   }}
-                  className="flex items-center gap-2 px-4 py-2 bg-sky-600 text-white hover:bg-sky-700 transition-colors text-sm font-light"
+                  className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white hover:bg-green-700 transition-colors text-sm font-light"
                 >
                   <Plus className="w-4 h-4" />
                   ADD CATEGORY
@@ -1075,7 +1075,7 @@ export default function AdminDashboardPage() {
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {categories.map((category) => (
-                    <div key={category.id} className="border border-sky-200 p-4">
+                    <div key={category.id} className="border border-green-200 p-4">
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <h3 className="font-light text-slate-900 mb-1">{category.name}</h3>
@@ -1086,7 +1086,7 @@ export default function AdminDashboardPage() {
                         <div className="flex gap-2">
                           <button
                             onClick={() => handleEditCategory(category)}
-                            className="p-1.5 text-sky-600 hover:bg-sky-100 rounded"
+                            className="p-1.5 text-green-600 hover:bg-green-100 rounded"
                             title="Edit"
                           >
                             <Edit className="w-4 h-4" />
@@ -1107,7 +1107,7 @@ export default function AdminDashboardPage() {
             </div>
 
             {/* Products Section */}
-            <div className="border border-sky-200 bg-white shadow-sm p-6">
+            <div className="border border-green-200 bg-white shadow-sm p-6">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-light tracking-wide flex items-center gap-2">
                   <ShoppingBag className="w-5 h-5" />
@@ -1134,7 +1134,7 @@ export default function AdminDashboardPage() {
                     });
                     setShowProductForm(true);
                   }}
-                  className="flex items-center gap-2 px-4 py-2 bg-sky-600 text-white hover:bg-sky-700 transition-colors text-sm font-light"
+                  className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white hover:bg-green-700 transition-colors text-sm font-light"
                 >
                   <Plus className="w-4 h-4" />
                   ADD PRODUCT
@@ -1143,7 +1143,7 @@ export default function AdminDashboardPage() {
 
               {loadingProducts ? (
                 <div className="text-center py-8">
-                  <div className="w-8 h-8 border-4 border-sky-600 border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
+                  <div className="w-8 h-8 border-4 border-green-600 border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
                   <p className="text-slate-600 font-light text-sm">Loading products...</p>
                 </div>
               ) : products.length === 0 ? (
@@ -1151,7 +1151,7 @@ export default function AdminDashboardPage() {
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full">
-                    <thead className="bg-sky-50 border-b border-sky-200">
+                    <thead className="bg-green-50 border-b border-green-200">
                       <tr>
                         <th className="px-4 py-3 text-left text-xs font-light tracking-wider text-slate-600">Name</th>
                         <th className="px-4 py-3 text-left text-xs font-light tracking-wider text-slate-600">Category</th>
@@ -1162,9 +1162,9 @@ export default function AdminDashboardPage() {
                         <th className="px-4 py-3 text-left text-xs font-light tracking-wider text-slate-600">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-sky-100">
+                    <tbody className="divide-y divide-green-100">
                       {products.map((product) => (
-                        <tr key={product.id} className="hover:bg-sky-50">
+                        <tr key={product.id} className="hover:bg-green-50">
                           <td className="px-4 py-3 text-sm font-light">{product.name}</td>
                           <td className="px-4 py-3 text-sm font-light">{product.category?.name || "N/A"}</td>
                           <td className="px-4 py-3 text-sm font-light">{product.itemCode}</td>
@@ -1179,7 +1179,7 @@ export default function AdminDashboardPage() {
                             <div className="flex gap-2">
                               <button
                                 onClick={() => handleEditProduct(product)}
-                                className="p-1.5 text-sky-600 hover:bg-sky-100 rounded"
+                                className="p-1.5 text-green-600 hover:bg-green-100 rounded"
                                 title="Edit"
                               >
                                 <Edit className="w-4 h-4" />
@@ -1230,7 +1230,7 @@ export default function AdminDashboardPage() {
                       required
                       value={productFormData.name}
                       onChange={(e) => setProductFormData({ ...productFormData, name: e.target.value })}
-                      className="w-full px-3 py-2 border border-sky-300 focus:outline-none focus:border-sky-500 text-sm"
+                      className="w-full px-3 py-2 border border-green-300 focus:outline-none focus:border-green-500 text-sm"
                     />
                   </div>
                   <div>
@@ -1239,7 +1239,7 @@ export default function AdminDashboardPage() {
                       required
                       value={productFormData.categoryId}
                       onChange={(e) => setProductFormData({ ...productFormData, categoryId: e.target.value })}
-                      className="w-full px-3 py-2 border border-sky-300 focus:outline-none focus:border-sky-500 text-sm"
+                      className="w-full px-3 py-2 border border-green-300 focus:outline-none focus:border-green-500 text-sm"
                     >
                       <option value="">Select Category</option>
                       {categories.map((cat) => (
@@ -1254,7 +1254,7 @@ export default function AdminDashboardPage() {
                       required
                       value={productFormData.itemCode}
                       onChange={(e) => setProductFormData({ ...productFormData, itemCode: e.target.value })}
-                      className="w-full px-3 py-2 border border-sky-300 focus:outline-none focus:border-sky-500 text-sm"
+                      className="w-full px-3 py-2 border border-green-300 focus:outline-none focus:border-green-500 text-sm"
                     />
                   </div>
                   <div>
@@ -1265,7 +1265,7 @@ export default function AdminDashboardPage() {
                       value={productFormData.weight}
                       onChange={(e) => setProductFormData({ ...productFormData, weight: e.target.value })}
                       placeholder="e.g., 250 gms"
-                      className="w-full px-3 py-2 border border-sky-300 focus:outline-none focus:border-sky-500 text-sm"
+                      className="w-full px-3 py-2 border border-green-300 focus:outline-none focus:border-green-500 text-sm"
                     />
                   </div>
                   <div>
@@ -1276,7 +1276,7 @@ export default function AdminDashboardPage() {
                       required
                       value={productFormData.mrp}
                       onChange={(e) => setProductFormData({ ...productFormData, mrp: e.target.value })}
-                      className="w-full px-3 py-2 border border-sky-300 focus:outline-none focus:border-sky-500 text-sm"
+                      className="w-full px-3 py-2 border border-green-300 focus:outline-none focus:border-green-500 text-sm"
                     />
                   </div>
                   <div>
@@ -1287,7 +1287,7 @@ export default function AdminDashboardPage() {
                       required
                       value={productFormData.salePrice}
                       onChange={(e) => setProductFormData({ ...productFormData, salePrice: e.target.value })}
-                      className="w-full px-3 py-2 border border-sky-300 focus:outline-none focus:border-sky-500 text-sm"
+                      className="w-full px-3 py-2 border border-green-300 focus:outline-none focus:border-green-500 text-sm"
                     />
                   </div>
                   <div>
@@ -1297,7 +1297,7 @@ export default function AdminDashboardPage() {
                       step="0.01"
                       value={productFormData.gst}
                       onChange={(e) => setProductFormData({ ...productFormData, gst: e.target.value })}
-                      className="w-full px-3 py-2 border border-sky-300 focus:outline-none focus:border-sky-500 text-sm"
+                      className="w-full px-3 py-2 border border-green-300 focus:outline-none focus:border-green-500 text-sm"
                     />
                   </div>
                   <div>
@@ -1307,7 +1307,7 @@ export default function AdminDashboardPage() {
                       required
                       value={productFormData.hsnCode}
                       onChange={(e) => setProductFormData({ ...productFormData, hsnCode: e.target.value })}
-                      className="w-full px-3 py-2 border border-sky-300 focus:outline-none focus:border-sky-500 text-sm"
+                      className="w-full px-3 py-2 border border-green-300 focus:outline-none focus:border-green-500 text-sm"
                     />
                   </div>
                   <div className="sm:col-span-2">
@@ -1351,7 +1351,7 @@ export default function AdminDashboardPage() {
                           });
                         }}
                         placeholder="https://res.cloudinary.com/your-cloud/image/upload/..."
-                        className="w-full px-3 py-2 border border-sky-300 focus:outline-none focus:border-sky-500 text-sm"
+                        className="w-full px-3 py-2 border border-green-300 focus:outline-none focus:border-green-500 text-sm"
                       />
                     </div>
                   </div>
@@ -1361,7 +1361,7 @@ export default function AdminDashboardPage() {
                       value={productFormData.description}
                       onChange={(e) => setProductFormData({ ...productFormData, description: e.target.value })}
                       rows={3}
-                      className="w-full px-3 py-2 border border-sky-300 focus:outline-none focus:border-sky-500 text-sm"
+                      className="w-full px-3 py-2 border border-green-300 focus:outline-none focus:border-green-500 text-sm"
                     />
                   </div>
                   <div className="flex items-center gap-2">
@@ -1395,7 +1395,7 @@ export default function AdminDashboardPage() {
                 <div className="flex gap-3 pt-4">
                   <button
                     type="submit"
-                    className="flex items-center gap-2 px-6 py-2 bg-sky-600 text-white hover:bg-sky-700 transition-colors text-sm font-light"
+                    className="flex items-center gap-2 px-6 py-2 bg-green-600 text-white hover:bg-green-700 transition-colors text-sm font-light"
                   >
                     <Save className="w-4 h-4" />
                     {editingProduct ? "UPDATE PRODUCT" : "CREATE PRODUCT"}
@@ -1406,7 +1406,7 @@ export default function AdminDashboardPage() {
                       setShowProductForm(false);
                       setEditingProduct(null);
                     }}
-                    className="px-6 py-2 border border-sky-300 text-slate-700 hover:bg-sky-50 transition-colors text-sm font-light"
+                    className="px-6 py-2 border border-green-300 text-slate-700 hover:bg-green-50 transition-colors text-sm font-light"
                   >
                     CANCEL
                   </button>
@@ -1442,7 +1442,7 @@ export default function AdminDashboardPage() {
                     required
                     value={categoryFormData.name}
                     onChange={(e) => setCategoryFormData({ ...categoryFormData, name: e.target.value })}
-                    className="w-full px-3 py-2 border border-sky-300 focus:outline-none focus:border-sky-500 text-sm"
+                    className="w-full px-3 py-2 border border-green-300 focus:outline-none focus:border-green-500 text-sm"
                   />
                 </div>
                 <div>
@@ -1451,7 +1451,7 @@ export default function AdminDashboardPage() {
                     value={categoryFormData.description}
                     onChange={(e) => setCategoryFormData({ ...categoryFormData, description: e.target.value })}
                     rows={3}
-                    className="w-full px-3 py-2 border border-sky-300 focus:outline-none focus:border-sky-500 text-sm"
+                    className="w-full px-3 py-2 border border-green-300 focus:outline-none focus:border-green-500 text-sm"
                   />
                 </div>
                 <div>
@@ -1461,13 +1461,13 @@ export default function AdminDashboardPage() {
                     value={categoryFormData.image}
                     onChange={(e) => setCategoryFormData({ ...categoryFormData, image: e.target.value })}
                     placeholder="https://example.com/image.jpg"
-                    className="w-full px-3 py-2 border border-sky-300 focus:outline-none focus:border-sky-500 text-sm"
+                    className="w-full px-3 py-2 border border-green-300 focus:outline-none focus:border-green-500 text-sm"
                   />
                 </div>
                 <div className="flex gap-3 pt-4">
                   <button
                     type="submit"
-                    className="flex items-center gap-2 px-6 py-2 bg-sky-600 text-white hover:bg-sky-700 transition-colors text-sm font-light"
+                    className="flex items-center gap-2 px-6 py-2 bg-green-600 text-white hover:bg-green-700 transition-colors text-sm font-light"
                   >
                     <Save className="w-4 h-4" />
                     {editingCategory ? "UPDATE CATEGORY" : "CREATE CATEGORY"}
@@ -1478,7 +1478,7 @@ export default function AdminDashboardPage() {
                       setShowCategoryForm(false);
                       setEditingCategory(null);
                     }}
-                    className="px-6 py-2 border border-sky-300 text-slate-700 hover:bg-sky-50 transition-colors text-sm font-light"
+                    className="px-6 py-2 border border-green-300 text-slate-700 hover:bg-green-50 transition-colors text-sm font-light"
                   >
                     CANCEL
                   </button>
@@ -1490,10 +1490,10 @@ export default function AdminDashboardPage() {
 
         {activeTab === "gallery" && (
           <div className="space-y-6">
-            <div className="border border-sky-200 bg-white shadow-sm p-6">
+            <div className="border border-green-200 bg-white shadow-sm p-6">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-light tracking-wide flex items-center gap-2">
-                  <ImageIcon className="w-5 h-5 text-sky-600" />
+                  <ImageIcon className="w-5 h-5 text-green-600" />
                   Gallery Management
                 </h2>
                 <button
@@ -1507,7 +1507,7 @@ export default function AdminDashboardPage() {
                       description: "",
                     });
                   }}
-                  className="px-4 py-2 bg-sky-600 text-white hover:bg-sky-700 transition-colors text-sm font-light flex items-center gap-2"
+                  className="px-4 py-2 bg-green-600 text-white hover:bg-green-700 transition-colors text-sm font-light flex items-center gap-2"
                 >
                   <Plus className="w-4 h-4" />
                   ADD GALLERY ITEM
@@ -1520,7 +1520,7 @@ export default function AdminDashboardPage() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   onSubmit={handleGallerySubmit}
-                  className="relative bg-white border border-sky-200 rounded-2xl p-6 md:p-8 mb-6 shadow-lg shadow-sky-100/50 space-y-6"
+                  className="relative bg-white border border-green-200 rounded-2xl p-6 md:p-8 mb-6 shadow-lg shadow-green-100/50 space-y-6"
                 >
                   <div className="space-y-6">
                     {/* Type Selection */}
@@ -1531,15 +1531,15 @@ export default function AdminDashboardPage() {
                       <div className="relative">
                         <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
                           {galleryFormData.type === "IMAGE" ? (
-                            <ImageIcon className="w-5 h-5 text-sky-600" />
+                            <ImageIcon className="w-5 h-5 text-green-600" />
                           ) : (
-                            <Video className="w-5 h-5 text-sky-600" />
+                            <Video className="w-5 h-5 text-green-600" />
                           )}
                         </div>
                         <select
                           value={galleryFormData.type}
                           onChange={(e) => setGalleryFormData({ ...galleryFormData, type: e.target.value as "IMAGE" | "VIDEO", url: "" })}
-                          className="w-full bg-white border border-sky-300 pl-12 pr-4 py-3 text-sm text-slate-900 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-all duration-200 appearance-none cursor-pointer"
+                          className="w-full bg-white border border-green-300 pl-12 pr-4 py-3 text-sm text-slate-900 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-200 appearance-none cursor-pointer"
                           required
                         >
                           <option value="IMAGE">Image</option>
@@ -1568,12 +1568,12 @@ export default function AdminDashboardPage() {
                                 handleMediaUpload(file);
                               }
                             }}
-                            className="w-full bg-white border-2 border-dashed border-sky-300 rounded-xl px-4 py-6 text-sm text-slate-600 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-all duration-200 cursor-pointer hover:border-sky-400 hover:bg-sky-50/50 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-sky-600 file:text-white hover:file:bg-sky-700"
+                            className="w-full bg-white border-2 border-dashed border-green-300 rounded-xl px-4 py-6 text-sm text-slate-600 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-200 cursor-pointer hover:border-green-400 hover:bg-green-50/50 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-green-600 file:text-white hover:file:bg-green-700"
                             disabled={uploadingMedia}
                           />
                           {uploadingMedia && (
                             <div className="absolute inset-0 flex items-center justify-center bg-white/80 rounded-xl">
-                              <div className="w-6 h-6 border-4 border-sky-600 border-t-transparent rounded-full animate-spin"></div>
+                              <div className="w-6 h-6 border-4 border-green-600 border-t-transparent rounded-full animate-spin"></div>
                             </div>
                           )}
                         </div>
@@ -1582,7 +1582,7 @@ export default function AdminDashboardPage() {
                           <motion.div
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
-                            className="relative w-full h-48 md:h-64 border-2 border-sky-200 rounded-xl overflow-hidden bg-slate-100 shadow-md group"
+                            className="relative w-full h-48 md:h-64 border-2 border-green-200 rounded-xl overflow-hidden bg-slate-100 shadow-md group"
                           >
                             {galleryFormData.type === "VIDEO" ? (
                               <video
@@ -1623,7 +1623,7 @@ export default function AdminDashboardPage() {
                             value={galleryFormData.url}
                             onChange={(e) => setGalleryFormData({ ...galleryFormData, url: e.target.value })}
                             placeholder={galleryFormData.type === "VIDEO" ? "Or enter video URL (YouTube, Vimeo, etc.)" : "Or enter image URL manually"}
-                            className="w-full bg-white border border-sky-300 pl-12 pr-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-all duration-200"
+                            className="w-full bg-white border border-green-300 pl-12 pr-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-200"
                           />
                         </div>
                       </div>
@@ -1639,7 +1639,7 @@ export default function AdminDashboardPage() {
                         value={galleryFormData.title}
                         onChange={(e) => setGalleryFormData({ ...galleryFormData, title: e.target.value })}
                         placeholder="Enter a title for this media"
-                        className="w-full bg-white border border-sky-300 px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-all duration-200"
+                        className="w-full bg-white border border-green-300 px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-200"
                       />
                     </div>
 
@@ -1653,16 +1653,16 @@ export default function AdminDashboardPage() {
                         onChange={(e) => setGalleryFormData({ ...galleryFormData, description: e.target.value })}
                         rows={4}
                         placeholder="Add a description for this media item"
-                        className="w-full bg-white border border-sky-300 px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-all duration-200 resize-none"
+                        className="w-full bg-white border border-green-300 px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-200 resize-none"
                       />
                     </div>
                   </div>
 
                   {/* Action Buttons */}
-                  <div className="flex gap-3 pt-4 border-t border-sky-200">
+                  <div className="flex gap-3 pt-4 border-t border-green-200">
                     <button
                       type="submit"
-                      className="flex-1 px-6 py-3 bg-sky-600 text-white hover:bg-sky-700 transition-all duration-200 text-sm font-medium rounded-lg shadow-md shadow-sky-200 hover:shadow-lg hover:shadow-sky-300 hover:scale-[1.02] active:scale-[0.98]"
+                      className="flex-1 px-6 py-3 bg-green-600 text-white hover:bg-green-700 transition-all duration-200 text-sm font-medium rounded-lg shadow-md shadow-green-200 hover:shadow-lg hover:shadow-green-300 hover:scale-[1.02] active:scale-[0.98]"
                     >
                       {editingGalleryItem ? "UPDATE GALLERY ITEM" : "CREATE GALLERY ITEM"}
                     </button>
@@ -1678,7 +1678,7 @@ export default function AdminDashboardPage() {
                           description: "",
                         });
                       }}
-                      className="px-6 py-3 border-2 border-sky-300 text-slate-700 hover:bg-slate-50 hover:border-sky-400 transition-all duration-200 text-sm font-medium rounded-lg"
+                      className="px-6 py-3 border-2 border-green-300 text-slate-700 hover:bg-slate-50 hover:border-green-400 transition-all duration-200 text-sm font-medium rounded-lg"
                     >
                       CANCEL
                     </button>
@@ -1688,14 +1688,14 @@ export default function AdminDashboardPage() {
 
               {loadingGallery ? (
                 <div className="text-center py-8">
-                  <div className="inline-block w-6 h-6 border-4 border-sky-600 border-t-transparent rounded-full animate-spin"></div>
+                  <div className="inline-block w-6 h-6 border-4 border-green-600 border-t-transparent rounded-full animate-spin"></div>
                 </div>
               ) : galleryItems.length === 0 ? (
                 <p className="text-center text-slate-500 py-8">No gallery items. Add your first item above.</p>
               ) : (
                 <div className="space-y-4">
                   <div className="flex items-center gap-2 text-sm text-slate-600 font-light">
-                    <GripVertical className="w-5 h-5 text-sky-600" />
+                    <GripVertical className="w-5 h-5 text-green-600" />
                     <span>Drag and drop items to change their display order</span>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -1716,10 +1716,10 @@ export default function AdminDashboardPage() {
                             whileHover={{ scale: 1.02 }}
                             className={`relative border-2 bg-white p-4 rounded-xl cursor-move transition-all duration-200 shadow-md ${
                               isDragging 
-                                ? "border-sky-400 shadow-sky-200 z-50" 
+                                ? "border-green-400 shadow-green-200 z-50" 
                                 : isDragOver
-                                ? "border-sky-500 shadow-lg shadow-sky-300 z-40"
-                                : "border-sky-200 hover:border-sky-300 hover:shadow-lg"
+                                ? "border-green-500 shadow-lg shadow-green-300 z-40"
+                                : "border-green-200 hover:border-green-300 hover:shadow-lg"
                             }`}
                             draggable
                             onDragStart={(e) => {
@@ -1737,7 +1737,7 @@ export default function AdminDashboardPage() {
                             onDragEnd={() => handleDragEnd()}
                           >
                           {/* Position Badge */}
-                          <div className="absolute -top-2 -left-2 w-8 h-8 bg-sky-600 text-white rounded-full flex items-center justify-center text-xs font-bold shadow-lg z-10">
+                          <div className="absolute -top-2 -left-2 w-8 h-8 bg-green-600 text-white rounded-full flex items-center justify-center text-xs font-bold shadow-lg z-10">
                             {index + 1}
                           </div>
                           
@@ -1818,7 +1818,7 @@ export default function AdminDashboardPage() {
                                 });
                                 setShowGalleryForm(true);
                               }}
-                              className="flex-1 px-3 py-1.5 bg-sky-100 text-sky-700 hover:bg-sky-200 transition-colors text-xs font-light rounded-lg"
+                              className="flex-1 px-3 py-1.5 bg-green-100 text-green-700 hover:bg-green-200 transition-colors text-xs font-light rounded-lg"
                             >
                               EDIT
                             </button>

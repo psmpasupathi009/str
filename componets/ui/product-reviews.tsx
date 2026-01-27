@@ -133,7 +133,7 @@ export default function ProductReviews({ productId, refreshTrigger }: ProductRev
     return (
       <div className="py-16 sm:py-20">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-3 border-sky-600 border-t-transparent"></div>
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-3 border-green-600 border-t-transparent"></div>
           <p className="mt-6 text-base sm:text-lg text-slate-600 font-light">Loading reviews...</p>
         </div>
       </div>
@@ -153,8 +153,8 @@ export default function ProductReviews({ productId, refreshTrigger }: ProductRev
   if (reviews.length === 0) {
     return (
       <div className="py-16 sm:py-20 text-center">
-        <div className="inline-flex items-center justify-center w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-linear-to-br from-sky-100 to-sky-200 mb-6">
-          <MessageSquare className="w-10 h-10 sm:w-12 sm:h-12 text-sky-500" />
+        <div className="inline-flex items-center justify-center w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-linear-to-br from-green-100 to-green-200 mb-6">
+          <MessageSquare className="w-10 h-10 sm:w-12 sm:h-12 text-green-500" />
         </div>
         <h3 className="text-xl sm:text-2xl font-bold text-slate-900 mb-3">No reviews yet</h3>
         <p className="text-base sm:text-lg text-slate-600 font-light">Be the first to share your experience!</p>
@@ -172,7 +172,7 @@ export default function ProductReviews({ productId, refreshTrigger }: ProductRev
   }));
 
   return (
-    <div className="border-t border-sky-200/60 pt-6 sm:pt-8">
+    <div className="border-t border-green-200/60 pt-6 sm:pt-8">
       <div className="flex flex-col xl:flex-row gap-6 sm:gap-8 lg:gap-10">
         {/* Rating Summary - Left Sidebar */}
         <div className="xl:w-96 shrink-0">
@@ -180,10 +180,10 @@ export default function ProductReviews({ productId, refreshTrigger }: ProductRev
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
-            className="sticky top-6 bg-linear-to-br from-white via-sky-50/30 to-white rounded-2xl p-6 sm:p-8 shadow-lg border-2 border-sky-200/60"
+            className="sticky top-6 bg-linear-to-br from-white via-green-50/30 to-white rounded-2xl p-6 sm:p-8 shadow-lg border-2 border-green-200/60"
           >
             {/* Average Rating */}
-            <div className="text-center mb-8 pb-8 border-b-2 border-sky-200/60">
+            <div className="text-center mb-8 pb-8 border-b-2 border-green-200/60">
               <div className="flex items-center justify-center gap-4 mb-4">
                 <span className="text-5xl sm:text-6xl font-bold text-slate-900">
                   {averageRating.toFixed(1)}
@@ -202,7 +202,7 @@ export default function ProductReviews({ productId, refreshTrigger }: ProductRev
                 </div>
               </div>
               <p className="text-base sm:text-lg text-slate-700 font-semibold">
-                Based on <span className="text-sky-600">{reviews.length}</span> {reviews.length === 1 ? "review" : "reviews"}
+                Based on <span className="text-green-600">{reviews.length}</span> {reviews.length === 1 ? "review" : "reviews"}
               </p>
             </div>
 
@@ -240,7 +240,7 @@ export default function ProductReviews({ productId, refreshTrigger }: ProductRev
               <h3 className="text-2xl sm:text-3xl font-bold text-slate-900">
                 {reviews.length} {reviews.length === 1 ? "Review" : "Reviews"}
               </h3>
-              <div className="flex items-center gap-1 text-sky-600">
+              <div className="flex items-center gap-1 text-green-600">
                 <TrendingUp className="w-5 h-5" />
                 <span className="text-sm font-semibold">Verified</span>
               </div>
@@ -264,12 +264,12 @@ export default function ProductReviews({ productId, refreshTrigger }: ProductRev
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ delay: index * 0.05, duration: 0.4 }}
-                    className="bg-white rounded-2xl p-6 sm:p-8 shadow-md border-2 border-sky-100/60 hover:shadow-xl hover:border-sky-200/80 transition-all duration-300"
+                    className="bg-white rounded-2xl p-6 sm:p-8 shadow-md border-2 border-green-100/60 hover:shadow-xl hover:border-green-200/80 transition-all duration-300"
                   >
                     {/* Review Header */}
                     <div className="flex items-start gap-4 sm:gap-5 mb-5">
                       <div className="relative shrink-0">
-                        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-linear-to-br from-sky-400 via-sky-500 to-sky-600 flex items-center justify-center shadow-lg">
+                        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-linear-to-br from-green-400 via-green-500 to-green-600 flex items-center justify-center shadow-lg">
                           <span className="text-lg sm:text-xl font-bold text-white">
                             {review.userName.charAt(0).toUpperCase()}
                           </span>
@@ -319,7 +319,7 @@ export default function ProductReviews({ productId, refreshTrigger }: ProductRev
                       {isLongComment && (
                         <button
                           onClick={() => toggleReviewExpanded(review.id)}
-                          className="text-sm sm:text-base text-sky-600 hover:text-sky-700 mt-3 flex items-center gap-2 font-semibold hover:underline transition-colors group"
+                          className="text-sm sm:text-base text-green-600 hover:text-green-700 mt-3 flex items-center gap-2 font-semibold hover:underline transition-colors group"
                           type="button"
                         >
                           {isExpanded ? (
@@ -338,7 +338,7 @@ export default function ProductReviews({ productId, refreshTrigger }: ProductRev
                     </div>
 
                     {/* Helpful Button */}
-                    <div className="flex items-center gap-4 pt-5 border-t-2 border-sky-100/60">
+                    <div className="flex items-center gap-4 pt-5 border-t-2 border-green-100/60">
                       <motion.button
                         onClick={() => handleHelpful(review.id)}
                         disabled={!user}
@@ -346,12 +346,12 @@ export default function ProductReviews({ productId, refreshTrigger }: ProductRev
                         whileTap={{ scale: user ? 0.95 : 1 }}
                         className={`flex items-center gap-2.5 px-5 py-2.5 rounded-xl border-2 transition-all text-sm sm:text-base font-semibold ${
                           helpfulStatus[review.id]
-                            ? "border-sky-500 bg-sky-50 text-sky-700 shadow-md"
-                            : "border-sky-200 bg-white text-slate-600 hover:border-sky-400 hover:bg-sky-50 hover:shadow-sm"
-                        } disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:border-sky-200 disabled:hover:shadow-none`}
+                            ? "border-green-500 bg-green-50 text-green-700 shadow-md"
+                            : "border-green-200 bg-white text-slate-600 hover:border-green-400 hover:bg-green-50 hover:shadow-sm"
+                        } disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:border-green-200 disabled:hover:shadow-none`}
                       >
                         <ThumbsUp className={`w-5 h-5 transition-all ${
-                          helpfulStatus[review.id] ? "fill-sky-600 text-sky-600" : ""
+                          helpfulStatus[review.id] ? "fill-green-600 text-green-600" : ""
                         }`} />
                         <span>Helpful</span>
                         {review.helpfulCount > 0 && (

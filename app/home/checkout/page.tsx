@@ -163,7 +163,7 @@ function CheckoutContent() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         <Link
           href={buyNowItem === "true" ? "/home/products" : "/home/cart"}
-          className="inline-flex items-center gap-2 text-slate-600 hover:text-sky-700 transition-colors mb-6 sm:mb-8"
+          className="inline-flex items-center gap-2 text-slate-600 hover:text-green-700 transition-colors mb-6 sm:mb-8"
         >
           <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
           <span className="text-xs sm:text-sm font-light tracking-wider">
@@ -178,7 +178,7 @@ function CheckoutContent() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 sm:gap-12">
           {/* Shipping Address Form */}
           <div className="lg:col-span-2 space-y-6 sm:space-y-8">
-            <div className="border border-sky-200 bg-white shadow-sm p-4 sm:p-6">
+            <div className="border border-green-200 bg-white shadow-sm p-4 sm:p-6">
               <h2 className="text-xl sm:text-2xl font-light tracking-wide mb-6 sm:mb-8 flex items-center gap-2">
                 <MapPin className="w-5 h-5 sm:w-6 sm:h-6" />
                 SHIPPING ADDRESS
@@ -195,7 +195,7 @@ function CheckoutContent() {
                       type="text"
                       value={shippingAddress.fullName}
                       onChange={(e) => handleInputChange("fullName", e.target.value)}
-                      className="w-full bg-white border border-sky-300 pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-all duration-200"
+                      className="w-full bg-white border border-green-300 pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-200"
                       placeholder="John Doe"
                       style={{ color: 'rgb(15 23 42)', caretColor: 'rgb(14 165 233)' }}
                     />
@@ -214,7 +214,7 @@ function CheckoutContent() {
                         type="email"
                         value={shippingAddress.email}
                         onChange={(e) => handleInputChange("email", e.target.value)}
-                        className="w-full bg-white border border-sky-300 pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-all duration-200"
+                        className="w-full bg-white border border-green-300 pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-200"
                         placeholder="you@example.com"
                         style={{ color: 'rgb(15 23 42)', caretColor: 'rgb(14 165 233)' }}
                       />
@@ -232,7 +232,7 @@ function CheckoutContent() {
                         type="tel"
                         value={shippingAddress.phone}
                         onChange={(e) => handleInputChange("phone", e.target.value.replace(/\D/g, ""))}
-                        className="w-full bg-white border border-sky-300 pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-all duration-200"
+                        className="w-full bg-white border border-green-300 pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-200"
                         placeholder="1234567890"
                         style={{ color: 'rgb(15 23 42)', caretColor: 'rgb(14 165 233)' }}
                       />
@@ -249,7 +249,7 @@ function CheckoutContent() {
                     type="text"
                     value={shippingAddress.addressLine1}
                     onChange={(e) => handleInputChange("addressLine1", e.target.value)}
-                    className="w-full bg-white border border-sky-300 px-3 sm:px-4 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-all duration-200"
+                    className="w-full bg-white border border-green-300 px-3 sm:px-4 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-200"
                     placeholder="Street address, P.O. box"
                     style={{ color: 'rgb(15 23 42)', caretColor: 'rgb(14 165 233)' }}
                   />
@@ -264,7 +264,7 @@ function CheckoutContent() {
                     type="text"
                     value={shippingAddress.addressLine2}
                     onChange={(e) => handleInputChange("addressLine2", e.target.value)}
-                    className="w-full bg-white border border-sky-300 px-3 sm:px-4 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-all duration-200"
+                    className="w-full bg-white border border-green-300 px-3 sm:px-4 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-200"
                     placeholder="Apartment, suite, unit, building, floor, etc."
                     style={{ color: 'rgb(15 23 42)', caretColor: 'rgb(14 165 233)' }}
                   />
@@ -279,7 +279,7 @@ function CheckoutContent() {
                       type="text"
                       value={shippingAddress.city}
                       onChange={(e) => handleInputChange("city", e.target.value)}
-                      className="w-full bg-white border border-sky-300 px-3 sm:px-4 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-all duration-200"
+                      className="w-full bg-white border border-green-300 px-3 sm:px-4 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-200"
                       placeholder="City"
                       style={{ color: 'rgb(15 23 42)', caretColor: 'rgb(14 165 233)' }}
                     />
@@ -294,7 +294,7 @@ function CheckoutContent() {
                       type="text"
                       value={shippingAddress.state}
                       onChange={(e) => handleInputChange("state", e.target.value)}
-                      className="w-full bg-white border border-sky-300 px-3 sm:px-4 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-all duration-200"
+                      className="w-full bg-white border border-green-300 px-3 sm:px-4 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-200"
                       placeholder="State"
                       style={{ color: 'rgb(15 23 42)', caretColor: 'rgb(14 165 233)' }}
                     />
@@ -309,7 +309,7 @@ function CheckoutContent() {
                       type="text"
                       value={shippingAddress.zipCode}
                       onChange={(e) => handleInputChange("zipCode", e.target.value)}
-                      className="w-full bg-white border border-sky-300 px-3 sm:px-4 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-all duration-200"
+                      className="w-full bg-white border border-green-300 px-3 sm:px-4 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-200"
                       placeholder="ZIP"
                       style={{ color: 'rgb(15 23 42)', caretColor: 'rgb(14 165 233)' }}
                     />
@@ -325,7 +325,7 @@ function CheckoutContent() {
                     type="text"
                     value={shippingAddress.country}
                     onChange={(e) => handleInputChange("country", e.target.value)}
-                    className="w-full bg-white border border-sky-300 px-3 sm:px-4 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-all duration-200"
+                    className="w-full bg-white border border-green-300 px-3 sm:px-4 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-200"
                     placeholder="Country"
                     style={{ color: 'rgb(15 23 42)', caretColor: 'rgb(14 165 233)' }}
                   />
@@ -337,7 +337,7 @@ function CheckoutContent() {
 
           {/* Order Summary */}
           <div className="lg:col-span-1">
-            <div className="border border-sky-200 bg-white shadow-sm p-4 sm:p-6 sticky top-24">
+            <div className="border border-green-200 bg-white shadow-sm p-4 sm:p-6 sticky top-24">
               <h2 className="text-xl sm:text-2xl font-light tracking-wide mb-6 sm:mb-8 flex items-center gap-2">
                 <Package className="w-5 h-5 sm:w-6 sm:h-6" />
                 ORDER SUMMARY
@@ -345,7 +345,7 @@ function CheckoutContent() {
 
               <div className="space-y-4 sm:space-y-5 mb-6 sm:mb-8">
                 {cartItems.map((item) => (
-                  <div key={item.productId} className="flex justify-between items-start border-b border-sky-200 pb-3 sm:pb-4">
+                  <div key={item.productId} className="flex justify-between items-start border-b border-green-200 pb-3 sm:pb-4">
                     <div className="flex-1">
                       <p className="text-sm sm:text-base font-light mb-1 text-slate-900">{item.productName}</p>
                       <p className="text-xs sm:text-sm text-slate-600">Qty: {item.quantity}</p>
@@ -357,7 +357,7 @@ function CheckoutContent() {
                 ))}
               </div>
 
-              <div className="border-t border-sky-200 pt-4 sm:pt-5 space-y-3 sm:space-y-4">
+              <div className="border-t border-green-200 pt-4 sm:pt-5 space-y-3 sm:space-y-4">
                 <div className="flex justify-between items-center">
                   <span className="text-sm sm:text-base text-slate-600 font-light">Subtotal</span>
                   <span className="text-sm sm:text-base font-light text-slate-900">₹{total.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
@@ -366,7 +366,7 @@ function CheckoutContent() {
                   <span className="text-sm sm:text-base text-slate-600 font-light">Shipping</span>
                   <span className="text-sm sm:text-base font-light text-slate-900">Free</span>
                 </div>
-                <div className="border-t border-sky-200 pt-3 sm:pt-4 flex justify-between items-center">
+                <div className="border-t border-green-200 pt-3 sm:pt-4 flex justify-between items-center">
                   <span className="text-lg sm:text-xl font-light tracking-wide text-slate-900">TOTAL</span>
                   <span className="text-xl sm:text-2xl font-light text-slate-900">₹{total.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                 </div>
@@ -382,7 +382,7 @@ function CheckoutContent() {
                     customerPhone={shippingAddress.phone}
                     userId={user?.id || undefined}
                     buttonText="PROCEED TO PAYMENT"
-                    className="w-full px-6 sm:px-8 py-3 sm:py-4 bg-sky-600 text-white hover:bg-sky-700 transition-opacity duration-200"
+                    className="w-full px-6 sm:px-8 py-3 sm:py-4 bg-green-600 text-white hover:bg-green-700 transition-opacity duration-200"
                     shippingAddress={shippingAddress}
                   />
                 </div>

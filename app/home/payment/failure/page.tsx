@@ -11,7 +11,7 @@ function PaymentFailureContent() {
   const error = searchParams.get("error");
 
   return (
-    <main className="min-h-screen bg-linear-to-b from-sky-50 to-sky-100 text-slate-900 pt-16 sm:pt-20">
+    <main className="min-h-screen bg-linear-to-b from-green-50 to-green-50 text-slate-900 pt-16 sm:pt-20">
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
         <div className="flex flex-col items-center justify-center text-center space-y-6 sm:space-y-8">
           <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-red-500/20 flex items-center justify-center">
@@ -33,7 +33,7 @@ function PaymentFailureContent() {
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 pt-4 sm:pt-6">
             <Link
               href="/home/cart"
-              className="px-6 sm:px-8 py-3 sm:py-4 border border-sky-600 hover:border-sky-700 bg-sky-600 text-white hover:bg-sky-700 transition-all"
+              className="px-6 sm:px-8 py-3 sm:py-4 border border-green-600 hover:border-green-700 bg-green-600 text-white hover:bg-green-700 transition-all"
             >
               <span className="text-xs sm:text-sm font-light tracking-widest">
                 BACK TO CART
@@ -41,7 +41,7 @@ function PaymentFailureContent() {
             </Link>
             <Link
               href="/home/products"
-              className="px-6 sm:px-8 py-3 sm:py-4 bg-sky-600 text-white hover:bg-sky-700 transition-colors"
+              className="px-6 sm:px-8 py-3 sm:py-4 bg-green-600 text-white hover:bg-green-700 transition-colors"
             >
               <span className="text-xs sm:text-sm font-light tracking-widest">
                 CONTINUE SHOPPING
@@ -57,7 +57,7 @@ function PaymentFailureContent() {
 export default function PaymentFailurePage() {
   return (
     <Suspense fallback={
-      <main className="min-h-screen bg-linear-to-b from-sky-50 to-sky-100 text-slate-900 pt-16 sm:pt-20">
+      <main className="min-h-screen bg-linear-to-b from-green-50 to-green-50 text-slate-900 pt-16 sm:pt-20">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
           <div className="flex flex-col items-center justify-center text-center">
             <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-red-500/20 flex items-center justify-center animate-pulse">

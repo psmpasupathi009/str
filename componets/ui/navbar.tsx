@@ -80,13 +80,13 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-sky-600/95 backdrop-blur-sm border-b border-sky-300/20">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-green-800/95 backdrop-blur-sm border-b border-green-700/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 sm:h-20">
             {/* Menu Button */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="flex items-center gap-1 sm:gap-2 text-white hover:text-sky-100 transition-colors"
+              className="flex items-center gap-1 sm:gap-2 text-white hover:text-green-100 transition-colors"
             >
               <Menu className="w-5 h-5 sm:w-6 sm:h-6" />
               <span className="text-xs sm:text-sm font-light tracking-wider hidden xs:inline">
@@ -96,11 +96,11 @@ export default function Navbar() {
 
             {/* Logo - Centered */}
             <Link href="/" className="flex flex-col items-center">
-              <div className="text-white text-xl sm:text-2xl font-light tracking-[0.2em] sm:tracking-[0.3em]">
-                STR
+              <div className="text-white text-xs sm:text-sm font-light tracking-wider text-center">
+                STN GOLDEN
               </div>
-              <div className="text-white/60 text-[10px] sm:text-xs font-light tracking-widest mt-0.5 sm:mt-1">
-                E-COMMERCE
+              <div className="text-white/90 text-[10px] sm:text-xs font-light tracking-widest mt-0.5">
+                HEALTHY FOODS
               </div>
             </Link>
 
@@ -109,7 +109,7 @@ export default function Navbar() {
               {user ? (
                 <Link
                   href="/home/profile"
-                  className="text-white hover:text-sky-100 transition-colors"
+                  className="text-white hover:text-green-100 transition-colors"
                   title="Profile"
                 >
                   <User className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -117,14 +117,14 @@ export default function Navbar() {
               ) : (
                 <Link
                   href="/home/signin"
-                  className="text-white hover:text-sky-100 transition-colors text-xs sm:text-sm font-light tracking-wider"
+                  className="text-white hover:text-green-100 transition-colors text-xs sm:text-sm font-light tracking-wider"
                 >
                   SIGN IN
                 </Link>
               )}
               <Link
                 href="/home/cart"
-                className="text-white hover:text-sky-100 transition-colors relative"
+                className="text-white hover:text-green-100 transition-colors relative"
               >
                 <ShoppingCart className="w-5 h-5 sm:w-6 sm:h-6" />
                 {cartItemCount > 0 && (
@@ -148,7 +148,7 @@ export default function Navbar() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
-              className="fixed inset-0 bg-sky-900/40 backdrop-blur-md z-60"
+              className="fixed inset-0 bg-green-900/40 backdrop-blur-md z-60"
               onClick={() => setIsMenuOpen(false)}
             />
 
@@ -158,7 +158,7 @@ export default function Navbar() {
               animate={{ y: 0 }}
               exit={{ y: "-100%" }}
               transition={{ type: "spring", damping: 30, stiffness: 300 }}
-              className="fixed top-0 left-0 right-0 z-70 bg-sky-600/90 backdrop-blur-lg border-b border-sky-300/20"
+              className="fixed top-0 left-0 right-0 z-70 bg-green-600/90 backdrop-blur-lg border-b border-green-300/20"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 py-6 sm:py-8 md:py-10 lg:py-12">
@@ -166,7 +166,7 @@ export default function Navbar() {
                 <div className="flex justify-end mb-4 sm:mb-6 md:mb-8 lg:mb-10">
                   <button
                     onClick={() => setIsMenuOpen(false)}
-                    className="flex items-center gap-1.5 sm:gap-2 text-white hover:text-sky-100 transition-colors"
+                    className="flex items-center gap-1.5 sm:gap-2 text-white hover:text-green-100 transition-colors"
                   >
                     <X className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
                     <span className="text-[10px] xs:text-xs sm:text-sm font-light tracking-wider">CLOSE</span>
@@ -177,35 +177,35 @@ export default function Navbar() {
                 <nav className="flex flex-col gap-2 sm:gap-3 md:gap-4">
                   <Link
                     href="/"
-                    className="text-white text-sm sm:text-base md:text-lg lg:text-xl font-light tracking-wider hover:text-sky-100 transition-colors"
+                    className="text-white text-sm sm:text-base md:text-lg lg:text-xl font-light tracking-wider hover:text-green-100 transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     HOME
                   </Link>
                   <Link
                     href="/home/products"
-                    className="text-white text-sm sm:text-base md:text-lg lg:text-xl font-light tracking-wider hover:text-sky-100 transition-colors"
+                    className="text-white text-sm sm:text-base md:text-lg lg:text-xl font-light tracking-wider hover:text-green-100 transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     PRODUCTS
                   </Link>
                   <Link
                     href="/home/about"
-                    className="text-white text-sm sm:text-base md:text-lg lg:text-xl font-light tracking-wider hover:text-sky-100 transition-colors"
+                    className="text-white text-sm sm:text-base md:text-lg lg:text-xl font-light tracking-wider hover:text-green-100 transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     ABOUT
                   </Link>
                   <Link
                     href="/home/contact"
-                    className="text-white text-sm sm:text-base md:text-lg lg:text-xl font-light tracking-wider hover:text-sky-100 transition-colors"
+                    className="text-white text-sm sm:text-base md:text-lg lg:text-xl font-light tracking-wider hover:text-green-100 transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     CONTACT
                   </Link>
                   <Link
                     href="/home/track-order"
-                    className="text-white text-sm sm:text-base md:text-lg lg:text-xl font-light tracking-wider hover:text-sky-100 transition-colors"
+                    className="text-white text-sm sm:text-base md:text-lg lg:text-xl font-light tracking-wider hover:text-green-100 transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     TRACK ORDER

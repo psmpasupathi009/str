@@ -17,7 +17,7 @@ function PaymentSuccessContent() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-linear-to-b from-sky-50 to-sky-100 text-slate-900 pt-16 sm:pt-20">
+    <main className="min-h-screen bg-linear-to-b from-green-50 to-green-50 text-slate-900 pt-16 sm:pt-20">
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
         <div className="flex flex-col items-center justify-center text-center space-y-6 sm:space-y-8">
           <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-green-500/20 flex items-center justify-center">
@@ -34,7 +34,7 @@ function PaymentSuccessContent() {
           </div>
 
           {orderId && (
-            <div className="w-full max-w-md space-y-4 p-6 sm:p-8 border border-sky-200 bg-white shadow-sm">
+            <div className="w-full max-w-md space-y-4 p-6 sm:p-8 border border-green-200 bg-white shadow-sm">
               <div className="flex justify-between items-center">
                 <span className="text-sm sm:text-base text-slate-600 font-light">Order ID:</span>
                 <span className="text-sm sm:text-base font-light text-slate-900">{orderId.slice(-8).toUpperCase()}</span>
@@ -52,7 +52,7 @@ function PaymentSuccessContent() {
             {orderId && (
               <Link
                 href={`/home/orders/${orderId}`}
-                className="px-6 sm:px-8 py-3 sm:py-4 border border-sky-600 hover:border-sky-700 bg-sky-600 text-white hover:bg-sky-700 transition-all"
+                className="px-6 sm:px-8 py-3 sm:py-4 border border-green-600 hover:border-green-700 bg-green-600 text-white hover:bg-green-700 transition-all"
               >
                 <span className="text-xs sm:text-sm font-light tracking-widest">
                   VIEW ORDER DETAILS
@@ -61,7 +61,7 @@ function PaymentSuccessContent() {
             )}
             <Link
               href="/home/products"
-              className="px-6 sm:px-8 py-3 sm:py-4 border border-sky-600 hover:border-sky-700 bg-white hover:bg-sky-50 text-sky-600 hover:text-sky-700 transition-all"
+              className="px-6 sm:px-8 py-3 sm:py-4 border border-green-600 hover:border-green-700 bg-white hover:bg-green-50 text-green-600 hover:text-green-700 transition-all"
             >
               <span className="text-xs sm:text-sm font-light tracking-widest">
                 CONTINUE SHOPPING
@@ -69,7 +69,7 @@ function PaymentSuccessContent() {
             </Link>
             <Link
               href="/home/orders"
-              className="px-6 sm:px-8 py-3 sm:py-4 bg-sky-600 text-white hover:bg-sky-700 transition-colors"
+              className="px-6 sm:px-8 py-3 sm:py-4 bg-green-600 text-white hover:bg-green-700 transition-colors"
             >
               <span className="text-xs sm:text-sm font-light tracking-widest">
                 VIEW ALL ORDERS
@@ -85,7 +85,7 @@ function PaymentSuccessContent() {
 export default function PaymentSuccessPage() {
   return (
     <Suspense fallback={
-      <main className="min-h-screen bg-linear-to-b from-sky-50 to-sky-100 text-slate-900 pt-16 sm:pt-20">
+      <main className="min-h-screen bg-linear-to-b from-green-50 to-green-50 text-slate-900 pt-16 sm:pt-20">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
           <div className="flex flex-col items-center justify-center text-center">
             <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-green-500/20 flex items-center justify-center animate-pulse">

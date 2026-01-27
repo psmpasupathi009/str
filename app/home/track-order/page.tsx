@@ -39,18 +39,18 @@ export default function TrackOrderPage() {
   };
 
   return (
-    <main className="min-h-screen bg-linear-to-b from-sky-50 to-sky-100 text-slate-900 pt-16 sm:pt-20">
+    <main className="min-h-screen bg-linear-to-b from-green-50 to-green-50 text-slate-900 pt-16 sm:pt-20">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         <Link
           href="/home"
-          className="inline-flex items-center gap-2 text-slate-600 hover:text-sky-700 transition-colors mb-6 sm:mb-8"
+          className="inline-flex items-center gap-2 text-slate-600 hover:text-green-700 transition-colors mb-6 sm:mb-8"
         >
           <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
           <span className="text-xs sm:text-sm font-light tracking-wider">BACK TO HOME</span>
         </Link>
 
         <div className="text-center mb-8 sm:mb-12">
-          <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-sky-600 flex items-center justify-center mx-auto mb-6">
+          <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-green-600 flex items-center justify-center mx-auto mb-6">
             <Truck className="w-10 h-10 sm:w-12 sm:h-12 text-white" />
           </div>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-light tracking-wider mb-3 sm:mb-4 text-slate-900">
@@ -61,7 +61,7 @@ export default function TrackOrderPage() {
           </p>
         </div>
 
-        <div className="border border-sky-200 bg-white shadow-sm rounded-lg p-6 sm:p-8 max-w-2xl mx-auto">
+        <div className="border border-green-200 bg-white shadow-sm rounded-lg p-6 sm:p-8 max-w-2xl mx-auto">
           <div className="space-y-4">
             <div>
               <label className="block text-sm sm:text-base text-slate-600 font-light mb-2">
@@ -77,13 +77,13 @@ export default function TrackOrderPage() {
                   }}
                   onKeyPress={(e) => e.key === "Enter" && handleSearch()}
                   placeholder="Enter your order ID"
-                  className="flex-1 bg-white border border-sky-300 px-4 py-3 text-sm sm:text-base text-slate-900 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-colors rounded"
+                  className="flex-1 bg-white border border-green-300 px-4 py-3 text-sm sm:text-base text-slate-900 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-colors rounded"
                   style={{ color: 'rgb(15 23 42)', caretColor: 'rgb(14 165 233)' }}
                 />
                 <button
                   onClick={handleSearch}
                   disabled={isSearching}
-                  className="flex items-center justify-center gap-2 px-6 sm:px-8 py-3 bg-sky-600 text-white hover:bg-sky-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed rounded"
+                  className="flex items-center justify-center gap-2 px-6 sm:px-8 py-3 bg-green-600 text-white hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed rounded"
                 >
                   <Search className="w-4 h-4" />
                   <span className="text-xs sm:text-sm font-light tracking-wider">
@@ -99,20 +99,20 @@ export default function TrackOrderPage() {
               </p>
             </div>
 
-            <div className="pt-4 border-t border-sky-200">
+            <div className="pt-4 border-t border-green-200">
               <p className="text-xs sm:text-sm text-slate-500 font-light text-center">
                 Don't have your order ID?{" "}
                 {user ? (
                   <Link
                     href="/home/orders"
-                    className="text-sky-600 hover:text-sky-700 underline"
+                    className="text-green-600 hover:text-green-700 underline"
                   >
                     View your order history
                   </Link>
                 ) : (
                   <Link
                     href="/home/signin"
-                    className="text-sky-600 hover:text-sky-700 underline"
+                    className="text-green-600 hover:text-green-700 underline"
                   >
                     Sign in to view orders
                   </Link>

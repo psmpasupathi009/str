@@ -120,7 +120,7 @@ export default function OrderDetailsPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
           <div className="flex items-center justify-center min-h-[400px]">
             <div className="text-center">
-              <div className="w-16 h-16 border-4 border-sky-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+              <div className="w-16 h-16 border-4 border-green-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
               <p className="text-slate-600 font-light">Loading order details...</p>
             </div>
           </div>
@@ -139,7 +139,7 @@ export default function OrderDetailsPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
           <Link
             href="/home/orders"
-            className="inline-flex items-center gap-2 text-slate-600 hover:text-sky-700 transition-colors mb-6"
+            className="inline-flex items-center gap-2 text-slate-600 hover:text-green-700 transition-colors mb-6"
           >
             <ArrowLeft className="w-4 h-4" />
             <span className="text-xs sm:text-sm font-light tracking-wider">
@@ -161,7 +161,7 @@ export default function OrderDetailsPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         <Link
           href="/home/orders"
-          className="inline-flex items-center gap-2 text-slate-600 hover:text-sky-700 transition-colors mb-6 sm:mb-8"
+          className="inline-flex items-center gap-2 text-slate-600 hover:text-green-700 transition-colors mb-6 sm:mb-8"
         >
           <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
           <span className="text-xs sm:text-sm font-light tracking-wider">
@@ -182,7 +182,7 @@ export default function OrderDetailsPage() {
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6 sm:space-y-8">
             {/* Order Items */}
-            <div className="border border-sky-200 bg-white shadow-sm p-4 sm:p-6">
+            <div className="border border-green-200 bg-white shadow-sm p-4 sm:p-6">
               <h2 className="text-xl sm:text-2xl font-light tracking-wide mb-4 sm:mb-6 flex items-center gap-2">
                 <Package className="w-5 h-5 sm:w-6 sm:h-6" />
                 ORDER ITEMS
@@ -191,7 +191,7 @@ export default function OrderDetailsPage() {
                 {order.items.map((item) => (
                   <div
                     key={item.id}
-                    className="flex items-start justify-between pb-4 border-b border-sky-100 last:border-0 last:pb-0"
+                    className="flex items-start justify-between pb-4 border-b border-green-100 last:border-0 last:pb-0"
                   >
                     <div className="flex-1">
                       <h3 className="text-base sm:text-lg font-light text-slate-900 mb-1">
@@ -202,7 +202,7 @@ export default function OrderDetailsPage() {
                       </p>
                       <Link
                         href={`/home/products/${item.productId}`}
-                        className="text-xs sm:text-sm text-sky-600 hover:text-sky-700 font-light mt-2 inline-block"
+                        className="text-xs sm:text-sm text-green-600 hover:text-green-700 font-light mt-2 inline-block"
                       >
                         View Product →
                       </Link>
@@ -220,7 +220,7 @@ export default function OrderDetailsPage() {
 
             {/* Shipping Address */}
             {order.shippingAddress && (
-              <div className="border border-sky-200 bg-white shadow-sm p-4 sm:p-6">
+              <div className="border border-green-200 bg-white shadow-sm p-4 sm:p-6">
                 <h2 className="text-xl sm:text-2xl font-light tracking-wide mb-4 sm:mb-6 flex items-center gap-2">
                   <MapPin className="w-5 h-5 sm:w-6 sm:h-6" />
                   SHIPPING ADDRESS
@@ -244,7 +244,7 @@ export default function OrderDetailsPage() {
           {/* Sidebar */}
           <div className="lg:col-span-1 space-y-6 sm:space-y-8">
             {/* Order Summary */}
-            <div className="border border-sky-200 bg-white shadow-sm p-4 sm:p-6 sticky top-24">
+            <div className="border border-green-200 bg-white shadow-sm p-4 sm:p-6 sticky top-24">
               <h2 className="text-xl sm:text-2xl font-light tracking-wide mb-4 sm:mb-6">
                 ORDER SUMMARY
               </h2>
@@ -263,7 +263,7 @@ export default function OrderDetailsPage() {
                   <span className="text-slate-600 font-light">Shipping</span>
                   <span className="text-slate-900 font-light">Free</span>
                 </div>
-                <div className="border-t border-sky-200 pt-4 flex justify-between">
+                <div className="border-t border-green-200 pt-4 flex justify-between">
                   <span className="text-lg sm:text-xl font-light text-slate-900">Total</span>
                   <span className="text-lg sm:text-xl font-light text-slate-900">
                     ₹{order.amount.toLocaleString("en-IN", {
@@ -275,7 +275,7 @@ export default function OrderDetailsPage() {
               </div>
 
               {/* Order Status */}
-              <div className="border-t border-sky-200 pt-4 space-y-4">
+              <div className="border-t border-green-200 pt-4 space-y-4">
                 <div>
                   <p className="text-xs sm:text-sm text-slate-600 font-light mb-2">
                     ORDER STATUS
@@ -303,7 +303,7 @@ export default function OrderDetailsPage() {
               </div>
 
               {/* Order Info */}
-              <div className="border-t border-sky-200 pt-4 space-y-3 text-xs sm:text-sm">
+              <div className="border-t border-green-200 pt-4 space-y-3 text-xs sm:text-sm">
                 <div className="flex items-center gap-2 text-slate-600">
                   <Calendar className="w-4 h-4" />
                   <span className="font-light">
@@ -321,10 +321,10 @@ export default function OrderDetailsPage() {
               </div>
 
               {/* Actions */}
-              <div className="border-t border-sky-200 pt-4 space-y-3">
+              <div className="border-t border-green-200 pt-4 space-y-3">
                 <Link
                   href={`/home/orders/${order.id}/track`}
-                  className="w-full flex items-center justify-center gap-2 px-4 sm:px-6 py-3 bg-sky-600 text-white hover:bg-sky-700 transition-colors"
+                  className="w-full flex items-center justify-center gap-2 px-4 sm:px-6 py-3 bg-green-600 text-white hover:bg-green-700 transition-colors"
                 >
                   <Truck className="w-4 h-4" />
                   <span className="text-xs sm:text-sm font-light tracking-wider">
@@ -333,7 +333,7 @@ export default function OrderDetailsPage() {
                 </Link>
                 <button
                   onClick={() => window.print()}
-                  className="w-full flex items-center justify-center gap-2 px-4 sm:px-6 py-3 border border-sky-600 hover:border-sky-700 bg-white hover:bg-sky-50 text-sky-600 hover:text-sky-700 transition-all"
+                  className="w-full flex items-center justify-center gap-2 px-4 sm:px-6 py-3 border border-green-600 hover:border-green-700 bg-white hover:bg-green-50 text-green-600 hover:text-green-700 transition-all"
                 >
                   <Download className="w-4 h-4" />
                   <span className="text-xs sm:text-sm font-light tracking-wider">

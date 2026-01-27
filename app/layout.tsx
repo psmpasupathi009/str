@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/componets/ui/navbar";
 import Footer from "@/componets/ui/footer";
+import ScrollToTop from "@/componets/ui/scroll-to-top";
 import { AuthProvider } from "@/lib/auth-context";
 import { ToastProvider } from "@/lib/toast-context";
 
@@ -17,8 +18,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "STR - Premium E-Commerce",
-  description: "Discover our exclusive collection of premium products",
+  title: "STN GOLDEN HEALTHY FOODS",
+  description: "Premium Quality Natural & Healthy Food Products",
 };
 
 export default function RootLayout({
@@ -36,6 +37,7 @@ export default function RootLayout({
             <Navbar />
             {children}
             <Footer />
+            <ScrollToTop />
           </ToastProvider>
         </AuthProvider>
       </body>

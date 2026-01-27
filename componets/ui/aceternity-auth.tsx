@@ -48,7 +48,7 @@ const InputField = ({
       <div className="relative" style={{ zIndex: 60 }}>
         <div 
           className={`absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 pointer-events-none transition-colors duration-200 ${
-            isFocused ? 'text-sky-600' : 'text-slate-400'
+            isFocused ? 'text-green-600' : 'text-slate-400'
           }`}
           style={{ zIndex: 1 }}
         >
@@ -62,7 +62,7 @@ const InputField = ({
           required={required}
           maxLength={maxLength}
           autoComplete={type === "email" ? "email" : type === "password" ? "current-password" : "off"}
-          className="w-full bg-white border border-sky-300 pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-all duration-200"
+          className="w-full bg-white border border-green-300 pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-200"
           placeholder={placeholder}
           style={{
             color: 'rgb(15 23 42)',
@@ -381,8 +381,8 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
   const renderOTPStep = () => (
     <div className="space-y-4 sm:space-y-5 md:space-y-6" style={{ position: 'relative', zIndex: 50 }}>
       <div className="text-center mb-6 sm:mb-8">
-        <div className="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 mx-auto mb-3 sm:mb-4 rounded-full bg-sky-100 border border-sky-300 flex items-center justify-center">
-          <Shield className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 text-sky-600" />
+        <div className="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 mx-auto mb-3 sm:mb-4 rounded-full bg-green-100 border border-green-300 flex items-center justify-center">
+          <Shield className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 text-green-600" />
         </div>
         <p className="text-xs sm:text-sm md:text-base text-slate-600 font-light">
           Enter the 6-digit code sent to
@@ -398,7 +398,7 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
           value={formData.otp}
           onChange={handleOtpChange}
           maxLength={6}
-          className="w-full bg-white border border-sky-300 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 px-4 sm:px-6 py-3 sm:py-4 md:py-5 text-2xl sm:text-3xl md:text-4xl text-center text-slate-900 tracking-[0.3em] sm:tracking-[0.5em] focus:outline-none transition-all duration-200 font-mono font-light"
+          className="w-full bg-white border border-green-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 px-4 sm:px-6 py-3 sm:py-4 md:py-5 text-2xl sm:text-3xl md:text-4xl text-center text-slate-900 tracking-[0.3em] sm:tracking-[0.5em] focus:outline-none transition-all duration-200 font-mono font-light"
           placeholder="000000"
           autoFocus
           onFocus={() => setFocusedField("otp")}
@@ -434,7 +434,7 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
             setError("");
             setForgotPassword(false);
           }}
-          className="flex-1 bg-white border border-sky-300 text-slate-700 hover:bg-sky-50 hover:border-sky-400 py-2.5 sm:py-3 md:py-4 px-4 sm:px-6 font-light tracking-widest text-xs sm:text-sm uppercase transition-all duration-200"
+          className="flex-1 bg-white border border-green-300 text-slate-700 hover:bg-green-50 hover:border-green-400 py-2.5 sm:py-3 md:py-4 px-4 sm:px-6 font-light tracking-widest text-xs sm:text-sm uppercase transition-all duration-200"
         >
           BACK
         </button>
@@ -447,7 +447,7 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
           {isLoading ? (
             <span className="flex items-center justify-center gap-2">
               <motion.div
-                className="w-4 h-4 border-2 border-sky-200 border-t-sky-600 rounded-full"
+                className="w-4 h-4 border-2 border-green-200 border-t-green-600 rounded-full"
                 animate={{ rotate: 360 }}
                 transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
               />
@@ -503,7 +503,7 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
             setFormData(prev => ({ ...prev, password: "" }));
             setError("");
           }}
-          className="flex-1 bg-white border border-sky-300 text-slate-700 hover:bg-sky-50 hover:border-sky-400 py-2.5 sm:py-3 md:py-4 px-4 sm:px-6 font-light tracking-widest text-xs sm:text-sm uppercase transition-all duration-200"
+          className="flex-1 bg-white border border-green-300 text-slate-700 hover:bg-green-50 hover:border-green-400 py-2.5 sm:py-3 md:py-4 px-4 sm:px-6 font-light tracking-widest text-xs sm:text-sm uppercase transition-all duration-200"
         >
           BACK
         </button>
@@ -516,7 +516,7 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
           {isLoading ? (
             <span className="flex items-center justify-center gap-2">
               <motion.div
-                className="w-4 h-4 border-2 border-sky-200 border-t-sky-600 rounded-full"
+                className="w-4 h-4 border-2 border-green-200 border-t-green-600 rounded-full"
                 animate={{ rotate: 360 }}
                 transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
               />
@@ -590,13 +590,13 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
   );
 
   return (
-    <div className="min-h-screen bg-linear-to-b from-sky-50 to-sky-100 text-slate-900 pt-20 sm:pt-24 md:pt-28 pb-6 sm:pb-8 md:pb-12 relative" style={{ zIndex: 1 }}>
+    <div className="min-h-screen bg-linear-to-b from-green-50 to-green-50 text-slate-900 pt-20 sm:pt-24 md:pt-28 pb-6 sm:pb-8 md:pb-12 relative" style={{ zIndex: 1 }}>
       <div className="max-w-md mx-auto px-3 sm:px-4 md:px-6 relative" style={{ zIndex: 40 }}>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="border border-sky-200 bg-white shadow-xl p-4 sm:p-6 md:p-8 lg:p-10 relative"
+          className="border border-green-200 bg-white shadow-xl p-4 sm:p-6 md:p-8 lg:p-10 relative"
           style={{ zIndex: 40 }}
         >
           {/* Header */}
@@ -664,7 +664,7 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
                 {type === "signin" ? "Don't have an account? " : "Already have an account? "}
                 <Link
                   href={type === "signin" ? "/home/signup" : "/home/signin"}
-                  className="text-sky-600 font-light tracking-wider underline decoration-sky-400 underline-offset-4 hover:text-sky-700"
+                  className="text-green-600 font-light tracking-wider underline decoration-green-400 underline-offset-4 hover:text-green-700"
                 >
                   {type === "signin" ? "SIGN UP" : "SIGN IN"}
                 </Link>

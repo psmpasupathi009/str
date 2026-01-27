@@ -86,10 +86,10 @@ export default function ReviewForm({ productId, onReviewSubmitted }: ReviewFormP
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-linear-to-br from-sky-50 via-white to-sky-50/30 rounded-lg p-4 border border-sky-200/60 shadow-sm"
+        className="bg-linear-to-br from-green-50 via-white to-green-50/30 rounded-lg p-4 border border-green-200/60 shadow-sm"
       >
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-linear-to-br from-sky-400 to-sky-600 flex items-center justify-center shadow-sm shrink-0">
+          <div className="w-10 h-10 rounded-full bg-linear-to-br from-green-400 to-green-600 flex items-center justify-center shadow-sm shrink-0">
             <Edit3 className="w-5 h-5 text-white" />
           </div>
           <div className="flex-1">
@@ -99,7 +99,7 @@ export default function ReviewForm({ productId, onReviewSubmitted }: ReviewFormP
             <p className="text-xs text-slate-600 mb-3 font-light">
               <button
                 onClick={() => router.push("/home/signin")}
-                className="text-sky-600 hover:text-sky-700 underline font-medium transition-colors"
+                className="text-green-600 hover:text-green-700 underline font-medium transition-colors"
               >
                 Sign in
               </button>
@@ -115,12 +115,12 @@ export default function ReviewForm({ productId, onReviewSubmitted }: ReviewFormP
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white rounded-lg border border-sky-200/60 shadow-sm"
+      className="bg-white rounded-lg border border-green-200/60 shadow-sm"
     >
       {/* Compact Header */}
-      <div className="bg-linear-to-r from-sky-50 to-white p-3 border-b border-sky-200/60">
+      <div className="bg-linear-to-r from-green-50 to-white p-3 border-b border-green-200/60">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-linear-to-br from-sky-400 to-sky-600 flex items-center justify-center shadow-sm shrink-0">
+          <div className="w-8 h-8 rounded-full bg-linear-to-br from-green-400 to-green-600 flex items-center justify-center shadow-sm shrink-0">
             <Edit3 className="w-4 h-4 text-white" />
           </div>
           <div>
@@ -190,7 +190,7 @@ export default function ReviewForm({ productId, onReviewSubmitted }: ReviewFormP
               placeholder="Share your experience..."
               rows={4}
               maxLength={500}
-              className="w-full px-3 py-2 text-sm border border-sky-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 bg-white text-slate-900 resize-none transition-all placeholder:text-slate-400 font-light"
+              className="w-full px-3 py-2 text-sm border border-green-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white text-slate-900 resize-none transition-all placeholder:text-slate-400 font-light"
             />
             <div className="absolute bottom-2 right-2 text-xs text-slate-400 font-light bg-white px-1.5 py-0.5 rounded">
               {comment.length}/500
@@ -229,13 +229,13 @@ export default function ReviewForm({ productId, onReviewSubmitted }: ReviewFormP
         </AnimatePresence>
 
         {/* Action Buttons */}
-        <div className="flex items-center gap-2 pt-2 border-t border-sky-200/60">
+        <div className="flex items-center gap-2 pt-2 border-t border-green-200/60">
           <motion.button
             type="submit"
             disabled={isSubmitting || rating === 0 || !comment.trim()}
             whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
             whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
-            className="flex-1 px-4 py-2 bg-linear-to-r from-sky-600 to-sky-500 text-white text-sm font-semibold rounded-lg hover:shadow-md hover:shadow-sky-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-none flex items-center justify-center gap-2"
+            className="flex-1 px-4 py-2 bg-linear-to-r from-green-600 to-green-500 text-white text-sm font-semibold rounded-lg hover:shadow-md hover:shadow-green-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-none flex items-center justify-center gap-2"
           >
             {isSubmitting ? (
               <>

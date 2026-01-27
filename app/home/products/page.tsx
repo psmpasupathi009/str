@@ -158,11 +158,11 @@ function ProductsPageContent() {
 
   if (loading) {
     return (
-      <main className="min-h-screen bg-linear-to-b from-sky-50 to-sky-100 pt-16 sm:pt-20">
+      <main className="min-h-screen bg-linear-to-b from-green-100 to-green-200 pt-16 sm:pt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
           <div className="flex items-center justify-center min-h-[400px]">
             <div className="text-center">
-              <div className="w-16 h-16 border-4 border-sky-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+              <div className="w-16 h-16 border-4 border-green-700 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
               <p className="text-slate-600 font-light">Loading products...</p>
             </div>
           </div>
@@ -173,7 +173,7 @@ function ProductsPageContent() {
 
   if (error) {
     return (
-      <main className="min-h-screen bg-linear-to-b from-sky-50 to-sky-100 pt-16 sm:pt-20">
+      <main className="min-h-screen bg-linear-to-b from-green-100 to-green-200 pt-16 sm:pt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
           <div className="text-center py-20 border border-red-200 bg-red-50 rounded-lg">
             <p className="text-red-600 font-light text-lg mb-2">Error Loading Products</p>
@@ -191,7 +191,7 @@ function ProductsPageContent() {
   }
 
   return (
-    <main className="min-h-screen bg-linear-to-b from-sky-50 to-sky-100 pt-16 sm:pt-20">
+    <main className="min-h-screen bg-linear-to-b from-green-100 to-green-200 pt-16 sm:pt-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         {/* Header */}
         <div className="mb-8 sm:mb-12">
@@ -208,8 +208,8 @@ function ProductsPageContent() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search products..."
-                className="w-full pl-12 pr-4 py-3 border border-sky-300 bg-white focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-colors text-sm sm:text-base"
-                style={{ color: 'rgb(15 23 42)', caretColor: 'rgb(14 165 233)' }}
+                className="w-full pl-12 pr-4 py-3 border border-green-700 bg-white focus:outline-none focus:border-green-700 focus:ring-2 focus:ring-green-200 transition-colors text-sm sm:text-base"
+                style={{ color: 'rgb(15 23 42)', caretColor: 'rgb(16 185 129)' }}
               />
             </div>
           </div>
@@ -222,8 +222,8 @@ function ProductsPageContent() {
                 onClick={() => setSelectedCategory("all")}
                 className={`px-4 sm:px-6 py-2 sm:py-3 border transition-all text-sm sm:text-base font-light tracking-wider rounded ${
                   selectedCategory === "all"
-                    ? "border-sky-600 text-white bg-sky-600"
-                    : "border-sky-300 text-slate-700 hover:border-sky-500 hover:text-sky-700 bg-white"
+                    ? "border-green-700 text-white bg-green-600"
+                    : "border-green-700 text-slate-700 hover:border-green-700 hover:text-green-700 bg-white"
                 }`}
               >
                 ALL
@@ -236,8 +236,8 @@ function ProductsPageContent() {
                     onClick={() => setSelectedCategory(category.name)}
                     className={`px-4 sm:px-6 py-2 sm:py-3 border transition-all text-sm sm:text-base font-light tracking-wider rounded ${
                       isSelected
-                        ? "border-sky-600 text-white bg-sky-600"
-                        : "border-sky-300 text-slate-700 hover:border-sky-500 hover:text-sky-700 bg-white"
+                        ? "border-green-700 text-white bg-green-600"
+                        : "border-green-700 text-slate-700 hover:border-green-700 hover:text-green-700 bg-white"
                     }`}
                   >
                     {category.name.toUpperCase()}
@@ -250,7 +250,7 @@ function ProductsPageContent() {
             <div className="flex gap-3">
               <button
                 onClick={() => setShowFilters(!showFilters)}
-                className="flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 border border-sky-300 hover:border-sky-500 bg-white hover:bg-sky-50 text-slate-700 hover:text-sky-700 transition-all rounded"
+                className="flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 border border-green-700 hover:border-green-700 bg-white hover:bg-green-50 text-slate-700 hover:text-green-700 transition-all rounded"
               >
                 <Filter className="w-4 h-4" />
                 <span className="text-xs sm:text-sm font-light tracking-wider">FILTERS</span>
@@ -258,7 +258,7 @@ function ProductsPageContent() {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as SortOption)}
-                className="px-4 sm:px-6 py-2 sm:py-3 border border-sky-300 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 bg-white text-slate-700 text-xs sm:text-sm font-light tracking-wider rounded"
+                className="px-4 sm:px-6 py-2 sm:py-3 border border-green-700 focus:outline-none focus:border-green-700 focus:ring-2 focus:ring-green-200 bg-white text-slate-700 text-xs sm:text-sm font-light tracking-wider rounded"
               >
                 <option value="default">Sort: Default</option>
                 <option value="price-low">Price: Low to High</option>
@@ -274,25 +274,25 @@ function ProductsPageContent() {
             <div className="mt-4 flex items-center gap-2 flex-wrap">
               <span className="text-xs sm:text-sm text-slate-600 font-light">Active filters:</span>
               {searchQuery && (
-                <span className="px-3 py-1 bg-sky-100 text-sky-700 text-xs font-light rounded flex items-center gap-2">
+                <span className="px-3 py-1 bg-green-100 text-green-700 text-xs font-light rounded flex items-center gap-2">
                   Search: "{searchQuery}"
-                  <button onClick={() => setSearchQuery("")} className="hover:text-sky-900">
+                  <button onClick={() => setSearchQuery("")} className="hover:text-green-900">
                     <X className="w-3 h-3" />
                   </button>
                 </span>
               )}
               {(priceRange[0] > 0 || priceRange[1] < maxPrice) && (
-                <span className="px-3 py-1 bg-sky-100 text-sky-700 text-xs font-light rounded flex items-center gap-2">
+                <span className="px-3 py-1 bg-green-100 text-green-700 text-xs font-light rounded flex items-center gap-2">
                   Price: ₹{priceRange[0]} - ₹{priceRange[1]}
-                  <button onClick={() => setPriceRange([0, maxPrice])} className="hover:text-sky-900">
+                  <button onClick={() => setPriceRange([0, maxPrice])} className="hover:text-green-900">
                     <X className="w-3 h-3" />
                   </button>
                 </span>
               )}
               {sortBy !== "default" && (
-                <span className="px-3 py-1 bg-sky-100 text-sky-700 text-xs font-light rounded flex items-center gap-2">
+                <span className="px-3 py-1 bg-green-100 text-green-700 text-xs font-light rounded flex items-center gap-2">
                   Sorted
-                  <button onClick={() => setSortBy("default")} className="hover:text-sky-900">
+                  <button onClick={() => setSortBy("default")} className="hover:text-green-900">
                     <X className="w-3 h-3" />
                   </button>
                 </span>
@@ -309,7 +309,7 @@ function ProductsPageContent() {
 
         {/* Filter Panel */}
         {showFilters && (
-          <div className="mb-6 border border-sky-200 bg-white shadow-sm rounded-lg p-6">
+          <div className="mb-6 border border-green-200 bg-white shadow-sm rounded-lg p-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-light tracking-wide">Filters</h3>
               <button
@@ -362,7 +362,7 @@ function ProductsPageContent() {
         {filteredProducts.length > 0 ? (
           <ProductsGrid products={filteredProducts} />
         ) : (
-          <div className="text-center py-20 border border-sky-200 bg-white rounded-lg">
+          <div className="text-center py-20 border border-green-200 bg-white rounded-lg">
             <p className="text-slate-600 font-light text-lg mb-2">No products found</p>
             <p className="text-slate-500 font-light text-sm">
               Try adjusting your filters or search query
@@ -370,7 +370,7 @@ function ProductsPageContent() {
             {hasActiveFilters && (
               <button
                 onClick={clearFilters}
-                className="mt-4 px-6 py-2 border border-sky-600 text-sky-600 hover:bg-sky-50 transition-colors rounded text-sm font-light"
+                className="mt-4 px-6 py-2 border border-green-700 text-green-600 hover:bg-green-50 transition-colors rounded text-sm font-light"
               >
                 Clear All Filters
               </button>
@@ -386,11 +386,11 @@ export default function ProductsPage() {
   return (
     <Suspense
       fallback={
-        <main className="min-h-screen bg-linear-to-b from-sky-50 to-sky-100 pt-16 sm:pt-20">
+        <main className="min-h-screen bg-linear-to-b from-green-100 to-green-200 pt-16 sm:pt-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
             <div className="flex items-center justify-center min-h-[400px]">
               <div className="text-center">
-                <div className="w-16 h-16 border-4 border-sky-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                <div className="w-16 h-16 border-4 border-green-700 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
                 <p className="text-slate-600 font-light">Loading products...</p>
               </div>
             </div>

@@ -132,7 +132,7 @@ export default function OrderTrackingPage() {
         completed: true,
         date: order.createdAt,
         icon: <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6" />,
-        color: "from-green-500 to-emerald-500",
+        color: "from-green-500 to-green-500",
       },
       {
         status: "PROCESSING",
@@ -281,7 +281,7 @@ export default function OrderTrackingPage() {
                 repeat: Infinity,
                 repeatDelay: 3
               }}
-              className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-linear-to-br from-green-600 to-green-600 flex items-center justify-center shadow-lg shadow-sky-200"
+              className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-linear-to-br from-green-600 to-green-600 flex items-center justify-center shadow-lg shadow-green-200"
             >
               <Truck className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
             </motion.div>
@@ -334,10 +334,10 @@ export default function OrderTrackingPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="border border-sky-200 bg-white/80 backdrop-blur-sm shadow-lg rounded-2xl p-6 sm:p-8 relative overflow-hidden"
+              className="border border-green-200 bg-white/80 backdrop-blur-sm shadow-lg rounded-2xl p-6 sm:p-8 relative overflow-hidden"
             >
               {/* Animated Background */}
-              <div className="absolute inset-0 bg-linear-to-br from-sky-50/50 to-blue-50/50 opacity-50" />
+              <div className="absolute inset-0 bg-linear-to-br from-green-50/50 to-blue-50/50 opacity-50" />
               <div className="relative z-10">
                 <h2 className="text-xl sm:text-2xl font-light tracking-wide mb-6 sm:mb-8 flex items-center gap-2">
                   <Package className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -350,7 +350,7 @@ export default function OrderTrackingPage() {
                     initial={{ scaleY: 0 }}
                     animate={{ scaleY: 1 }}
                     transition={{ duration: 1, delay: 0.3 }}
-                    className="absolute left-6 sm:left-8 top-0 bottom-0 w-1 bg-linear-to-b from-sky-200 via-blue-300 to-sky-200 rounded-full"
+                    className="absolute left-6 sm:left-8 top-0 bottom-0 w-1 bg-linear-to-b from-green-200 via-blue-300 to-green-200 rounded-full"
                   />
 
                   {/* Timeline Steps with Animations */}
@@ -372,15 +372,15 @@ export default function OrderTrackingPage() {
                             animate={isActive ? {
                               scale: [1, 1.2, 1],
                               boxShadow: [
-                                "0 0 0 0px rgba(14, 165, 233, 0.4)",
-                                "0 0 0 10px rgba(14, 165, 233, 0)",
-                                "0 0 0 0px rgba(14, 165, 233, 0)"
+                                "0 0 0 0px rgba(16, 185, 129, 0.4)",
+                                "0 0 0 10px rgba(16, 185, 129, 0)",
+                                "0 0 0 0px rgba(16, 185, 129, 0)"
                               ]
                             } : {}}
                             transition={{ duration: 2, repeat: isActive ? Infinity : 0, repeatDelay: 3 }}
                             className={`relative z-10 shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center transition-all duration-300 ${
                               isActive
-                                ? `bg-linear-to-br ${step.color} text-white shadow-lg shadow-sky-200`
+                                ? `bg-linear-to-br ${step.color} text-white shadow-lg shadow-green-200`
                                 : "bg-slate-200 text-slate-400"
                             }`}
                           >
@@ -444,10 +444,10 @@ export default function OrderTrackingPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.6 }}
-                className="border border-sky-200 bg-linear-to-br from-green-50 to-emerald-50 shadow-lg rounded-2xl p-6 sm:p-8"
+                className="border border-green-200 bg-linear-to-br from-green-50 to-green-50 shadow-lg rounded-2xl p-6 sm:p-8"
               >
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-full bg-linear-to-br from-green-500 to-emerald-500 flex items-center justify-center shrink-0">
+                  <div className="w-12 h-12 rounded-full bg-linear-to-br from-green-500 to-green-500 flex items-center justify-center shrink-0">
                     <CheckCircle className="w-6 h-6 text-white" />
                   </div>
                   <div className="flex-1">
@@ -462,7 +462,7 @@ export default function OrderTrackingPage() {
                       whileTap={{ scale: 0.98 }}
                       onClick={confirmDelivery}
                       disabled={confirming}
-                      className="px-6 sm:px-8 py-3 bg-linear-to-r from-green-600 to-emerald-600 text-white hover:from-green-700 hover:to-emerald-700 transition-all rounded-lg shadow-lg shadow-green-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                      className="px-6 sm:px-8 py-3 bg-linear-to-r from-green-600 to-green-600 text-white hover:from-green-700 hover:to-green-700 transition-all rounded-lg shadow-lg shadow-green-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                     >
                       {confirming ? (
                         <>
@@ -488,13 +488,13 @@ export default function OrderTrackingPage() {
                   initial={{ opacity: 0, y: -20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
-                  className="border border-green-200 bg-linear-to-br from-green-50 to-emerald-50 shadow-lg rounded-2xl p-6"
+                  className="border border-green-200 bg-linear-to-br from-green-50 to-green-50 shadow-lg rounded-2xl p-6"
                 >
                   <div className="flex items-center gap-3">
                     <motion.div
                       animate={{ rotate: 360 }}
                       transition={{ duration: 0.5 }}
-                      className="w-10 h-10 rounded-full bg-linear-to-br from-green-500 to-emerald-500 flex items-center justify-center"
+                      className="w-10 h-10 rounded-full bg-linear-to-br from-green-500 to-green-500 flex items-center justify-center"
                     >
                       <CheckCircle className="w-6 h-6 text-white" />
                     </motion.div>
@@ -512,7 +512,7 @@ export default function OrderTrackingPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.4 }}
-              className="border border-sky-200 bg-white/80 backdrop-blur-sm shadow-lg rounded-2xl p-6 sm:p-8"
+              className="border border-green-200 bg-white/80 backdrop-blur-sm shadow-lg rounded-2xl p-6 sm:p-8"
             >
               <h2 className="text-xl sm:text-2xl font-light tracking-wide mb-6 flex items-center gap-2">
                 <Package className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -547,9 +547,9 @@ export default function OrderTrackingPage() {
 
               {/* Shipping Address */}
               {order.shippingAddress && (
-                <div className="mt-6 pt-6 border-t border-sky-200">
+                <div className="mt-6 pt-6 border-t border-green-200">
                   <div className="flex items-start gap-3">
-                    <MapPin className="w-5 h-5 text-sky-600 shrink-0 mt-1" />
+                    <MapPin className="w-5 h-5 text-green-600 shrink-0 mt-1" />
                     <div className="flex-1">
                       <p className="text-sm sm:text-base text-slate-600 font-light mb-2">Shipping Address</p>
                       <p className="text-sm sm:text-base font-light text-slate-900 leading-relaxed">
@@ -577,7 +577,7 @@ export default function OrderTrackingPage() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5, delay: 0.3 }}
-              className="border border-sky-200 bg-white/80 backdrop-blur-sm shadow-lg rounded-2xl p-6 sticky top-24"
+              className="border border-green-200 bg-white/80 backdrop-blur-sm shadow-lg rounded-2xl p-6 sticky top-24"
             >
               <h2 className="text-xl sm:text-2xl font-light tracking-wide mb-4 sm:mb-6">ORDER ITEMS</h2>
               
@@ -588,7 +588,7 @@ export default function OrderTrackingPage() {
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.5 + index * 0.1 }}
-                    className="flex items-start justify-between pb-4 border-b border-sky-100 last:border-0"
+                    className="flex items-start justify-between pb-4 border-b border-green-100 last:border-0"
                   >
                     <div className="flex-1">
                       <p className="text-sm sm:text-base font-light text-slate-900 mb-1">
@@ -608,7 +608,7 @@ export default function OrderTrackingPage() {
                 ))}
               </div>
 
-              <div className="border-t border-sky-200 pt-4 space-y-3">
+              <div className="border-t border-green-200 pt-4 space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="text-sm sm:text-base text-slate-600 font-light">Subtotal</span>
                   <span className="text-sm sm:text-base font-light text-slate-900">
@@ -622,7 +622,7 @@ export default function OrderTrackingPage() {
                   <span className="text-sm sm:text-base text-slate-600 font-light">Shipping</span>
                   <span className="text-sm sm:text-base font-light text-slate-900">Free</span>
                 </div>
-                <div className="border-t border-sky-200 pt-3 flex justify-between items-center">
+                <div className="border-t border-green-200 pt-3 flex justify-between items-center">
                   <span className="text-base sm:text-lg font-light text-slate-900">Total</span>
                   <span className="text-lg sm:text-xl font-light text-slate-900">
                     ₹{order.amount.toLocaleString("en-IN", {
@@ -636,13 +636,13 @@ export default function OrderTrackingPage() {
               <div className="mt-6 space-y-3">
                 <Link
                   href={`/home/orders/${order.id}`}
-                  className="block w-full text-center px-4 sm:px-6 py-3 border border-sky-600 hover:border-sky-700 bg-white hover:bg-sky-50 text-sky-600 hover:text-green-700 transition-all rounded-lg"
+                  className="block w-full text-center px-4 sm:px-6 py-3 border border-green-600 hover:border-green-700 bg-white hover:bg-green-50 text-green-600 hover:text-green-700 transition-all rounded-lg"
                 >
                   <span className="text-xs sm:text-sm font-light tracking-wider">VIEW FULL ORDER</span>
                 </Link>
                 <button
                   onClick={() => window.print()}
-                  className="w-full flex items-center justify-center gap-2 px-4 sm:px-6 py-3 border border-sky-300 hover:border-sky-500 bg-white hover:bg-sky-50 text-slate-700 hover:text-slate-900 transition-all rounded-lg"
+                  className="w-full flex items-center justify-center gap-2 px-4 sm:px-6 py-3 border border-green-300 hover:border-green-500 bg-white hover:bg-green-50 text-slate-700 hover:text-slate-900 transition-all rounded-lg"
                 >
                   <Download className="w-4 h-4" />
                   <span className="text-xs sm:text-sm font-light tracking-wider">DOWNLOAD INVOICE</span>

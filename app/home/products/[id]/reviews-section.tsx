@@ -28,7 +28,7 @@ export default function ReviewsSection({ productId }: ReviewsSectionProps) {
           className="mb-6 sm:mb-8"
         >
           <div className="flex items-center gap-3 mb-2">
-            <div className="h-1 w-12 bg-linear-to-r from-sky-500 to-sky-400 rounded-full"></div>
+            <div className="h-1 w-12 bg-linear-to-r from-green-500 to-green-400 rounded-full"></div>
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-900">
               Customer Reviews
             </h2>

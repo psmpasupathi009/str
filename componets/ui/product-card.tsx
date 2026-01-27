@@ -33,7 +33,7 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
       className="group relative"
     >
       <Link href={`/home/products/${product.id}`}>
-        <div className="relative overflow-hidden bg-white border border-sky-200 hover:border-sky-400 shadow-lg hover:shadow-xl transition-all duration-300">
+        <div className="relative overflow-hidden bg-white border border-green-200 hover:border-green-400 shadow-lg hover:shadow-xl transition-all duration-300">
           {/* Badges */}
           {(product.bestSeller || product.featured) && (
             <div className="absolute top-3 right-3 z-10 flex flex-col gap-2">
@@ -69,12 +69,12 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
                 <span className="text-slate-400 text-xs font-light">No Image</span>
               </div>
             )}
-            <div className="absolute inset-0 bg-linear-to-t from-sky-600/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <div className="absolute inset-0 bg-linear-to-t from-green-600/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           </div>
 
           {/* Content */}
           <div className="p-4 sm:p-6 text-slate-900">
-            <h3 className="text-base sm:text-lg md:text-xl font-light tracking-wider mb-2 group-hover:text-sky-700 transition-colors">
+            <h3 className="text-base sm:text-lg md:text-xl font-light tracking-wider mb-2 group-hover:text-green-700 transition-colors">
               {product.name.toUpperCase()}
             </h3>
             <p className="text-xs sm:text-sm text-slate-600 font-light mb-3 sm:mb-4 line-clamp-2">

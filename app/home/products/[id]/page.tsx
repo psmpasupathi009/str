@@ -47,12 +47,12 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const gstAmount = product.salePrice * product.gst;
 
   return (
-    <main className="min-h-screen bg-linear-to-b from-sky-50 to-sky-100 text-slate-900 pt-16 sm:pt-20">
+    <main className="min-h-screen bg-linear-to-b from-green-50 to-green-50 text-slate-900 pt-16 sm:pt-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         {/* Back Button */}
         <Link
           href="/home/products"
-          className="inline-flex items-center gap-2 text-slate-600 hover:text-sky-700 transition-colors mb-6 sm:mb-8"
+          className="inline-flex items-center gap-2 text-slate-600 hover:text-green-700 transition-colors mb-6 sm:mb-8"
         >
           <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
           <span className="text-xs sm:text-sm font-light tracking-wider">BACK TO PRODUCTS</span>
@@ -74,7 +74,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 {product.category?.name?.toUpperCase() || "PRODUCT"}
               </span>
               {product.featured && (
-                <span className="px-2 py-1 text-xs font-light tracking-wider bg-sky-100 text-sky-700 border border-sky-300">
+                <span className="px-2 py-1 text-xs font-light tracking-wider bg-green-100 text-green-700 border border-green-300">
                   FEATURED
                 </span>
               )}
@@ -114,7 +114,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
             )}
 
             {/* Price Section */}
-            <div className="mb-6 sm:mb-8 p-4 sm:p-6 border border-sky-200 bg-white rounded-lg">
+            <div className="mb-6 sm:mb-8 p-4 sm:p-6 border border-green-200 bg-white rounded-lg">
               <div className="space-y-3">
                 {product.mrp > product.salePrice && (
                   <div className="flex items-center gap-3">
@@ -135,7 +135,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
                   </span>
                   <span className="text-sm text-slate-600 font-light">(Excluding GST)</span>
                 </div>
-                <div className="pt-2 border-t border-sky-100 space-y-1 text-sm text-slate-600">
+                <div className="pt-2 border-t border-green-100 space-y-1 text-sm text-slate-600">
                   <div className="flex justify-between">
                     <span className="font-light">Price:</span>
                     <span className="font-light">₹{product.salePrice.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
@@ -144,7 +144,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
                     <span className="font-light">GST ({(product.gst * 100).toFixed(0)}%):</span>
                     <span className="font-light">₹{gstAmount.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                   </div>
-                  <div className="flex justify-between pt-1 border-t border-sky-100 font-medium text-slate-900">
+                  <div className="flex justify-between pt-1 border-t border-green-100 font-medium text-slate-900">
                     <span>Total Price:</span>
                     <span>₹{priceWithGST.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                   </div>
@@ -159,13 +159,13 @@ export default async function ProductPage({ params }: ProductPageProps) {
                   productId={product.id}
                   productName={product.name}
                   price={product.salePrice}
-                  className="flex-1 flex items-center justify-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 border border-sky-600 hover:border-sky-700 bg-sky-600 text-white hover:bg-sky-700 transition-all group"
+                  className="flex-1 flex items-center justify-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 border border-green-600 hover:border-green-700 bg-green-600 text-white hover:bg-green-700 transition-all group"
                 />
                 <BuyNowButton
                   productId={product.id}
                   productName={product.name}
                   price={product.salePrice}
-                  className="flex-1 sm:flex-none px-6 sm:px-8 py-3 sm:py-4 border border-sky-600 hover:border-sky-700 bg-sky-600 text-white hover:bg-sky-700 transition-all"
+                  className="flex-1 sm:flex-none px-6 sm:px-8 py-3 sm:py-4 border border-green-600 hover:border-green-700 bg-green-600 text-white hover:bg-green-700 transition-all"
                 />
               </div>
             ) : (
@@ -175,9 +175,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
             )}
 
             {/* Product Specifications */}
-            <div className="border border-sky-200 bg-white rounded-lg p-4 sm:p-6">
+            <div className="border border-green-200 bg-white rounded-lg p-4 sm:p-6">
               <h2 className="text-lg sm:text-xl font-light tracking-wide mb-4 sm:mb-6 flex items-center gap-2">
-                <Package className="w-5 h-5 text-sky-600" />
+                <Package className="w-5 h-5 text-green-600" />
                 PRODUCT DETAILS
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">

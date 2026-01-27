@@ -31,7 +31,7 @@ export default function ContactPage() {
   };
 
   return (
-    <main className="min-h-screen bg-linear-to-b from-sky-50 to-sky-100 text-slate-900 pt-16 sm:pt-20">
+    <main className="min-h-screen bg-linear-to-b from-green-100 to-green-200 text-slate-900 pt-16 sm:pt-20">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20">
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light tracking-wider mb-8 sm:mb-12">
           CONTACT US
@@ -68,7 +68,7 @@ export default function ContactPage() {
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 required
-                className="w-full bg-white border border-sky-300 px-4 py-3 text-sm sm:text-base text-slate-900 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-colors"
+                className="w-full bg-white border border-green-300 px-4 py-3 text-sm sm:text-base text-slate-900 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-colors"
                 style={{ color: 'rgb(15 23 42)', caretColor: 'rgb(14 165 233)' }}
               />
               <input
@@ -77,7 +77,7 @@ export default function ContactPage() {
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 required
-                className="w-full bg-white border border-sky-300 px-4 py-3 text-sm sm:text-base text-slate-900 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-colors"
+                className="w-full bg-white border border-green-300 px-4 py-3 text-sm sm:text-base text-slate-900 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-colors"
                 style={{ color: 'rgb(15 23 42)', caretColor: 'rgb(14 165 233)' }}
               />
               <textarea
@@ -86,7 +86,7 @@ export default function ContactPage() {
                 value={formData.message}
                 onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                 required
-                className="w-full bg-white border border-sky-300 px-4 py-3 text-sm sm:text-base text-slate-900 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-colors resize-none"
+                className="w-full bg-white border border-green-300 px-4 py-3 text-sm sm:text-base text-slate-900 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-colors resize-none"
                 style={{ color: 'rgb(15 23 42)', caretColor: 'rgb(14 165 233)' }}
               />
               {submitStatus === "success" && (
@@ -98,7 +98,7 @@ export default function ContactPage() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full px-6 sm:px-8 py-3 sm:py-4 border border-sky-600 hover:border-sky-700 bg-sky-600 text-white hover:bg-sky-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full px-6 sm:px-8 py-3 sm:py-4 border border-green-600 hover:border-green-700 bg-green-600 text-white hover:bg-green-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <span className="text-xs sm:text-sm font-light tracking-widest">
                   {isSubmitting ? "SENDING..." : "SEND MESSAGE"}

@@ -5,17 +5,17 @@ import { Youtube, Facebook, Instagram, Linkedin, Twitter } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="bg-sky-600 text-white border-t border-sky-300/20">
+    <footer className="bg-green-600 text-white border-t border-green-300/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 md:py-16">
         {/* Logo Section */}
         <div className="flex flex-col items-center mb-8 sm:mb-12">
           <div className="text-white text-2xl sm:text-3xl font-light tracking-[0.2em] sm:tracking-[0.3em] mb-2">
             STR
           </div>
-          <div className="text-sky-100 text-xs sm:text-sm font-light tracking-widest">
+          <div className="text-green-100 text-xs sm:text-sm font-light tracking-widest">
             E-COMMERCE
           </div>
-          <div className="w-full max-w-4xl h-px bg-sky-300/20 mt-6 sm:mt-8"></div>
+          <div className="w-full max-w-4xl h-px bg-green-300/20 mt-6 sm:mt-8"></div>
         </div>
 
         {/* Links Grid */}
@@ -136,7 +136,7 @@ export default function Footer() {
         </div>
 
         {/* Divider */}
-        <div className="w-full h-px bg-sky-300/20 mb-8"></div>
+        <div className="w-full h-px bg-green-300/20 mb-8"></div>
 
         {/* Social Media Icons */}
         <div className="flex justify-center sm:justify-end items-center gap-4 sm:gap-6">
@@ -144,7 +144,7 @@ export default function Footer() {
             href="https://youtube.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sky-100 hover:text-white transition-colors"
+            className="text-green-100 hover:text-white transition-colors"
           >
             <Youtube className="w-4 h-4 sm:w-5 sm:h-5" />
           </Link>
@@ -152,7 +152,7 @@ export default function Footer() {
             href="https://facebook.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sky-100 hover:text-white transition-colors"
+            className="text-green-100 hover:text-white transition-colors"
           >
             <Facebook className="w-4 h-4 sm:w-5 sm:h-5" />
           </Link>
@@ -160,7 +160,7 @@ export default function Footer() {
             href="https://instagram.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sky-100 hover:text-white transition-colors"
+            className="text-green-100 hover:text-white transition-colors"
           >
             <Instagram className="w-4 h-4 sm:w-5 sm:h-5" />
           </Link>
@@ -168,7 +168,7 @@ export default function Footer() {
             href="https://linkedin.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sky-100 hover:text-white transition-colors"
+            className="text-green-100 hover:text-white transition-colors"
           >
             <Linkedin className="w-4 h-4 sm:w-5 sm:h-5" />
           </Link>
@@ -176,7 +176,7 @@ export default function Footer() {
             href="https://x.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sky-100 hover:text-white transition-colors"
+            className="text-green-100 hover:text-white transition-colors"
           >
             <Twitter className="w-4 h-4 sm:w-5 sm:h-5" />
           </Link>

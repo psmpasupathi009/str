@@ -100,11 +100,11 @@ export default function OrdersPage() {
 
   if (authLoading || loading) {
     return (
-      <main className="min-h-screen bg-linear-to-b from-sky-50 to-sky-100 text-slate-900 pt-16 sm:pt-20">
+      <main className="min-h-screen bg-linear-to-b from-green-50 to-green-50 text-slate-900 pt-16 sm:pt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
           <div className="flex items-center justify-center min-h-[400px]">
             <div className="text-center">
-              <div className="w-16 h-16 border-4 border-sky-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+              <div className="w-16 h-16 border-4 border-green-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
               <p className="text-slate-600 font-light">Loading orders...</p>
             </div>
           </div>
@@ -118,11 +118,11 @@ export default function OrdersPage() {
   }
 
   return (
-    <main className="min-h-screen bg-linear-to-b from-sky-50 to-sky-100 text-slate-900 pt-16 sm:pt-20">
+    <main className="min-h-screen bg-linear-to-b from-green-50 to-green-50 text-slate-900 pt-16 sm:pt-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         <Link
           href="/home/profile"
-          className="inline-flex items-center gap-2 text-slate-600 hover:text-sky-700 transition-colors mb-6 sm:mb-8"
+          className="inline-flex items-center gap-2 text-slate-600 hover:text-green-700 transition-colors mb-6 sm:mb-8"
         >
           <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
           <span className="text-xs sm:text-sm font-light tracking-wider">
@@ -131,7 +131,7 @@ export default function OrdersPage() {
         </Link>
 
         <div className="flex items-center gap-3 sm:gap-4 mb-8 sm:mb-12">
-          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-sky-600 flex items-center justify-center">
+          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-green-600 flex items-center justify-center">
             <Package className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
           </div>
           <div>
@@ -151,7 +151,7 @@ export default function OrdersPage() {
         )}
 
         {orders.length === 0 ? (
-          <div className="border border-sky-200 bg-white shadow-sm p-8 sm:p-12 text-center">
+          <div className="border border-green-200 bg-white shadow-sm p-8 sm:p-12 text-center">
             <Package className="w-16 h-16 sm:w-20 sm:h-20 text-slate-400 mx-auto mb-4" />
             <h2 className="text-xl sm:text-2xl font-light tracking-wide mb-2 text-slate-900">
               No Orders Yet
@@ -161,7 +161,7 @@ export default function OrdersPage() {
             </p>
             <Link
               href="/home/products"
-              className="inline-block px-6 sm:px-8 py-3 sm:py-4 bg-sky-600 text-white hover:bg-sky-700 transition-colors"
+              className="inline-block px-6 sm:px-8 py-3 sm:py-4 bg-green-600 text-white hover:bg-green-700 transition-colors"
             >
               <span className="text-xs sm:text-sm font-light tracking-widest">
                 START SHOPPING
@@ -173,7 +173,7 @@ export default function OrdersPage() {
             {orders.map((order) => (
               <div
                 key={order.id}
-                className="border border-sky-200 bg-white shadow-sm p-4 sm:p-6 hover:shadow-md transition-shadow"
+                className="border border-green-200 bg-white shadow-sm p-4 sm:p-6 hover:shadow-md transition-shadow"
               >
                 <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4">
                   <div className="flex-1">
@@ -214,7 +214,7 @@ export default function OrdersPage() {
                   </div>
                 </div>
 
-                <div className="border-t border-sky-200 pt-4 mt-4">
+                <div className="border-t border-green-200 pt-4 mt-4">
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                     <div className="flex-1">
                       <p className="text-xs sm:text-sm text-slate-600 font-light mb-2">
@@ -239,7 +239,7 @@ export default function OrdersPage() {
                     <div className="flex gap-2 sm:gap-3">
                       <Link
                         href={`/home/orders/${order.id}`}
-                        className="flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 border border-sky-600 hover:border-sky-700 bg-white hover:bg-sky-50 text-sky-600 hover:text-sky-700 transition-all"
+                        className="flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 border border-green-600 hover:border-green-700 bg-white hover:bg-green-50 text-green-600 hover:text-green-700 transition-all"
                       >
                         <Eye className="w-4 h-4" />
                         <span className="text-xs sm:text-sm font-light tracking-wider">
@@ -248,7 +248,7 @@ export default function OrdersPage() {
                       </Link>
                       <Link
                         href={`/home/orders/${order.id}/track`}
-                        className="flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 bg-sky-600 text-white hover:bg-sky-700 transition-colors"
+                        className="flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 bg-green-600 text-white hover:bg-green-700 transition-colors"
                       >
                         <Truck className="w-4 h-4" />
                         <span className="text-xs sm:text-sm font-light tracking-wider">

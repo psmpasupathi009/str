@@ -165,7 +165,7 @@ export default function MediaModal({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 z-[9999] bg-black/95 flex items-center justify-center p-4"
+        className="fixed inset-0  bg-black/95 flex items-center justify-center p-4"
         onClick={onClose}
       >
         {/* Close Button */}
@@ -236,10 +236,10 @@ export default function MediaModal({
                     onClick={handleProgressClick}
                   >
                     <div
-                      className="h-full bg-sky-500 rounded-full transition-all relative group-hover/progress:bg-sky-400"
+                      className="h-full bg-green-500 rounded-full transition-all relative group-hover/progress:bg-green-400"
                       style={{ width: `${duration > 0 ? (currentTime / duration) * 100 : 0}%` }}
                     >
-                      <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-sky-500 rounded-full opacity-0 group-hover/progress:opacity-100 transition-opacity" />
+                      <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-green-500 rounded-full opacity-0 group-hover/progress:opacity-100 transition-opacity" />
                     </div>
                   </div>
 

@@ -44,7 +44,7 @@ export default function ProductImageGallery({
 
   if (allImages.length === 0) {
     return (
-      <div className="relative aspect-square overflow-hidden border border-sky-200 bg-slate-100 rounded-lg">
+      <div className="relative aspect-square overflow-hidden border border-green-200 bg-slate-100 rounded-lg">
         <div className="w-full h-full flex items-center justify-center">
           <span className="text-slate-400 text-sm font-light">No Image Available</span>
         </div>
@@ -55,7 +55,7 @@ export default function ProductImageGallery({
   return (
     <div className="space-y-4">
       {/* Main Image Display - Amazon Style */}
-      <div className="relative aspect-square overflow-hidden border border-sky-200 bg-white rounded-lg shadow-sm group">
+      <div className="relative aspect-square overflow-hidden border border-green-200 bg-white rounded-lg shadow-sm group">
         {!imageErrors.has(selectedIndex) ? (
           <>
             <Image
@@ -108,15 +108,15 @@ export default function ProductImageGallery({
 
       {/* Thumbnail Strip - Amazon Style */}
       {allImages.length > 1 && (
-        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-sky-300 scrollbar-track-sky-100">
+        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-green-300 scrollbar-track-green-100">
           {allImages.map((img, index) => (
             <button
               key={index}
               onClick={() => handleThumbnailClick(index)}
               className={`relative shrink-0 w-20 h-20 sm:w-24 sm:h-24 overflow-hidden border-2 rounded-lg transition-all ${
                 selectedIndex === index
-                  ? "border-sky-600 shadow-md ring-2 ring-sky-200"
-                  : "border-sky-200 hover:border-sky-400"
+                  ? "border-green-600 shadow-md ring-2 ring-green-200"
+                  : "border-green-200 hover:border-green-400"
               }`}
               aria-label={`View image ${index + 1}`}
             >
@@ -135,7 +135,7 @@ export default function ProductImageGallery({
               )}
               {/* Selected Indicator */}
               {selectedIndex === index && (
-                <div className="absolute inset-0 bg-sky-600/10 border-2 border-sky-600" />
+                <div className="absolute inset-0 bg-green-600/10 border-2 border-green-600" />
               )}
             </button>
           ))}
@@ -150,7 +150,7 @@ export default function ProductImageGallery({
         >
           <button
             onClick={() => setShowZoom(false)}
-            className="absolute top-4 right-4 text-white hover:text-sky-300 transition-colors z-10"
+            className="absolute top-4 right-4 text-white hover:text-green-300 transition-colors z-10"
             aria-label="Close zoom"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

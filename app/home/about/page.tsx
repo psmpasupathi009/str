@@ -104,7 +104,7 @@ export default function AboutPage() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-linear-to-b from-sky-50 to-sky-100 text-slate-900 pt-16 sm:pt-20">
+    <main className="min-h-screen bg-linear-to-b from-green-50 to-green-50 text-slate-900 pt-16 sm:pt-20">
       {/* Hero */}
       <section className="relative py-14 sm:py-20 md:py-24">
         <div
@@ -141,7 +141,7 @@ export default function AboutPage() {
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-light tracking-wide text-slate-900 mb-3">
               Our Story
             </h2>
-            <div className="w-16 h-0.5 bg-linear-to-r from-sky-500 to-sky-400 mx-auto rounded-full" />
+            <div className="w-16 h-0.5 bg-linear-to-r from-green-500 to-green-400 mx-auto rounded-full" />
           </motion.div>
 
           <motion.div
@@ -156,9 +156,9 @@ export default function AboutPage() {
                 key={title}
                 variants={itemVariants}
                 transition={{ duration: 0.5 }}
-                className="p-6 sm:p-8 bg-white/90 backdrop-blur-sm rounded-2xl border border-sky-200/80 shadow-sm hover:shadow-md hover:border-sky-300 transition-all duration-300"
+                className="p-6 sm:p-8 bg-white/90 backdrop-blur-sm rounded-2xl border border-green-200/80 shadow-sm hover:shadow-md hover:border-green-300 transition-all duration-300"
               >
-                <div className="w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-4 rounded-full bg-linear-to-br from-sky-400 to-sky-600 flex items-center justify-center">
+                <div className="w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-4 rounded-full bg-linear-to-br from-green-400 to-green-600 flex items-center justify-center">
                   <Icon className="w-7 h-7 sm:w-8 sm:h-8 text-white" aria-hidden />
                 </div>
                 <h3 className="text-lg font-semibold text-slate-900 text-center mb-2">{title}</h3>
@@ -193,7 +193,7 @@ export default function AboutPage() {
       </section>
 
       {/* Gallery */}
-      <section className="relative py-12 sm:py-16 md:py-20 bg-white/50 border-t border-sky-200/60">
+      <section className="relative py-12 sm:py-16 md:py-20 bg-white/50 border-t border-green-200/60">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0 }}
@@ -211,7 +211,7 @@ export default function AboutPage() {
           {loading ? (
             <div className="flex justify-center py-16">
               <div
-                className="w-8 h-8 border-2 border-sky-300 border-t-sky-600 rounded-full animate-spin"
+                className="w-8 h-8 border-2 border-green-300 border-t-green-600 rounded-full animate-spin"
                 aria-hidden
               />
             </div>
@@ -236,7 +236,7 @@ export default function AboutPage() {
                     initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3 }}
-                    className="relative group aspect-square rounded-xl overflow-hidden bg-white border border-sky-200 shadow-sm hover:shadow-md hover:border-sky-300 transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-offset-2"
+                    className="relative group aspect-square rounded-xl overflow-hidden bg-white border border-green-200 shadow-sm hover:shadow-md hover:border-green-300 transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2"
                     onClick={() => openMedia(item)}
                     onKeyDown={(e) => {
                       if (e.key === "Enter" || e.key === " ") {
@@ -247,7 +247,7 @@ export default function AboutPage() {
                   >
                     {item.type === "IMAGE" ? (
                       imageErrors.has(item.url) ? (
-                        <div className="absolute inset-0 bg-linear-to-br from-sky-100 to-sky-200 flex items-center justify-center">
+                        <div className="absolute inset-0 bg-linear-to-br from-green-100 to-green-200 flex items-center justify-center">
                           <ImageIcon className="w-10 h-10 text-slate-400" aria-hidden />
                         </div>
                       ) : (
@@ -285,7 +285,7 @@ export default function AboutPage() {
                     )}
                     <span
                       className={`absolute top-2 right-2 text-[10px] px-2 py-0.5 rounded-md pointer-events-none ${
-                        item.type === "IMAGE" ? "bg-sky-600/90 text-white" : "bg-slate-700/90 text-white"
+                        item.type === "IMAGE" ? "bg-green-600/90 text-white" : "bg-slate-700/90 text-white"
                       }`}
                     >
                       {item.type === "IMAGE" ? "Image" : "Video"}
@@ -303,7 +303,7 @@ export default function AboutPage() {
                     type="button"
                     onClick={goPrev}
                     disabled={page === 0}
-                    className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-sky-600 text-white hover:bg-sky-700 disabled:hover:bg-sky-600"
+                    className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-green-600 text-white hover:bg-green-700 disabled:hover:bg-green-600"
                   >
                     <ChevronLeft className="w-4 h-4" aria-hidden /> Prev
                   </button>
@@ -314,7 +314,7 @@ export default function AboutPage() {
                     type="button"
                     onClick={goNext}
                     disabled={page >= totalPages - 1}
-                    className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-sky-600 text-white hover:bg-sky-700 disabled:hover:bg-sky-600"
+                    className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-green-600 text-white hover:bg-green-700 disabled:hover:bg-green-600"
                   >
                     Next <ChevronRight className="w-4 h-4" aria-hidden />
                   </button>
