@@ -15,6 +15,7 @@ interface Product {
   category?: string;
   featured?: boolean;
   bestSeller?: boolean;
+  inStock?: boolean;
 }
 
 interface ProductCardProps {
@@ -50,13 +51,24 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
           )}
 
           {/* Image Container */}
-          <div className="relative aspect-4/3 overflow-hidden">
-            <Image
-              src={product.image}
-              alt={product.name}
-              fill
-              className="object-cover group-hover:scale-110 transition-transform duration-500"
-            />
+          <div className="relative aspect-4/3 overflow-hidden bg-slate-100">
+            {product.image ? (
+              <Image
+                src={product.image}
+                alt={product.name}
+                fill
+                className="object-cover group-hover:scale-110 transition-transform duration-500"
+                onError={(e) => {
+                  // Fallback to placeholder if image fails to load
+                  const target = e.target as HTMLImageElement;
+                  target.src = "/placeholder-product.jpg";
+                }}
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center bg-slate-200">
+                <span className="text-slate-400 text-xs font-light">No Image</span>
+              </div>
+            )}
             <div className="absolute inset-0 bg-linear-to-t from-sky-600/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           </div>
 
@@ -73,9 +85,14 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
               <ProductRating productId={product.id} showCount size="sm" />
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-base sm:text-lg font-light tracking-wide">
-                ${product.price.toLocaleString()}
-              </span>
+              <div className="flex flex-col">
+                <span className="text-base sm:text-lg font-light tracking-wide">
+                  ₹{product.price.toLocaleString("en-IN")}
+                </span>
+                {product.inStock === false && (
+                  <span className="text-xs text-red-600 font-light">Out of Stock</span>
+                )}
+              </div>
               <motion.div
                 className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-light tracking-wider opacity-0 group-hover:opacity-100 transition-opacity"
                 whileHover={{ x: 5 }}

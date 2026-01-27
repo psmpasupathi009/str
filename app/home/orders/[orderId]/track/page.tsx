@@ -141,7 +141,7 @@ export default function OrderTrackingPage() {
         completed: ["PROCESSING", "SHIPPED", "DELIVERED"].includes(order.orderStatus),
         date: order.orderStatus !== "PENDING" ? order.updatedAt : undefined,
         icon: <Package className="w-5 h-5 sm:w-6 sm:h-6" />,
-        color: "from-blue-500 to-cyan-500",
+        color: "from-green-500 to-green-400",
       },
       {
         status: "SHIPPED",
@@ -184,7 +184,7 @@ export default function OrderTrackingPage() {
       case "shipped":
         return "text-purple-600 bg-purple-50 border-purple-200";
       case "processing":
-        return "text-blue-600 bg-blue-50 border-blue-200";
+        return "text-green-300 bg-green-50 border-green-200";
       case "pending":
         return "text-yellow-600 bg-yellow-50 border-yellow-200";
       case "cancelled":
@@ -204,7 +204,7 @@ export default function OrderTrackingPage() {
 
   if (authLoading || loading) {
     return (
-      <main className="min-h-screen bg-linear-to-b from-sky-50 via-blue-50 to-sky-100 text-slate-900 pt-16 sm:pt-20">
+      <main className="min-h-screen bg-linear-to-b from-green-50 via-green-50 to-green-100 text-slate-900 pt-16 sm:pt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
           <div className="flex items-center justify-center min-h-[400px]">
             <motion.div
@@ -212,7 +212,7 @@ export default function OrderTrackingPage() {
               animate={{ opacity: 1, scale: 1 }}
               className="text-center"
             >
-              <div className="w-16 h-16 border-4 border-sky-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+              <div className="w-16 h-16 border-4 border-green-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
               <p className="text-slate-600 font-light">Loading tracking information...</p>
             </motion.div>
           </div>
@@ -225,11 +225,11 @@ export default function OrderTrackingPage() {
 
   if (error || !order) {
     return (
-      <main className="min-h-screen bg-linear-to-b from-sky-50 via-blue-50 to-sky-100 text-slate-900 pt-16 sm:pt-20">
+      <main className="min-h-screen bg-linear-to-b from-green-50 via-green-50 to-green-100 text-slate-900 pt-16 sm:pt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
           <Link
             href="/home/orders"
-            className="inline-flex items-center gap-2 text-slate-600 hover:text-sky-700 transition-colors mb-6"
+            className="inline-flex items-center gap-2 text-slate-600 hover:text-green-700 transition-colors mb-6"
           >
             <ArrowLeft className="w-4 h-4" />
             <span className="text-xs sm:text-sm font-light tracking-wider">BACK TO ORDERS</span>
@@ -247,7 +247,7 @@ export default function OrderTrackingPage() {
   const canConfirmDelivery = order.orderStatus === "SHIPPED";
 
   return (
-    <main className="min-h-screen bg-linear-to-b from-sky-50 via-blue-50 to-sky-100 text-slate-900 pt-16 sm:pt-20 pb-8 sm:pb-12">
+    <main className="min-h-screen bg-linear-to-b from-green-50 via-green-50 to-green-100 text-slate-900 pt-16 sm:pt-20 pb-8 sm:pb-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -256,7 +256,7 @@ export default function OrderTrackingPage() {
         >
           <Link
             href={`/home/orders/${order.id}`}
-            className="inline-flex items-center gap-2 text-slate-600 hover:text-sky-700 transition-colors mb-6 sm:mb-8"
+            className="inline-flex items-center gap-2 text-slate-600 hover:text-green-700 transition-colors mb-6 sm:mb-8"
           >
             <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
             <span className="text-xs sm:text-sm font-light tracking-wider">BACK TO ORDER</span>
@@ -281,7 +281,7 @@ export default function OrderTrackingPage() {
                 repeat: Infinity,
                 repeatDelay: 3
               }}
-              className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-linear-to-br from-sky-600 to-blue-600 flex items-center justify-center shadow-lg shadow-sky-200"
+              className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-linear-to-br from-green-600 to-green-600 flex items-center justify-center shadow-lg shadow-sky-200"
             >
               <Truck className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
             </motion.div>
@@ -306,7 +306,7 @@ export default function OrderTrackingPage() {
                 initial={{ width: 0 }}
                 animate={{ width: `${progress}%` }}
                 transition={{ duration: 1, ease: "easeOut" }}
-                className="h-full bg-linear-to-r from-sky-500 via-blue-500 to-purple-500 rounded-full"
+                className="h-full bg-linear-to-r from-green-500 via-green-500 to-purple-500 rounded-full"
               />
             </div>
           </div>
@@ -636,7 +636,7 @@ export default function OrderTrackingPage() {
               <div className="mt-6 space-y-3">
                 <Link
                   href={`/home/orders/${order.id}`}
-                  className="block w-full text-center px-4 sm:px-6 py-3 border border-sky-600 hover:border-sky-700 bg-white hover:bg-sky-50 text-sky-600 hover:text-sky-700 transition-all rounded-lg"
+                  className="block w-full text-center px-4 sm:px-6 py-3 border border-sky-600 hover:border-sky-700 bg-white hover:bg-sky-50 text-sky-600 hover:text-green-700 transition-all rounded-lg"
                 >
                   <span className="text-xs sm:text-sm font-light tracking-wider">VIEW FULL ORDER</span>
                 </Link>

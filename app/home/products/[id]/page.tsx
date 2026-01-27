@@ -1,30 +1,44 @@
-import Image from "next/image";
-import { getProductById, products } from "@/lib/products";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Package, Percent, CheckCircle, XCircle } from "lucide-react";
 import BuyNowButton from "@/componets/ui/buy-now-button";
 import AddToCartButton from "@/componets/ui/add-to-cart-button";
+import ProductImageGallery from "@/componets/ui/product-image-gallery";
 import ReviewsSection from "./reviews-section";
 import ProductRating from "@/componets/ui/product-rating";
+import { prisma } from "@/lib/prisma";
 
 interface ProductPageProps {
   params: Promise<{ id: string }>;
 }
 
-export async function generateStaticParams() {
-  return products.map((product) => ({
-    id: product.id,
-  }));
-}
-
 export default async function ProductPage({ params }: ProductPageProps) {
   const { id } = await params;
-  const product = getProductById(id);
+  
+  // Fetch product directly from database
+  const product = await prisma.product.findUnique({
+    where: { id },
+    include: {
+      category: true,
+    },
+  });
 
   if (!product) {
     notFound();
   }
+
+  // Map database product to expected format
+  const productImage = product.image || "/placeholder-product.jpg";
+  const productImages = product.images && product.images.length > 0 ? product.images : [productImage];
+  
+  // Calculate discount percentage
+  const discountPercentage = product.mrp > product.salePrice 
+    ? Math.round(((product.mrp - product.salePrice) / product.mrp) * 100)
+    : 0;
+  
+  // Calculate price with GST
+  const priceWithGST = product.salePrice * (1 + product.gst);
+  const gstAmount = product.salePrice * product.gst;
 
   return (
     <main className="min-h-screen bg-linear-to-b from-sky-50 to-sky-100 text-slate-900 pt-16 sm:pt-20">
@@ -40,75 +54,154 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12">
           {/* Image Gallery */}
-          <div className="space-y-3 sm:space-y-4">
-            <div className="relative aspect-square overflow-hidden border border-sky-200 bg-white shadow-sm">
-              <Image
-                src={product.image}
-                alt={product.name}
-                fill
-                className="object-cover"
-                priority
-              />
-            </div>
-            {product.images && product.images.length > 0 && (
-              <div className="grid grid-cols-4 gap-2 sm:gap-4">
-                {product.images.map((img, index) => (
-                  <div
-                    key={index}
-                    className="relative aspect-square overflow-hidden border border-sky-200 bg-white shadow-sm"
-                  >
-                    <Image
-                      src={img}
-                      alt={`${product.name} ${index + 1}`}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+          <ProductImageGallery
+            mainImage={productImage}
+            images={productImages}
+            productName={product.name}
+          />
 
           {/* Product Details */}
           <div className="flex flex-col justify-center">
-            <div className="mb-3 sm:mb-4">
+            {/* Category and Badges */}
+            <div className="mb-3 sm:mb-4 flex items-center gap-3 flex-wrap">
               <span className="text-xs sm:text-sm text-slate-600 font-light tracking-wider">
-                {product.category.toUpperCase()}
+                {product.category?.name?.toUpperCase() || "PRODUCT"}
               </span>
+              {product.featured && (
+                <span className="px-2 py-1 text-xs font-light tracking-wider bg-sky-100 text-sky-700 border border-sky-300">
+                  FEATURED
+                </span>
+              )}
+              {product.bestSeller && (
+                <span className="px-2 py-1 text-xs font-light tracking-wider bg-green-100 text-green-700 border border-green-300">
+                  BEST SELLER
+                </span>
+              )}
+              {product.inStock ? (
+                <span className="px-2 py-1 text-xs font-light tracking-wider bg-green-100 text-green-700 border border-green-300 flex items-center gap-1">
+                  <CheckCircle className="w-3 h-3" />
+                  IN STOCK
+                </span>
+              ) : (
+                <span className="px-2 py-1 text-xs font-light tracking-wider bg-red-100 text-red-700 border border-red-300 flex items-center gap-1">
+                  <XCircle className="w-3 h-3" />
+                  OUT OF STOCK
+                </span>
+              )}
             </div>
+
+            {/* Product Name */}
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light tracking-tight mb-3 sm:mb-4 text-slate-900">
               {product.name.toUpperCase()}
             </h1>
+
             {/* Product Rating */}
             <div className="mb-4 sm:mb-6">
               <ProductRating productId={product.id} showCount size="md" />
             </div>
-            <p className="text-base sm:text-lg md:text-xl text-slate-700 font-light mb-6 sm:mb-8 leading-relaxed">
-              {product.description}
-            </p>
-            {product.details && (
-              <p className="text-sm sm:text-base text-slate-600 font-light mb-6 sm:mb-8 leading-relaxed">
-                {product.details}
+
+            {/* Description */}
+            {product.description && (
+              <p className="text-base sm:text-lg md:text-xl text-slate-700 font-light mb-6 sm:mb-8 leading-relaxed">
+                {product.description}
               </p>
             )}
-            <div className="mb-6 sm:mb-8">
-              <span className="text-3xl sm:text-4xl font-light tracking-wide text-slate-900">
-                ${product.price.toLocaleString()}
-              </span>
+
+            {/* Price Section */}
+            <div className="mb-6 sm:mb-8 p-4 sm:p-6 border border-sky-200 bg-white rounded-lg">
+              <div className="space-y-3">
+                {product.mrp > product.salePrice && (
+                  <div className="flex items-center gap-3">
+                    <span className="text-lg sm:text-xl text-slate-500 line-through">
+                      MRP: ₹{product.mrp.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    </span>
+                    {discountPercentage > 0 && (
+                      <span className="px-2 py-1 text-xs sm:text-sm font-light bg-red-100 text-red-700 border border-red-300 flex items-center gap-1">
+                        <Percent className="w-3 h-3" />
+                        {discountPercentage}% OFF
+                      </span>
+                    )}
+                  </div>
+                )}
+                <div className="flex items-baseline gap-2">
+                  <span className="text-3xl sm:text-4xl font-light tracking-wide text-slate-900">
+                    ₹{product.salePrice.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  </span>
+                  <span className="text-sm text-slate-600 font-light">(Excluding GST)</span>
+                </div>
+                <div className="pt-2 border-t border-sky-100 space-y-1 text-sm text-slate-600">
+                  <div className="flex justify-between">
+                    <span className="font-light">Price:</span>
+                    <span className="font-light">₹{product.salePrice.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="font-light">GST ({(product.gst * 100).toFixed(0)}%):</span>
+                    <span className="font-light">₹{gstAmount.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                  </div>
+                  <div className="flex justify-between pt-1 border-t border-sky-100 font-medium text-slate-900">
+                    <span>Total Price:</span>
+                    <span>₹{priceWithGST.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-              <AddToCartButton
-                productId={product.id}
-                productName={product.name}
-                price={product.price}
-                className="flex-1 flex items-center justify-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 border border-sky-600 hover:border-sky-700 bg-sky-600 text-white hover:bg-sky-700 transition-all group"
-              />
-              <BuyNowButton
-                productId={product.id}
-                productName={product.name}
-                price={product.price}
-                className="flex-1 sm:flex-none px-6 sm:px-8 py-3 sm:py-4 border border-sky-600 hover:border-sky-700 bg-sky-600 text-white hover:bg-sky-700 transition-all"
-              />
+
+            {/* Action Buttons */}
+            {product.inStock ? (
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-6 sm:mb-8">
+                <AddToCartButton
+                  productId={product.id}
+                  productName={product.name}
+                  price={product.salePrice}
+                  className="flex-1 flex items-center justify-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 border border-sky-600 hover:border-sky-700 bg-sky-600 text-white hover:bg-sky-700 transition-all group"
+                />
+                <BuyNowButton
+                  productId={product.id}
+                  productName={product.name}
+                  price={product.salePrice}
+                  className="flex-1 sm:flex-none px-6 sm:px-8 py-3 sm:py-4 border border-sky-600 hover:border-sky-700 bg-sky-600 text-white hover:bg-sky-700 transition-all"
+                />
+              </div>
+            ) : (
+              <div className="px-6 sm:px-8 py-3 sm:py-4 border border-slate-300 bg-slate-100 text-slate-600 text-center rounded mb-6 sm:mb-8">
+                <p className="text-sm sm:text-base font-light">OUT OF STOCK</p>
+              </div>
+            )}
+
+            {/* Product Specifications */}
+            <div className="border border-sky-200 bg-white rounded-lg p-4 sm:p-6">
+              <h2 className="text-lg sm:text-xl font-light tracking-wide mb-4 sm:mb-6 flex items-center gap-2">
+                <Package className="w-5 h-5 text-sky-600" />
+                PRODUCT DETAILS
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                <div className="flex flex-col">
+                  <span className="text-xs sm:text-sm text-slate-500 font-light mb-1">Item Code</span>
+                  <span className="text-sm sm:text-base text-slate-900 font-light">{product.itemCode}</span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-xs sm:text-sm text-slate-500 font-light mb-1">Weight</span>
+                  <span className="text-sm sm:text-base text-slate-900 font-light">{product.weight}</span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-xs sm:text-sm text-slate-500 font-light mb-1">HSN Code</span>
+                  <span className="text-sm sm:text-base text-slate-900 font-light">{product.hsnCode}</span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-xs sm:text-sm text-slate-500 font-light mb-1">GST Rate</span>
+                  <span className="text-sm sm:text-base text-slate-900 font-light">{(product.gst * 100).toFixed(0)}%</span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-xs sm:text-sm text-slate-500 font-light mb-1">Category</span>
+                  <span className="text-sm sm:text-base text-slate-900 font-light">{product.category?.name || "N/A"}</span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-xs sm:text-sm text-slate-500 font-light mb-1">Stock Status</span>
+                  <span className={`text-sm sm:text-base font-light ${product.inStock ? "text-green-600" : "text-red-600"}`}>
+                    {product.inStock ? "In Stock" : "Out of Stock"}
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
         </div>

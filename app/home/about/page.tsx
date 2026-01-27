@@ -58,7 +58,7 @@ export default function AboutPage() {
     : galleryImages.filter(img => img.category === selectedCategory);
 
   return (
-    <main className="min-h-screen bg-linear-to-br from-sky-50 via-sky-100 to-sky-200 text-slate-900 pt-20 sm:pt-24">
+    <main className="min-h-screen bg-linear-to-br from-green-50 via-green-100 to-green-200 text-slate-900 pt-20 sm:pt-24">
       {/* Hero Section */}
       <section className="relative overflow-hidden py-20 sm:py-28">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-size-[24px_24px]" />
@@ -130,10 +130,10 @@ export default function AboutPage() {
             transition={{ duration: 0.6 }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl sm:text-5xl font-bold mb-4 bg-linear-to-r from-sky-600 to-sky-400 bg-clip-text" style={{ WebkitTextFillColor: 'transparent' }}>
+            <h2 className="text-4xl sm:text-5xl font-bold mb-4 bg-linear-to-r from-green-600 to-green-400 bg-clip-text" style={{ WebkitTextFillColor: 'transparent' }}>
               Our Story
             </h2>
-            <div className="w-24 h-1 bg-linear-to-r from-sky-600 to-sky-400 mx-auto rounded-full" />
+            <div className="w-24 h-1 bg-linear-to-r from-green-600 to-green-400 mx-auto rounded-full" />
           </motion.div>
 
           <motion.div
@@ -152,12 +152,12 @@ export default function AboutPage() {
               <motion.div
                 key={i}
                 variants={itemVariants}
-                className="relative group p-8 bg-white/80 backdrop-blur-xl rounded-2xl border border-sky-200 hover:border-sky-400 shadow-lg hover:shadow-xl transition-all duration-300"
+                className="relative group p-8 bg-white/80 backdrop-blur-xl rounded-2xl border border-sky-200 hover:border-green-400 shadow-lg hover:shadow-xl transition-all duration-300"
               >
-                <div className="absolute inset-0 bg-linear-to-br from-sky-100/50 to-sky-200/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl" />
+                <div className="absolute inset-0 bg-linear-to-br from-green-100/50 to-green-200/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl" />
                 <div className="relative z-10">
-                  <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-linear-to-br from-sky-400 to-sky-600 flex items-center justify-center border border-sky-300">
-                    <item.icon className="w-8 h-8 text-sky-700" />
+                  <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-linear-to-br from-green-400 to-green-600 flex items-center justify-center border border-green-300">
+                    <item.icon className="w-8 h-8 text-green-700" />
                   </div>
                   <h3 className="text-xl font-semibold mb-2 text-center text-slate-900">{item.title}</h3>
                   <p className="text-slate-600 text-sm text-center">{item.desc}</p>
@@ -218,7 +218,7 @@ export default function AboutPage() {
                   onClick={() => setSelectedCategory(category)}
                   className={`px-6 py-2.5 rounded-full font-medium transition-all duration-300 ${
                     selectedCategory === category
-                      ? "bg-linear-to-r from-sky-600 to-sky-500 text-white shadow-lg shadow-sky-500/30"
+                      ? "bg-linear-to-r from-green-600 to-green-500 text-white shadow-lg shadow-green-500/30"
                       : "bg-white/80 text-slate-700 hover:bg-white border border-sky-200"
                   }`}
                 >
@@ -257,14 +257,14 @@ export default function AboutPage() {
                       unoptimized
                     />
                   ) : (
-                    <div className="w-full h-full bg-linear-to-br from-sky-200 to-sky-300 flex items-center justify-center rounded-xl">
+                    <div className="w-full h-full bg-linear-to-br from-green-200 to-green-300 flex items-center justify-center rounded-xl">
                       <span className="text-slate-600 text-sm font-medium text-center px-2">{image.alt}</span>
                     </div>
                   )}
                 </div>
                 <div className="absolute bottom-0 left-0 right-0 p-3 bg-sky-600/90 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-30">
                   <p className="text-white text-xs font-medium">{image.alt}</p>
-                  <p className="text-sky-100 text-xs">{image.category}</p>
+                  <p className="text-green-100 text-xs">{image.category}</p>
                 </div>
               </motion.div>
             ))}
@@ -290,7 +290,7 @@ export default function AboutPage() {
               >
                 <button
                   onClick={() => setSelectedImage(null)}
-                  className="absolute -top-12 right-0 text-white hover:text-sky-300 transition-colors flex items-center gap-2 z-10"
+                  className="absolute -top-12 right-0 text-white hover:text-green-300 transition-colors flex items-center gap-2 z-10"
                 >
                   <X className="w-5 h-5" />
                   Close
@@ -345,11 +345,11 @@ export default function AboutPage() {
               <motion.div
                 key={cert.id}
                 variants={itemVariants}
-                className="group relative p-6 bg-white/80 backdrop-blur-xl rounded-2xl border border-sky-200 hover:border-sky-400 shadow-lg hover:shadow-xl transition-all duration-300"
+                className="group relative p-6 bg-white/80 backdrop-blur-xl rounded-2xl border border-sky-200 hover:border-green-400 shadow-lg hover:shadow-xl transition-all duration-300"
               >
-                <div className="absolute inset-0 bg-linear-to-br from-sky-100/50 to-sky-200/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl" />
+                <div className="absolute inset-0 bg-linear-to-br from-green-100/50 to-green-200/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl" />
                 <div className="relative z-10">
-                  <div className="w-20 h-20 mx-auto mb-4 rounded-xl bg-linear-to-br from-sky-400 to-sky-600 flex items-center justify-center border border-sky-300">
+                  <div className="w-20 h-20 mx-auto mb-4 rounded-xl bg-linear-to-br from-green-400 to-green-600 flex items-center justify-center border border-green-300">
                     <FileCheck className="w-10 h-10 text-white" />
                   </div>
                   <div className="relative w-full h-48 mb-4 rounded-xl overflow-hidden bg-linear-to-br from-sky-100 to-sky-200 border border-sky-200">
@@ -382,9 +382,9 @@ export default function AboutPage() {
             transition={{ delay: 0.3 }}
             className="mt-12 max-w-3xl mx-auto text-center"
           >
-            <div className="p-8 bg-linear-to-br from-sky-100 to-sky-200 rounded-2xl border border-sky-300 backdrop-blur-xl">
+            <div className="p-8 bg-linear-to-br from-sky-100 to-sky-200 rounded-2xl border border-green-300 backdrop-blur-xl">
               <h3 className="text-2xl font-semibold mb-4 flex items-center justify-center gap-2 text-slate-900">
-                <Shield className="w-6 h-6 text-sky-700" />
+                <Shield className="w-6 h-6 text-green-700" />
                 Quality Guaranteed
               </h3>
               <p className="text-slate-700 leading-relaxed">

@@ -1,29 +1,96 @@
 import HeroSection from "@/componets/ui/hero-section";
 import BestProducts from "@/componets/ui/best-products";
 import CategorySection from "@/componets/ui/category-section";
-import {
-  products,
-  getBestSellerProducts,
-  getProductsByCategory,
-  getAllCategories,
-} from "@/lib/products";
+import { prisma } from "@/lib/prisma";
 
-export default function Home() {
-  const bestProducts = getBestSellerProducts();
-  const categories = getAllCategories();
+async function getBestSellerProducts() {
+  try {
+    const products = await prisma.product.findMany({
+      where: {
+        bestSeller: true,
+        inStock: true,
+      },
+      include: {
+        category: true,
+      },
+      take: 8,
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return products.map((p: any) => ({
+      id: p.id,
+      name: p.name,
+      description: p.description || "",
+      price: p.salePrice,
+      image: p.image || "/placeholder-product.jpg",
+      category: p.category?.name || "",
+      featured: p.featured,
+      bestSeller: p.bestSeller,
+    }));
+  } catch (error) {
+    console.error("Error fetching best seller products:", error);
+    return [];
+  }
+}
+
+async function getCategoriesWithProducts() {
+  try {
+    const categories = await prisma.productCategory.findMany({
+      include: {
+        products: {
+          where: {
+            inStock: true,
+          },
+          take: 3,
+          orderBy: {
+            createdAt: "desc",
+          },
+        },
+      },
+      orderBy: {
+        name: "asc",
+      },
+    });
+
+    return categories.map((cat: any) => ({
+      id: cat.id,
+      name: cat.name,
+      products: cat.products.map((p: any) => ({
+        id: p.id,
+        name: p.name,
+        description: p.description || "",
+        price: p.salePrice,
+        image: p.image || "/placeholder-product.jpg",
+        category: cat.name,
+        featured: p.featured,
+        bestSeller: p.bestSeller,
+      })),
+    }));
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+    return [];
+  }
+}
+
+export default async function Home() {
+  const [bestProducts, categoriesWithProducts] = await Promise.all([
+    getBestSellerProducts(),
+    getCategoriesWithProducts(),
+  ]);
 
   return (
     <main className="min-h-screen bg-linear-to-b from-sky-50 to-sky-100">
       <HeroSection />
-      <BestProducts products={bestProducts} />
-      {categories.map((category) => {
-        const categoryProducts = getProductsByCategory(category);
-        if (categoryProducts.length > 0) {
+      {bestProducts.length > 0 && <BestProducts products={bestProducts} />}
+      {categoriesWithProducts.map((categoryData: any) => {
+        if (categoryData.products.length > 0) {
           return (
             <CategorySection
-              key={category}
-              category={category}
-              products={categoryProducts}
+              key={categoryData.id}
+              category={categoryData.name}
+              products={categoryData.products}
               limit={3}
             />
           );
