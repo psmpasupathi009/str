@@ -1,4 +1,4 @@
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin, createErrorResponse, createSuccessResponse, handleApiError } from "@/lib/auth-utils";
 import type { Prisma } from "@prisma/client";
@@ -91,7 +91,11 @@ export async function PUT(
     const updateData: Prisma.ProductUpdateInput = {};
     
     if (body.name !== undefined) updateData.name = String(body.name).trim();
-    if (body.categoryId !== undefined) updateData.categoryId = body.categoryId;
+    if (body.categoryId !== undefined) {
+      updateData.category = {
+        connect: { id: body.categoryId }
+      };
+    }
     if (body.itemCode !== undefined) updateData.itemCode = String(body.itemCode).trim();
     if (body.weight !== undefined) updateData.weight = String(body.weight).trim();
     if (body.mrp !== undefined) {
@@ -113,7 +117,7 @@ export async function PUT(
     if (body.image !== undefined) updateData.image = body.image?.trim() || null;
     if (body.images !== undefined) {
       updateData.images = Array.isArray(body.images) 
-        ? body.images.filter((img): img is string => typeof img === "string" && img.trim().length > 0)
+        ? body.images.filter((img: any): img is string => typeof img === "string" && img.trim().length > 0)
         : [];
     }
     if (body.description !== undefined) updateData.description = body.description?.trim() || null;

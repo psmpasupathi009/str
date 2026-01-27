@@ -1,402 +1,338 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
-import { Award, Users, Heart, Shield, CheckCircle2, Image as ImageIcon, FileCheck, X } from "lucide-react";
-import { useState } from "react";
+import { motion } from "framer-motion";
+import {
+  Award,
+  Users,
+  ChevronLeft,
+  ChevronRight,
+  Video,
+  Image as ImageIcon,
+  type LucideIcon,
+} from "lucide-react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import Image from "next/image";
+import MediaModal from "@/componets/ui/media-modal";
+
+const ITEMS_PER_PAGE = 8;
+
+const FEATURES: { icon: LucideIcon; title: string; desc: string }[] = [
+  { icon: Award, title: "Premium Quality", desc: "Finest ingredients sourced" },
+  { icon: Users, title: "Trusted Brand", desc: "Loved by thousands" },
+];
+
+const fadeIn = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.5 },
+};
 
 const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-    },
-  },
+  initial: {},
+  animate: { transition: { staggerChildren: 0.08 } },
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.6,
-    },
-  },
+  initial: { opacity: 0, y: 24 },
+  animate: { opacity: 1, y: 0 },
 };
 
-// Sample gallery images - replace with actual product images
-const galleryImages = [
-  { id: 1, src: "/images/gallery/oil-1.jpg", alt: "Premium Cooking Oil", category: "Oil" },
-  { id: 2, src: "/images/gallery/idly-1.jpg", alt: "Fresh Idly Products", category: "Idly" },
-  { id: 3, src: "/images/gallery/masala-1.jpg", alt: "Authentic Masala Powders", category: "Masala" },
-  { id: 4, src: "/images/gallery/ready-to-eat-1.jpg", alt: "Ready to Eat Products", category: "Ready-to-Eat" },
-  { id: 5, src: "/images/gallery/oil-2.jpg", alt: "Quality Oil Products", category: "Oil" },
-  { id: 6, src: "/images/gallery/idly-2.jpg", alt: "Traditional Idly", category: "Idly" },
-  { id: 7, src: "/images/gallery/masala-2.jpg", alt: "Spice Powders", category: "Masala" },
-  { id: 8, src: "/images/gallery/ready-to-eat-2.jpg", alt: "Convenient Meals", category: "Ready-to-Eat" },
-];
+interface GalleryItem {
+  id: string;
+  url: string;
+  type: "IMAGE" | "VIDEO";
+  title: string | null;
+  description: string | null;
+  order: number;
+}
 
-// Sample certificates - replace with actual certificate images
-const certificates = [
-  { id: 1, title: "FSSAI Certified", description: "Food Safety and Standards Authority of India", image: "/images/certificates/fssai.jpg" },
-  { id: 2, title: "ISO 22000", description: "Food Safety Management System", image: "/images/certificates/iso22000.jpg" },
-  { id: 3, title: "Organic Certified", description: "100% Organic Products", image: "/images/certificates/organic.jpg" },
-  { id: 4, title: "HACCP Certified", description: "Hazard Analysis Critical Control Point", image: "/images/certificates/haccp.jpg" },
-];
+async function fetchGallery(): Promise<GalleryItem[]> {
+  const res = await fetch("/api/gallery");
+  if (!res.ok) return [];
+  const data = await res.json();
+  const items = (data.gallery ?? []) as GalleryItem[];
+  return items.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+}
 
 export default function AboutPage() {
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<string>("All");
+  const [gallery, setGallery] = useState<GalleryItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(0);
+  const [selectedMedia, setSelectedMedia] = useState<{
+    url: string;
+    type: "IMAGE" | "VIDEO";
+    title?: string;
+    description?: string;
+  } | null>(null);
   const [imageErrors, setImageErrors] = useState<Set<string>>(new Set());
-  const [certErrors, setCertErrors] = useState<Set<string>>(new Set());
 
-  const categories = ["All", "Oil", "Idly", "Masala", "Ready-to-Eat"];
-  const filteredImages = selectedCategory === "All" 
-    ? galleryImages 
-    : galleryImages.filter(img => img.category === selectedCategory);
+  useEffect(() => {
+    fetchGallery()
+      .then(setGallery)
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, []);
+
+  const totalPages = Math.max(1, Math.ceil(gallery.length / ITEMS_PER_PAGE));
+  const currentItems = useMemo(
+    () => gallery.slice(page * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE + ITEMS_PER_PAGE),
+    [gallery, page]
+  );
+
+  const goNext = useCallback(
+    () => setPage((p) => (p < totalPages - 1 ? p + 1 : 0)),
+    [totalPages]
+  );
+  const goPrev = useCallback(
+    () => setPage((p) => (p > 0 ? p - 1 : totalPages - 1)),
+    [totalPages]
+  );
+
+  const openMedia = useCallback(
+    (item: GalleryItem) =>
+      setSelectedMedia({
+        url: item.url,
+        type: item.type,
+        title: item.title ?? undefined,
+        description: item.description ?? undefined,
+      }),
+    []
+  );
+
+  const onImageError = useCallback((url: string) => {
+    setImageErrors((prev) => new Set(prev).add(url));
+  }, []);
 
   return (
-    <main className="min-h-screen bg-linear-to-br from-green-50 via-green-100 to-green-200 text-slate-900 pt-20 sm:pt-24">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden py-20 sm:py-28">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-size-[24px_24px]" />
-        
-        {/* Animated Background Blobs */}
-        <div className="absolute inset-0 overflow-hidden">
-          {[
-            { delay: 0, color: 'purple', left: '-10%', top: '10%', x: [0, 100, 0], y: [0, 100, 100] },
-            { delay: 2, color: 'blue', left: '50%', top: '20%', x: [0, -100, 0], y: [0, 100, 100] },
-            { delay: 4, color: 'pink', left: '80%', top: '60%', x: [0, 100, 0], y: [0, 100, -100] },
-          ].map((blob, i) => (
-            <motion.div
-              key={i}
-              className={`absolute w-96 h-96 rounded-full mix-blend-screen opacity-10 filter blur-3xl ${
-                blob.color === 'purple' ? 'bg-purple-500' : blob.color === 'blue' ? 'bg-blue-500' : 'bg-pink-500'
-              }`}
-              animate={{
-                x: blob.x,
-                y: blob.y,
-                scale: [1, 1.2, 1],
-              }}
-              transition={{
-                duration: 20,
-                repeat: Infinity,
-                repeatType: "reverse",
-                delay: blob.delay,
-              }}
-              style={{
-                left: blob.left,
-                top: blob.top,
-              }}
-            />
-          ))}
-        </div>
-
+    <main className="min-h-screen bg-linear-to-b from-sky-50 to-sky-100 text-slate-900 pt-16 sm:pt-20">
+      {/* Hero */}
+      <section className="relative py-14 sm:py-20 md:py-24">
+        <div
+          className="absolute inset-0 opacity-[0.4]"
+          style={{
+            backgroundImage: `linear-gradient(to right, rgba(14,165,233,0.03) 1px, transparent 1px),
+              linear-gradient(to bottom, rgba(14,165,233,0.03) 1px, transparent 1px)`,
+            backgroundSize: "24px 24px",
+          }}
+        />
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center"
+          {...fadeIn}
+          className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center"
         >
-          <motion.h1
-            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold mb-6 bg-linear-to-r from-white via-purple-200 to-white bg-clip-text"
-            style={{ WebkitTextFillColor: 'transparent', backgroundSize: '200% 200%' }}
-            animate={{
-              backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-            }}
-            transition={{
-              duration: 5,
-              repeat: Infinity,
-              ease: "linear",
-            }}
-          >
-            About STR
-          </motion.h1>
-          <p className="text-xl sm:text-2xl text-slate-700 font-light max-w-3xl mx-auto">
-            Premium Quality Food Products - Oil, Idly, Masala Powders & Ready-to-Eat Items
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light tracking-tight mb-4 sm:mb-6 text-slate-900">
+            ABOUT STR
+          </h1>
+          <p className="text-lg sm:text-xl text-slate-600 font-light max-w-2xl mx-auto">
+            Premium quality food products — oils, idly, masala powders & ready-to-eat items.
           </p>
         </motion.div>
       </section>
 
-      {/* Section 1: Company Details */}
-      <section className="relative py-20 sm:py-28">
+      {/* Our Story */}
+      <section className="relative py-12 sm:py-16 md:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
+            transition={{ duration: 0.5 }}
+            className="text-center mb-10 sm:mb-14"
           >
-            <h2 className="text-4xl sm:text-5xl font-bold mb-4 bg-linear-to-r from-green-600 to-green-400 bg-clip-text" style={{ WebkitTextFillColor: 'transparent' }}>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-light tracking-wide text-slate-900 mb-3">
               Our Story
             </h2>
-            <div className="w-24 h-1 bg-linear-to-r from-green-600 to-green-400 mx-auto rounded-full" />
+            <div className="w-16 h-0.5 bg-linear-to-r from-sky-500 to-sky-400 mx-auto rounded-full" />
           </motion.div>
 
           <motion.div
             variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
+            initial="initial"
+            whileInView="animate"
             viewport={{ once: true }}
-            className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12"
+            className="grid sm:grid-cols-2 gap-4 sm:gap-6 mb-10 sm:mb-14 max-w-2xl mx-auto"
+          >
+            {FEATURES.map(({ icon: Icon, title, desc }) => (
+              <motion.div
+                key={title}
+                variants={itemVariants}
+                transition={{ duration: 0.5 }}
+                className="p-6 sm:p-8 bg-white/90 backdrop-blur-sm rounded-2xl border border-sky-200/80 shadow-sm hover:shadow-md hover:border-sky-300 transition-all duration-300"
+              >
+                <div className="w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-4 rounded-full bg-linear-to-br from-sky-400 to-sky-600 flex items-center justify-center">
+                  <Icon className="w-7 h-7 sm:w-8 sm:h-8 text-white" aria-hidden />
+                </div>
+                <h3 className="text-lg font-semibold text-slate-900 text-center mb-2">{title}</h3>
+                <p className="text-slate-600 text-sm text-center">{desc}</p>
+              </motion.div>
+            ))}
+          </motion.div>
+
+          <motion.div
+            variants={containerVariants}
+            initial="initial"
+            whileInView="animate"
+            viewport={{ once: true }}
+            className="max-w-3xl mx-auto space-y-5 text-slate-700 leading-relaxed"
           >
             {[
-              { icon: Award, title: "Premium Quality", desc: "Finest ingredients sourced" },
-              { icon: Users, title: "Trusted Brand", desc: "Loved by thousands" },
-              { icon: Heart, title: "Healthy Food", desc: "100% natural products" },
-              { icon: Shield, title: "Certified Safe", desc: "FSSAI & ISO certified" },
-            ].map((item, i) => (
-              <motion.div
+              "STR delivers premium cooking oils, idly mixes, masala powders, and ready-to-eat products. We focus on quality, taste, and trust in every pack.",
+              "We bring traditional recipes and trusted ingredients together so you can cook with confidence. Our range fits home kitchens and modern lifestyles.",
+              "Explore our oils, masalas, and ready-to-eat options—crafted for flavour, consistency, and everyday goodness.",
+            ].map((paragraph, i) => (
+              <motion.p
                 key={i}
                 variants={itemVariants}
-                className="relative group p-8 bg-white/80 backdrop-blur-xl rounded-2xl border border-sky-200 hover:border-green-400 shadow-lg hover:shadow-xl transition-all duration-300"
+                transition={{ duration: 0.5 }}
+                className="text-base sm:text-lg"
               >
-                <div className="absolute inset-0 bg-linear-to-br from-green-100/50 to-green-200/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl" />
-                <div className="relative z-10">
-                  <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-linear-to-br from-green-400 to-green-600 flex items-center justify-center border border-green-300">
-                    <item.icon className="w-8 h-8 text-green-700" />
-                  </div>
-                  <h3 className="text-xl font-semibold mb-2 text-center text-slate-900">{item.title}</h3>
-                  <p className="text-slate-600 text-sm text-center">{item.desc}</p>
-                </div>
-              </motion.div>
+                {paragraph}
+              </motion.p>
             ))}
-          </motion.div>
-
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="max-w-4xl mx-auto space-y-6 text-lg text-slate-700 leading-relaxed"
-          >
-            <motion.p variants={itemVariants}>
-              STR is a premium food products company dedicated to bringing you the finest quality 
-              cooking oils, traditional idly products, authentic masala powders, and convenient 
-              ready-to-eat items. With a commitment to excellence and health, we ensure every 
-              product meets the highest standards of quality and safety.
-            </motion.p>
-            <motion.p variants={itemVariants}>
-              Our journey began with a simple mission: to provide families with healthy, 
-              nutritious, and delicious food products that maintain traditional flavors while 
-              meeting modern quality standards. We source only the best ingredients and use 
-              time-tested recipes passed down through generations.
-            </motion.p>
-            <motion.p variants={itemVariants}>
-              From our premium cooking oils that enhance every dish to our authentic masala 
-              powders that bring out the true flavors of Indian cuisine, every product is 
-              crafted with care, passion, and an unwavering commitment to your health and 
-              satisfaction.
-            </motion.p>
           </motion.div>
         </div>
       </section>
 
-      {/* Section 2: Gallery */}
-      <section className="relative py-20 sm:py-28 bg-white/40">
+      {/* Gallery */}
+      <section className="relative py-12 sm:py-16 md:py-20 bg-white/50 border-t border-sky-200/60">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-12"
+            transition={{ duration: 0.5 }}
+            className="text-center mb-8 sm:mb-10"
           >
-            <h2 className="text-4xl sm:text-5xl font-bold mb-4 bg-linear-to-r from-purple-300 to-blue-300 bg-clip-text" style={{ WebkitTextFillColor: 'transparent' }}>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-light tracking-wide text-slate-900 mb-2">
               Product Gallery
             </h2>
-            <p className="text-slate-600 mb-8">Explore our premium product range</p>
-            
-            {/* Category Filter */}
-            <div className="flex flex-wrap justify-center gap-3 mb-12">
-              {categories.map((category) => (
-                <button
-                  key={category}
-                  onClick={() => setSelectedCategory(category)}
-                  className={`px-6 py-2.5 rounded-full font-medium transition-all duration-300 ${
-                    selectedCategory === category
-                      ? "bg-linear-to-r from-green-600 to-green-500 text-white shadow-lg shadow-green-500/30"
-                      : "bg-white/80 text-slate-700 hover:bg-white border border-sky-200"
-                  }`}
-                >
-                  {category}
-                </button>
-              ))}
+            <p className="text-slate-600 text-sm sm:text-base">Explore our product range</p>
+          </motion.div>
+
+          {loading ? (
+            <div className="flex justify-center py-16">
+              <div
+                className="w-8 h-8 border-2 border-sky-300 border-t-sky-600 rounded-full animate-spin"
+                aria-hidden
+              />
             </div>
-          </motion.div>
-
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6"
-          >
-            {filteredImages.map((image, i) => (
+          ) : gallery.length === 0 ? (
+            <p className="text-center text-slate-500 py-16">
+              No gallery items yet. Add them from the admin dashboard.
+            </p>
+          ) : (
+            <>
               <motion.div
-                key={image.id}
-                variants={itemVariants}
-                className="relative group cursor-pointer overflow-hidden rounded-xl aspect-square"
-                onClick={() => setSelectedImage(image.src)}
+                key={page}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.25 }}
+                className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 mb-8"
               >
-                <div className="absolute inset-0 bg-linear-to-br from-purple-500/20 to-blue-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" />
-                <div className="absolute inset-0 flex items-center justify-center z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <ImageIcon className="w-8 h-8 text-white" />
-                </div>
-                <div className="relative w-full h-full">
-                  {!imageErrors.has(image.src) ? (
-                    <Image
-                      src={image.src}
-                      alt={image.alt}
-                      fill
-                      className="object-cover rounded-xl"
-                      onError={() => setImageErrors(prev => new Set(prev).add(image.src))}
-                      unoptimized
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-linear-to-br from-green-200 to-green-300 flex items-center justify-center rounded-xl">
-                      <span className="text-slate-600 text-sm font-medium text-center px-2">{image.alt}</span>
-                    </div>
-                  )}
-                </div>
-                <div className="absolute bottom-0 left-0 right-0 p-3 bg-sky-600/90 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-30">
-                  <p className="text-white text-xs font-medium">{image.alt}</p>
-                  <p className="text-green-100 text-xs">{image.category}</p>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-
-        {/* Image Modal */}
-        <AnimatePresence>
-          {selectedImage && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md p-4"
-              onClick={() => setSelectedImage(null)}
-            >
-              <motion.div
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.8, opacity: 0 }}
-                className="relative max-w-4xl w-full"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <button
-                  onClick={() => setSelectedImage(null)}
-                  className="absolute -top-12 right-0 text-white hover:text-green-300 transition-colors flex items-center gap-2 z-10"
-                >
-                  <X className="w-5 h-5" />
-                  Close
-                </button>
-                <div className="relative w-full h-96 rounded-2xl overflow-hidden bg-linear-to-br from-purple-500/30 to-blue-500/30">
-                  {selectedImage && !imageErrors.has(selectedImage) ? (
-                    <Image
-                      src={selectedImage}
-                      alt="Gallery Image"
-                      fill
-                      className="object-contain"
-                      onError={() => setImageErrors(prev => new Set(prev).add(selectedImage))}
-                      unoptimized
-                    />
-                  ) : (
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="text-white/90">Image not found. Please add image to public/images/gallery/</span>
-                    </div>
-                  )}
-                </div>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </section>
-
-      {/* Section 3: Certificates */}
-      <section className="relative py-20 sm:py-28">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl sm:text-5xl font-bold mb-4 bg-linear-to-r from-purple-300 to-blue-300 bg-clip-text" style={{ WebkitTextFillColor: 'transparent' }}>
-              Certifications & Quality Assurance
-            </h2>
-            <p className="text-slate-600 mb-2">Our commitment to healthy, safe, and quality food products</p>
-            <div className="w-24 h-1 bg-linear-to-r from-purple-500 to-blue-500 mx-auto rounded-full" />
-          </motion.div>
-
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="grid md:grid-cols-2 lg:grid-cols-4 gap-6"
-          >
-            {certificates.map((cert, i) => (
-              <motion.div
-                key={cert.id}
-                variants={itemVariants}
-                className="group relative p-6 bg-white/80 backdrop-blur-xl rounded-2xl border border-sky-200 hover:border-green-400 shadow-lg hover:shadow-xl transition-all duration-300"
-              >
-                <div className="absolute inset-0 bg-linear-to-br from-green-100/50 to-green-200/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl" />
-                <div className="relative z-10">
-                  <div className="w-20 h-20 mx-auto mb-4 rounded-xl bg-linear-to-br from-green-400 to-green-600 flex items-center justify-center border border-green-300">
-                    <FileCheck className="w-10 h-10 text-white" />
-                  </div>
-                  <div className="relative w-full h-48 mb-4 rounded-xl overflow-hidden bg-linear-to-br from-sky-100 to-sky-200 border border-sky-200">
-                    {!certErrors.has(cert.image) ? (
-                      <Image
-                        src={cert.image}
-                        alt={cert.title}
-                        fill
-                        className="object-contain p-2"
-                        onError={() => setCertErrors(prev => new Set(prev).add(cert.image))}
-                        unoptimized
-                      />
+                {currentItems.map((item) => (
+                  <motion.div
+                    key={item.id}
+                    role="button"
+                    tabIndex={0}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="relative group aspect-square rounded-xl overflow-hidden bg-white border border-sky-200 shadow-sm hover:shadow-md hover:border-sky-300 transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-offset-2"
+                    onClick={() => openMedia(item)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        openMedia(item);
+                      }
+                    }}
+                  >
+                    {item.type === "IMAGE" ? (
+                      imageErrors.has(item.url) ? (
+                        <div className="absolute inset-0 bg-linear-to-br from-sky-100 to-sky-200 flex items-center justify-center">
+                          <ImageIcon className="w-10 h-10 text-slate-400" aria-hidden />
+                        </div>
+                      ) : (
+                        <Image
+                          src={item.url}
+                          alt={item.title ?? "Gallery image"}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                          onError={() => onImageError(item.url)}
+                        />
+                      )
                     ) : (
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <CheckCircle2 className="w-12 h-12 text-sky-600" />
+                      <video
+                        src={item.url}
+                        className="absolute inset-0 w-full h-full object-cover"
+                        preload="metadata"
+                        muted
+                        playsInline
+                        onMouseEnter={(e) => e.currentTarget.play().catch(() => {})}
+                        onMouseLeave={(e) => e.currentTarget.pause()}
+                      >
+                        Your browser does not support the video tag.
+                      </video>
+                    )}
+                    {(item.title || item.description) && (
+                      <div className="absolute inset-x-0 bottom-0 p-3 bg-linear-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                        {item.title && (
+                          <p className="text-white text-xs font-medium truncate">{item.title}</p>
+                        )}
+                        {item.description && (
+                          <p className="text-white/90 text-xs line-clamp-2">{item.description}</p>
+                        )}
                       </div>
                     )}
-                  </div>
-                  <h3 className="text-lg font-semibold mb-2 text-center text-slate-900">{cert.title}</h3>
-                  <p className="text-slate-600 text-sm text-center">{cert.description}</p>
-                </div>
+                    <span
+                      className={`absolute top-2 right-2 text-[10px] px-2 py-0.5 rounded-md pointer-events-none ${
+                        item.type === "IMAGE" ? "bg-sky-600/90 text-white" : "bg-slate-700/90 text-white"
+                      }`}
+                    >
+                      {item.type === "IMAGE" ? "Image" : "Video"}
+                    </span>
+                  </motion.div>
+                ))}
               </motion.div>
-            ))}
-          </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.3 }}
-            className="mt-12 max-w-3xl mx-auto text-center"
-          >
-            <div className="p-8 bg-linear-to-br from-sky-100 to-sky-200 rounded-2xl border border-green-300 backdrop-blur-xl">
-              <h3 className="text-2xl font-semibold mb-4 flex items-center justify-center gap-2 text-slate-900">
-                <Shield className="w-6 h-6 text-green-700" />
-                Quality Guaranteed
-              </h3>
-              <p className="text-slate-700 leading-relaxed">
-                All our products undergo rigorous quality checks and are certified by leading 
-                food safety authorities. We ensure that every product meets the highest standards 
-                of hygiene, safety, and nutritional value. Your health and satisfaction are our 
-                top priorities.
-              </p>
-            </div>
-          </motion.div>
+              {totalPages > 1 && (
+                <nav
+                  className="flex flex-wrap items-center justify-center gap-3 sm:gap-4"
+                  aria-label="Gallery pagination"
+                >
+                  <button
+                    type="button"
+                    onClick={goPrev}
+                    disabled={page === 0}
+                    className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-sky-600 text-white hover:bg-sky-700 disabled:hover:bg-sky-600"
+                  >
+                    <ChevronLeft className="w-4 h-4" aria-hidden /> Prev
+                  </button>
+                  <span className="text-slate-600 text-sm">
+                    {page + 1} / {totalPages}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={goNext}
+                    disabled={page >= totalPages - 1}
+                    className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-sky-600 text-white hover:bg-sky-700 disabled:hover:bg-sky-600"
+                  >
+                    Next <ChevronRight className="w-4 h-4" aria-hidden />
+                  </button>
+                </nav>
+              )}
+            </>
+          )}
         </div>
       </section>
+
+      <MediaModal
+        isOpen={!!selectedMedia}
+        onClose={() => setSelectedMedia(null)}
+        mediaUrl={selectedMedia?.url ?? ""}
+        mediaType={selectedMedia?.type ?? "IMAGE"}
+        title={selectedMedia?.title}
+        description={selectedMedia?.description}
+      />
     </main>
   );
 }

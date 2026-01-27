@@ -28,8 +28,14 @@ export default async function ProductPage({ params }: ProductPageProps) {
   }
 
   // Map database product to expected format
+  // Combine main image with additional images, ensuring we have all 5 images
   const productImage = product.image || "/placeholder-product.jpg";
-  const productImages = product.images && product.images.length > 0 ? product.images : [productImage];
+  const additionalImages = product.images && product.images.length > 0 
+    ? product.images.filter(img => img && img.trim().length > 0 && img !== productImage)
+    : [];
+  
+  // Combine all images (main image first, then additional images)
+  const productImages = [productImage, ...additionalImages].slice(0, 5);
   
   // Calculate discount percentage
   const discountPercentage = product.mrp > product.salePrice 

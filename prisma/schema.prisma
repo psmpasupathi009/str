@@ -32,8 +32,8 @@ model Otp {
   expiresAt DateTime
   createdAt DateTime @default(now())
 
-  @@map("otps")
   @@index([email, type])
+  @@map("otps")
 }
 
 enum Role {
@@ -61,66 +61,71 @@ enum OrderStatus {
   CANCELLED
 }
 
-model Order {
-  id            String        @id @default(auto()) @map("_id") @db.ObjectId
-  userId        String?       @db.ObjectId
-  razorpayOrderId String      @unique
-  razorpayPaymentId String?
-  amount        Float
-  currency      String        @default("INR")
-  paymentStatus PaymentStatus @default(PENDING)
-  orderStatus   OrderStatus   @default(PENDING)
-  items         OrderItem[]
-  customerName  String?
-  customerEmail String?
-  customerPhone String?
-  shippingAddress Json?
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+enum MediaType {
+  IMAGE
+  VIDEO
+}
 
-  @@map("orders")
+model Order {
+  id                String        @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String?       @db.ObjectId
+  razorpayOrderId   String        @unique
+  razorpayPaymentId String?
+  amount            Float
+  currency          String        @default("INR")
+  paymentStatus     PaymentStatus @default(PENDING)
+  orderStatus       OrderStatus   @default(PENDING)
+  items             OrderItem[]
+  customerName      String?
+  customerEmail     String?
+  customerPhone     String?
+  shippingAddress   Json?
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
   @@index([userId])
+  @@map("orders")
 }
 
 model OrderItem {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  orderId     String   @db.ObjectId
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  orderId     String @db.ObjectId
   productId   String
   productName String
-  quantity    Int      @default(1)
+  quantity    Int    @default(1)
   price       Float
-  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  order       Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
 
-  @@map("order_items")
   @@index([orderId])
+  @@map("order_items")
 }
 
 model Review {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  productId String
-  userId    String   @db.ObjectId
-  userName  String
-  userEmail String
-  rating    Int      // 1-5 stars
-  comment   String
-  helpfulCount Int   @default(0)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  productId    String
+  userId       String   @db.ObjectId
+  userName     String
+  userEmail    String
+  rating       Int // 1-5 stars
+  comment      String
+  helpfulCount Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
-  @@map("reviews")
   @@index([productId])
   @@index([userId])
+  @@map("reviews")
 }
 
 model ReviewHelpful {
-  id       String   @id @default(auto()) @map("_id") @db.ObjectId
-  reviewId String   @db.ObjectId
-  userId   String   @db.ObjectId
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  reviewId  String   @db.ObjectId
+  userId    String   @db.ObjectId
   createdAt DateTime @default(now())
 
-  @@map("review_helpful")
   @@unique([reviewId, userId])
   @@index([reviewId])
+  @@map("review_helpful")
 }
 
 model ProductCategory {
@@ -155,9 +160,24 @@ model Product {
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @updatedAt
 
-  @@map("products")
   @@index([categoryId])
   @@index([name])
   @@index([featured])
   @@index([bestSeller])
+  @@map("products")
+}
+
+model Gallery {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  url         String
+  type        MediaType // IMAGE or VIDEO
+  title       String?
+  description String?
+  order       Int       @default(0) // For ordering gallery items
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([order])
+  @@index([type])
+  @@map("gallery")
 }

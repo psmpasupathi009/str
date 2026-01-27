@@ -155,6 +155,82 @@ export async function uploadImageToCloudinary(
   }
 }
 
+export async function uploadVideoToCloudinary(
+  file: File | Blob,
+  folder: string = 'gallery'
+): Promise<string> {
+  const cloudinary = await getCloudinary();
+
+  // Ensure Cloudinary is configured before upload
+  if (!isConfigured) {
+    configureCloudinary();
+  }
+
+  if (!isConfigured) {
+    throw new Error(
+      'Cloudinary is not configured. Please set CLOUDINARY_URL (format: cloudinary://api_key:api_secret@cloud_name) ' +
+      'or individual Cloudinary environment variables (CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET).'
+    );
+  }
+
+  try {
+    // Convert file to base64
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+    const base64 = buffer.toString('base64');
+    const dataURI = `data:${file.type || 'video/mp4'};base64,${base64}`;
+
+    // Upload to Cloudinary with video resource type
+    const result = await new Promise<UploadApiResponse>((resolve, reject) => {
+      cloudinary.uploader.upload(
+        dataURI,
+        {
+          folder: folder,
+          resource_type: 'video',
+          chunk_size: 6000000, // 6MB chunks for large videos
+        },
+        (error, result) => {
+          if (error) reject(error);
+          else if (result) resolve(result);
+          else reject(new Error('Upload failed: No result returned'));
+        }
+      );
+    });
+
+    if (!result.secure_url) {
+      throw new Error('Upload failed: No secure URL returned');
+    }
+
+    return result.secure_url;
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Failed to upload video to Cloudinary';
+    console.error('Cloudinary upload error:', error);
+    throw new Error(errorMessage);
+  }
+}
+
+export async function uploadMediaToCloudinary(
+  file: File | Blob,
+  folder: string = 'gallery'
+): Promise<{ url: string; type: 'IMAGE' | 'VIDEO' }> {
+  const fileType = file.type || '';
+  const isVideo = fileType.startsWith('video/');
+  const isImage = fileType.startsWith('image/');
+
+  if (!isImage && !isVideo) {
+    throw new Error('File must be an image or video');
+  }
+
+  const url = isVideo
+    ? await uploadVideoToCloudinary(file, folder)
+    : await uploadImageToCloudinary(file, folder);
+
+  return {
+    url,
+    type: isVideo ? 'VIDEO' : 'IMAGE',
+  };
+}
+
 export async function deleteImageFromCloudinary(publicId: string): Promise<void> {
   const cloudinary = await getCloudinary();
 
