@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createRazorpayOrder } from "@/lib/razorpay";
-import { prisma } from "@/lib/prisma";
-import { PaymentStatus, OrderStatus } from "@prisma/client";
 
 export async function POST(request: NextRequest) {
   try {
@@ -43,7 +41,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create Razorpay order
+    // Create Razorpay order (DO NOT create database order yet - only after payment success)
     const razorpayOrder = await createRazorpayOrder({
       amount: amountInPaise,
       currency: "INR",
@@ -52,53 +50,37 @@ export async function POST(request: NextRequest) {
         customerName: customerName || "",
         customerEmail: customerEmail || "",
         userId: userId || "",
+        // Store order data in notes for later retrieval (will be used to create DB order after payment)
+        orderData: JSON.stringify({
+          amount,
+          items,
+          customerName,
+          customerEmail,
+          customerPhone,
+          userId,
+          shippingAddress,
+        }),
       },
     });
 
-    // Create order in database
-    const order = await prisma.order.create({
-      data: {
-        userId: userId || null,
-        razorpayOrderId: razorpayOrder.id,
-        amount: amount,
-        currency: "INR",
-        paymentStatus: PaymentStatus.PENDING,
-        orderStatus: OrderStatus.PENDING,
-        customerName: customerName || null,
-        customerEmail: customerEmail || null,
-        customerPhone: customerPhone || null,
-        shippingAddress: shippingAddress ? {
-          fullName: shippingAddress.fullName,
-          email: shippingAddress.email,
-          phone: shippingAddress.phone,
-          addressLine1: shippingAddress.addressLine1,
-          addressLine2: shippingAddress.addressLine2 || "",
-          city: shippingAddress.city,
-          state: shippingAddress.state,
-          zipCode: shippingAddress.zipCode,
-          country: shippingAddress.country,
-        } : null,
-        items: {
-          create: items.map((item: any) => ({
-            productId: item.productId,
-            productName: item.productName,
-            quantity: item.quantity || 1,
-            price: item.price,
-          })),
-        },
-      },
-      include: {
-        items: true,
-      },
-    });
-
+    // Return Razorpay order details (NO database order created yet)
+    // Order will be created in database ONLY after successful payment verification
     return NextResponse.json(
       {
-        orderId: order.id,
         razorpayOrderId: razorpayOrder.id,
         amount: razorpayOrder.amount,
         currency: razorpayOrder.currency,
         key: process.env.RAZORPAY_KEY_ID || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        // Return order data to client so it can be sent to verify-payment
+        orderData: {
+          amount,
+          items,
+          customerName,
+          customerEmail,
+          customerPhone,
+          userId,
+          shippingAddress,
+        },
       },
       { status: 200 }
     );

@@ -37,32 +37,42 @@ function PaymentSuccessContent() {
             <div className="w-full max-w-md space-y-4 p-6 sm:p-8 border border-sky-200 bg-white shadow-sm">
               <div className="flex justify-between items-center">
                 <span className="text-sm sm:text-base text-slate-600 font-light">Order ID:</span>
-                <span className="text-sm sm:text-base font-light text-slate-900">{orderId}</span>
+                <span className="text-sm sm:text-base font-light text-slate-900">{orderId.slice(-8).toUpperCase()}</span>
               </div>
               {paymentId && (
                 <div className="flex justify-between items-center">
                   <span className="text-sm sm:text-base text-slate-600 font-light">Payment ID:</span>
-                  <span className="text-sm sm:text-base font-light text-slate-900">{paymentId}</span>
+                  <span className="text-sm sm:text-base font-light text-slate-900">{paymentId.slice(-8)}</span>
                 </div>
               )}
             </div>
           )}
 
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 pt-4 sm:pt-6">
+            {orderId && (
+              <Link
+                href={`/home/orders/${orderId}`}
+                className="px-6 sm:px-8 py-3 sm:py-4 border border-sky-600 hover:border-sky-700 bg-sky-600 text-white hover:bg-sky-700 transition-all"
+              >
+                <span className="text-xs sm:text-sm font-light tracking-widest">
+                  VIEW ORDER DETAILS
+                </span>
+              </Link>
+            )}
             <Link
               href="/home/products"
-              className="px-6 sm:px-8 py-3 sm:py-4 border border-sky-600 hover:border-sky-700 bg-sky-600 text-white hover:bg-sky-700 transition-all"
+              className="px-6 sm:px-8 py-3 sm:py-4 border border-sky-600 hover:border-sky-700 bg-white hover:bg-sky-50 text-sky-600 hover:text-sky-700 transition-all"
             >
               <span className="text-xs sm:text-sm font-light tracking-widest">
                 CONTINUE SHOPPING
               </span>
             </Link>
             <Link
-              href="/home/profile"
+              href="/home/orders"
               className="px-6 sm:px-8 py-3 sm:py-4 bg-sky-600 text-white hover:bg-sky-700 transition-colors"
             >
               <span className="text-xs sm:text-sm font-light tracking-widest">
-                VIEW ORDERS
+                VIEW ALL ORDERS
               </span>
             </Link>
           </div>

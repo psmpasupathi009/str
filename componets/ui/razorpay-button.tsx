@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/lib/toast-context";
 
 declare global {
   interface Window {
@@ -52,6 +53,7 @@ export default function RazorpayButton({
   const [isLoading, setIsLoading] = useState(false);
   const [razorpayLoaded, setRazorpayLoaded] = useState(false);
   const router = useRouter();
+  const { showError } = useToast();
 
   useEffect(() => {
     // Check if Razorpay is already loaded
@@ -137,7 +139,7 @@ export default function RazorpayButton({
         order_id: data.razorpayOrderId,
         handler: async function (response: any) {
           try {
-            // Verify payment
+            // Verify payment and create order in database
             const verifyResponse = await fetch("/api/razorpay/verify-payment", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
@@ -145,22 +147,22 @@ export default function RazorpayButton({
                 razorpayOrderId: response.razorpay_order_id,
                 razorpayPaymentId: response.razorpay_payment_id,
                 razorpaySignature: response.razorpay_signature,
-                orderId: data.orderId,
+                orderData: data.orderData, // Pass order data to create order after payment success
               }),
             });
 
             const verifyData = await verifyResponse.json();
 
             if (verifyResponse.ok && verifyData.success) {
-              // Redirect to success page
-              router.push(`/payment/success?orderId=${data.orderId}&paymentId=${response.razorpay_payment_id}`);
+              // Redirect to success page with the newly created order ID
+              router.push(`/home/payment/success?orderId=${verifyData.orderId}&paymentId=${response.razorpay_payment_id}`);
             } else {
-              // Redirect to failure page
-              router.push(`/payment/failure?orderId=${data.orderId}&error=${encodeURIComponent(verifyData.error || "Payment verification failed")}`);
+              // Redirect to failure page (no orderId since order wasn't created)
+              router.push(`/home/payment/failure?error=${encodeURIComponent(verifyData.error || "Payment verification failed")}`);
             }
           } catch (error: any) {
             console.error("Payment verification error:", error);
-            router.push(`/payment/failure?orderId=${data.orderId}&error=${encodeURIComponent(error.message || "Payment verification failed")}`);
+            router.push(`/home/payment/failure?error=${encodeURIComponent(error.message || "Payment verification failed")}`);
           }
         },
         prefill: {
@@ -181,13 +183,14 @@ export default function RazorpayButton({
       const razorpay = new window.Razorpay(options);
       razorpay.on("payment.failed", function (response: any) {
         console.error("Payment failed:", response);
-        router.push(`/payment/failure?orderId=${data.orderId}&error=${encodeURIComponent(response.error.description || "Payment failed")}`);
+        // No orderId since order is not created until payment succeeds
+        router.push(`/home/payment/failure?error=${encodeURIComponent(response.error.description || "Payment failed")}`);
         setIsLoading(false);
       });
       razorpay.open();
     } catch (error: any) {
       console.error("Payment error:", error);
-      alert(error.message || "Failed to initiate payment");
+      showError(error.message || "Failed to initiate payment");
       setIsLoading(false);
     }
   };

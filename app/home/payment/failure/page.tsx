@@ -25,16 +25,10 @@ function PaymentFailureContent() {
             <p className="text-base sm:text-lg text-slate-600 font-light">
               {error ? decodeURIComponent(error) : "Your payment could not be processed. Please try again."}
             </p>
+            <p className="text-sm text-slate-500 font-light">
+              No order was created. Your items are still in your cart.
+            </p>
           </div>
-
-          {orderId && (
-            <div className="w-full max-w-md space-y-4 p-6 sm:p-8 border border-sky-200 bg-white shadow-sm">
-              <div className="flex justify-between items-center">
-                <span className="text-sm sm:text-base text-slate-600 font-light">Order ID:</span>
-                <span className="text-sm sm:text-base font-light text-slate-900">{orderId}</span>
-              </div>
-            </div>
-          )}
 
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 pt-4 sm:pt-6">
             <Link

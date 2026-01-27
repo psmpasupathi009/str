@@ -34,8 +34,23 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Check if user is admin based on ADMIN_EMAIL env variable
+    const adminEmail = process.env.ADMIN_EMAIL;
+    let userRole = user.role;
+    if (adminEmail && email.toLowerCase() === adminEmail.toLowerCase()) {
+      userRole = "ADMIN";
+      // Update user role in database if not already set
+      if (user.role !== "ADMIN") {
+        const { prisma } = await import("@/lib/prisma");
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { role: "ADMIN" },
+        });
+      }
+    }
+
     // Return user without sensitive data
-    const { password: _, ...userWithoutSensitive } = user;
+    const { password: _, ...userWithoutSensitive } = { ...user, role: userRole };
     const token = generateToken(user.id, user.email);
 
     return NextResponse.json(

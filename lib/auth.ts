@@ -67,7 +67,8 @@ export async function createUser(
   email: string,
   password: string,
   name?: string,
-  phoneNumber?: string
+  phoneNumber?: string,
+  role: "USER" | "ADMIN" = "USER"
 ) {
   const hashedPassword = await hashPassword(password)
   return prisma.user.create({
@@ -76,6 +77,7 @@ export async function createUser(
       password: hashedPassword,
       name,
       phoneNumber,
+      role,
       isEmailVerified: true, // Set to true after OTP verification
     },
   })

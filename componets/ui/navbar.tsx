@@ -203,6 +203,13 @@ export default function Navbar() {
                   >
                     CONTACT
                   </Link>
+                  <Link
+                    href="/home/track-order"
+                    className="text-white text-sm sm:text-base md:text-lg lg:text-xl font-light tracking-wider hover:text-sky-100 transition-colors"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    TRACK ORDER
+                  </Link>
                 </nav>
               </div>
             </motion.div>

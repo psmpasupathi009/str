@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ShoppingCart } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
+import { useToast } from "@/lib/toast-context";
 
 interface AddToCartButtonProps {
   productId: string;
@@ -21,6 +22,7 @@ export default function AddToCartButton({
   const [isAdding, setIsAdding] = useState(false);
   const router = useRouter();
   const { user, isLoading } = useAuth();
+  const { showSuccess, showError } = useToast();
 
   const handleAddToCart = () => {
     // Check if user is logged in
@@ -74,14 +76,14 @@ export default function AddToCartButton({
       // Dispatch custom event to update navbar cart count
       window.dispatchEvent(new Event("cartUpdated"));
 
-      // Show success message (optional - you can use a toast library)
-      alert(`${productName} added to cart!`);
+      // Show success notification
+      showSuccess(`${productName} added to cart!`);
 
       // Optionally redirect to cart or refresh
       // router.push("/cart");
     } catch (error) {
       console.error("Error adding to cart:", error);
-      alert("Failed to add item to cart. Please try again.");
+      showError("Failed to add item to cart. Please try again.");
     } finally {
       setIsAdding(false);
     }

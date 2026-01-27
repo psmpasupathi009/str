@@ -1,13 +1,16 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { User, LogOut, Edit2, Save, X } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
+import { useToast } from "@/lib/toast-context";
 import { useRouter } from "next/navigation";
 
 export default function ProfilePage() {
   const { user, signOut, setUser } = useAuth();
   const router = useRouter();
+  const { showSuccess, showError } = useToast();
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [formData, setFormData] = useState({
@@ -75,7 +78,7 @@ export default function ProfilePage() {
     }
 
     if (!user?.id) {
-      alert("User not found. Please sign in again.");
+      showError("User not found. Please sign in again.");
       return;
     }
 
@@ -103,10 +106,10 @@ export default function ProfilePage() {
       localStorage.setItem("user", JSON.stringify(updatedUser));
 
       setIsEditing(false);
-      alert("Profile updated successfully!");
+      showSuccess("Profile updated successfully!");
     } catch (error: any) {
       console.error("Update profile error:", error);
-      alert(error.message || "Failed to update profile. Please try again.");
+      showError(error.message || "Failed to update profile. Please try again.");
     } finally {
       setIsSaving(false);
     }
@@ -236,12 +239,43 @@ export default function ProfilePage() {
             </div>
           </div>
 
+          {user.role === "ADMIN" && (
+            <div className="border border-sky-200 bg-white shadow-sm p-4 sm:p-6">
+              <div className="flex items-center justify-between mb-3 sm:mb-4">
+                <h2 className="text-lg sm:text-xl font-light tracking-wide text-slate-900">
+                  ADMIN DASHBOARD
+                </h2>
+                <Link
+                  href="/home/admin/dashboard"
+                  className="px-4 sm:px-6 py-2 border border-sky-600 hover:border-sky-700 bg-sky-600 text-white hover:bg-sky-700 transition-all"
+                >
+                  <span className="text-xs sm:text-sm font-light tracking-wider">
+                    OPEN DASHBOARD
+                  </span>
+                </Link>
+              </div>
+              <p className="text-sm sm:text-base text-slate-600 font-light">
+                Access the admin dashboard to manage orders, track real-time updates, and view statistics.
+              </p>
+            </div>
+          )}
+
           <div className="border border-sky-200 bg-white shadow-sm p-4 sm:p-6">
-            <h2 className="text-lg sm:text-xl font-light tracking-wide mb-3 sm:mb-4 text-slate-900">
-              ORDER HISTORY
-            </h2>
+            <div className="flex items-center justify-between mb-3 sm:mb-4">
+              <h2 className="text-lg sm:text-xl font-light tracking-wide text-slate-900">
+                ORDER HISTORY
+              </h2>
+              <Link
+                href="/home/orders"
+                className="px-4 sm:px-6 py-2 border border-sky-600 hover:border-sky-700 bg-sky-600 text-white hover:bg-sky-700 transition-all"
+              >
+                <span className="text-xs sm:text-sm font-light tracking-wider">
+                  VIEW ALL ORDERS
+                </span>
+              </Link>
+            </div>
             <p className="text-sm sm:text-base text-slate-600 font-light">
-              No orders yet. Start shopping to see your order history here.
+              View and track all your orders. Click the button above to see your complete order history.
             </p>
           </div>
         </div>

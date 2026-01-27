@@ -31,8 +31,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Check if user should be admin based on ADMIN_EMAIL env variable
+    const adminEmail = process.env.ADMIN_EMAIL;
+    const isAdmin = adminEmail && email.toLowerCase() === adminEmail.toLowerCase();
+
     // Create user (OTP was already verified in previous step)
-    const user = await createUser(email, password, name, phoneNumber);
+    const user = await createUser(email, password, name, phoneNumber, isAdmin ? "ADMIN" : "USER");
     const { password: _, ...userWithoutSensitive } = user;
 
     // Generate token for auto login
