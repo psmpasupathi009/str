@@ -5,11 +5,9 @@ import Link from "next/link";
 import { User, LogOut, Edit2, Save, X } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { useToast } from "@/lib/toast-context";
-import { useRouter } from "next/navigation";
 
 export default function ProfilePage() {
   const { user, signOut, setUser } = useAuth();
-  const router = useRouter();
   const { showSuccess, showError } = useToast();
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -20,8 +18,7 @@ export default function ProfilePage() {
   const [errors, setErrors] = useState<{ name?: string; phoneNumber?: string }>({});
 
   const handleLogout = () => {
-    signOut();
-    router.push("/home/signin");
+    signOut(); // signOut already redirects to /home
   };
 
   const handleEdit = () => {

@@ -41,8 +41,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signOut = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("token");
+    localStorage.removeItem("cart");
     setUser(null);
-    window.location.href = "/signin";
+    // Dispatch cart update event before redirect
+    window.dispatchEvent(new Event("cartUpdated"));
+    // Redirect directly to home page
+    window.location.href = "/home";
   };
 
   return (
