@@ -12,8 +12,10 @@ function PaymentSuccessContent() {
 
   // Clear cart after successful payment
   useEffect(() => {
-    localStorage.removeItem("cart");
-    window.dispatchEvent(new Event("cartUpdated"));
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("cart");
+      window.dispatchEvent(new Event("cartUpdated"));
+    }
   }, []);
 
   return (

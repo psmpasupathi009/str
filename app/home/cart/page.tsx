@@ -102,7 +102,7 @@ export default function CartPage() {
               >
                 <div className="flex-1">
                   <h3 className="text-lg sm:text-xl font-light mb-2">{item.productName}</h3>
-                  <p className="text-sm sm:text-base text-slate-600">${item.price.toLocaleString()} each</p>
+                  <p className="text-sm sm:text-base text-slate-600">₹{item.price.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} each</p>
                 </div>
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-3">
@@ -121,7 +121,7 @@ export default function CartPage() {
                     </button>
                   </div>
                   <div className="text-lg sm:text-xl font-light w-24 sm:w-32 text-right">
-                    ${(item.price * item.quantity).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    ₹{(item.price * item.quantity).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </div>
                   <button
                     onClick={() => removeFromCart(item.productId)}
@@ -136,7 +136,7 @@ export default function CartPage() {
             <div className="border-t border-green-200 pt-6 sm:pt-8">
               <div className="flex justify-between items-center mb-6 sm:mb-8">
                 <span className="text-lg sm:text-xl font-light tracking-wide">TOTAL</span>
-                <span className="text-xl sm:text-2xl font-light">${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                <span className="text-xl sm:text-2xl font-light">₹{total.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
               </div>
               <Link
                 href="/home/checkout"

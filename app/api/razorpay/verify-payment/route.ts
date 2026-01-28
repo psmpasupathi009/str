@@ -3,31 +3,39 @@ import { verifyPayment } from "@/lib/razorpay";
 import { prisma } from "@/lib/prisma";
 import { PaymentStatus, OrderStatus } from "@prisma/client";
 
+/**
+ * Verify Payment and Create Order API
+ * Following Razorpay best practices:
+ * - Signature verification (MANDATORY)
+ * - Status verification (captured/authorized)
+ * - Create order only after successful verification
+ */
 export async function POST(request: NextRequest) {
   try {
+    const body = await request.json();
     const { 
       razorpayOrderId, 
       razorpayPaymentId, 
       razorpaySignature, 
       orderData 
-    } = await request.json();
+    } = body;
 
     // Validation
     if (!razorpayOrderId || !razorpayPaymentId || !razorpaySignature) {
       return NextResponse.json(
-        { error: "Payment details are required" },
+        { success: false, error: "Payment details are required" },
         { status: 400 }
       );
     }
 
-    if (!orderData) {
+    if (!orderData || typeof orderData !== "object") {
       return NextResponse.json(
-        { error: "Order data is required" },
+        { success: false, error: "Order data is required" },
         { status: 400 }
       );
     }
 
-    // Verify payment FIRST before creating order in database
+    // Step 1: Verify payment (signature + status)
     const verification = await verifyPayment(
       razorpayOrderId,
       razorpayPaymentId,
@@ -35,64 +43,100 @@ export async function POST(request: NextRequest) {
     );
 
     if (!verification.isValid) {
-      // Payment failed - do NOT create order in database
       return NextResponse.json(
-        { error: verification.error || "Payment verification failed" },
+        { 
+          success: false,
+          error: verification.error || "Payment verification failed" 
+        },
         { status: 400 }
       );
     }
 
-    // Payment verified successfully - NOW create order in database
-    const { amount, items, customerName, customerEmail, customerPhone, userId, shippingAddress } = orderData;
-
-    // Check if order already exists (prevent duplicate creation)
-    const existingOrder = await prisma.order.findUnique({
-      where: { razorpayOrderId },
+    // Step 2: Check if order already exists (prevent duplicates)
+    const existingOrder = await prisma.order.findFirst({
+      where: {
+        OR: [
+          { razorpayOrderId },
+          { razorpayPaymentId },
+        ],
+      },
     });
 
+    // If order exists and is already completed, return success
+    if (existingOrder && existingOrder.paymentStatus === PaymentStatus.COMPLETED) {
+      return NextResponse.json(
+        {
+          success: true,
+          message: "Payment already verified",
+          paymentId: razorpayPaymentId,
+          orderId: existingOrder.id,
+        },
+        { status: 200 }
+      );
+    }
+
+    // Step 3: Extract order data
+    const { amount, items, customerName, customerEmail, customerPhone, userId, shippingAddress } = orderData;
+
+    // Validate order data
+    if (typeof amount !== "number" || amount <= 0) {
+      return NextResponse.json(
+        { success: false, error: "Invalid order amount" },
+        { status: 400 }
+      );
+    }
+
+    if (!Array.isArray(items) || items.length === 0) {
+      return NextResponse.json(
+        { success: false, error: "Order items are required" },
+        { status: 400 }
+      );
+    }
+
+    // Step 4: Create or update order in database
     let order;
     if (existingOrder) {
-      // Order already exists, update it
+      // Update existing order
       order = await prisma.order.update({
-        where: { razorpayOrderId },
+        where: { id: existingOrder.id },
         data: {
-          razorpayPaymentId: razorpayPaymentId,
+          razorpayPaymentId,
           paymentStatus: PaymentStatus.COMPLETED,
           orderStatus: OrderStatus.PROCESSING,
         },
         include: { items: true },
       });
     } else {
-      // Create new order in database ONLY after successful payment
+      // Create new order
       order = await prisma.order.create({
         data: {
           userId: userId || null,
-          razorpayOrderId: razorpayOrderId,
-          razorpayPaymentId: razorpayPaymentId,
-          amount: amount,
+          razorpayOrderId,
+          razorpayPaymentId,
+          amount,
           currency: "INR",
-          paymentStatus: PaymentStatus.COMPLETED, // Payment is already verified
-          orderStatus: OrderStatus.PROCESSING, // Order is placed and ready to process
+          paymentStatus: PaymentStatus.COMPLETED,
+          orderStatus: OrderStatus.PROCESSING,
           customerName: customerName || null,
           customerEmail: customerEmail || null,
           customerPhone: customerPhone || null,
           shippingAddress: shippingAddress ? {
-            fullName: shippingAddress.fullName,
-            email: shippingAddress.email,
-            phone: shippingAddress.phone,
-            addressLine1: shippingAddress.addressLine1,
+            fullName: shippingAddress.fullName || "",
+            email: shippingAddress.email || "",
+            phone: shippingAddress.phone || "",
+            addressLine1: shippingAddress.addressLine1 || "",
             addressLine2: shippingAddress.addressLine2 || "",
-            city: shippingAddress.city,
-            state: shippingAddress.state,
-            zipCode: shippingAddress.zipCode,
-            country: shippingAddress.country,
+            city: shippingAddress.city || "",
+            state: shippingAddress.state || "",
+            zipCode: shippingAddress.zipCode || "",
+            country: shippingAddress.country || "India",
           } : null,
           items: {
             create: items.map((item: any) => ({
-              productId: item.productId,
-              productName: item.productName,
+              productId: item.productId || "",
+              productName: item.productName || "",
               quantity: item.quantity || 1,
-              price: item.price,
+              price: item.price || 0,
             })),
           },
         },
@@ -109,13 +153,27 @@ export async function POST(request: NextRequest) {
         paymentId: razorpayPaymentId,
         orderId: order.id,
       },
-      { status: 200 }
+      { 
+        status: 200,
+        headers: {
+          "Cache-Control": "no-store, no-cache, must-revalidate",
+        }
+      }
     );
   } catch (error: any) {
-    console.error("Verify payment error:", error);
+    console.error("[API] Verify payment error:", error);
+    
     return NextResponse.json(
-      { error: error.message || "Failed to verify payment" },
-      { status: 500 }
+      { 
+        success: false,
+        error: error.message || "Failed to verify payment" 
+      },
+      { 
+        status: 500,
+        headers: {
+          "Cache-Control": "no-store, no-cache, must-revalidate",
+        }
+      }
     );
   }
 }

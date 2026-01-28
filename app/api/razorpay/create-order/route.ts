@@ -1,12 +1,27 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createRazorpayOrder } from "@/lib/razorpay";
 
+/**
+ * Create Razorpay Order API
+ * Following Razorpay best practices:
+ * - Orders API prevents duplicate payments
+ * - Server-side order creation for security
+ */
 export async function POST(request: NextRequest) {
   try {
-    const { amount, items, customerName, customerEmail, customerPhone, userId, shippingAddress } = await request.json();
+    const body = await request.json();
+    const { 
+      amount, 
+      items, 
+      customerName, 
+      customerEmail, 
+      customerPhone, 
+      userId, 
+      shippingAddress 
+    } = body;
 
     // Validation
-    if (!amount || amount <= 0) {
+    if (typeof amount !== "number" || amount <= 0 || !isFinite(amount)) {
       return NextResponse.json(
         { error: "Valid amount is required" },
         { status: 400 }
@@ -20,28 +35,30 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Convert amount to paise (Razorpay uses smallest currency unit)
-    // Amount is already in INR, so just multiply by 100 to convert to paise
-    const amountInPaise = Math.round(amount * 100);
-    
-    // Validate amount doesn't exceed Razorpay's maximum (typically 99,99,999 paise = ₹9,99,999.99)
-    const MAX_AMOUNT_PAISE = 99999999; // ₹9,99,999.99
-    if (amountInPaise > MAX_AMOUNT_PAISE) {
-      return NextResponse.json(
-        { error: `Amount exceeds maximum allowed. Maximum amount is ₹${(MAX_AMOUNT_PAISE / 100).toLocaleString('en-IN')}` },
-        { status: 400 }
-      );
-    }
-    
-    // Validate minimum amount (Razorpay minimum is typically 1 paise = ₹0.01)
-    if (amountInPaise < 1) {
-      return NextResponse.json(
-        { error: "Amount must be at least ₹0.01" },
-        { status: 400 }
-      );
+    // Validate and normalize items
+    const normalizedItems = items.map((item: any) => ({
+      productId: String(item.productId || ""),
+      productName: String(item.productName || ""),
+      quantity: Number(item.quantity) || 1,
+      price: Number(Number(item.price).toFixed(2)),
+    }));
+
+    // Validate normalized items
+    for (const item of normalizedItems) {
+      if (!item.productId || !item.productName || item.price <= 0 || item.quantity < 1) {
+        return NextResponse.json(
+          { error: "Invalid item data. Each item must have valid productId, productName, price, and quantity." },
+          { status: 400 }
+        );
+      }
     }
 
-    // Create Razorpay order (DO NOT create database order yet - only after payment success)
+    // Convert amount to paise (Razorpay uses smallest currency unit)
+    // Ensure amount is properly rounded to 2 decimal places first
+    const roundedAmount = Math.round(amount * 100) / 100;
+    const amountInPaise = Math.round(roundedAmount * 100);
+
+    // Create Razorpay order
     const razorpayOrder = await createRazorpayOrder({
       amount: amountInPaise,
       currency: "INR",
@@ -50,10 +67,9 @@ export async function POST(request: NextRequest) {
         customerName: customerName || "",
         customerEmail: customerEmail || "",
         userId: userId || "",
-        // Store order data in notes for later retrieval (will be used to create DB order after payment)
         orderData: JSON.stringify({
-          amount,
-          items,
+          amount: roundedAmount,
+          items: normalizedItems,
           customerName,
           customerEmail,
           customerPhone,
@@ -63,18 +79,27 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Return Razorpay order details (NO database order created yet)
-    // Order will be created in database ONLY after successful payment verification
+    // Get Razorpay key for client-side
+    const keyId = process.env.RAZORPAY_KEY_ID;
+    if (!keyId) {
+      return NextResponse.json(
+        { error: "Razorpay key not configured" },
+        { status: 500 }
+      );
+    }
+
+    // Return order details (NO database order created yet)
+    // Order created in DB only after successful payment verification
     return NextResponse.json(
       {
+        success: true,
         razorpayOrderId: razorpayOrder.id,
         amount: razorpayOrder.amount,
         currency: razorpayOrder.currency,
-        key: process.env.RAZORPAY_KEY_ID || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
-        // Return order data to client so it can be sent to verify-payment
+        key: keyId,
         orderData: {
-          amount,
-          items,
+          amount: roundedAmount,
+          items: normalizedItems,
           customerName,
           customerEmail,
           customerPhone,
@@ -82,13 +107,27 @@ export async function POST(request: NextRequest) {
           shippingAddress,
         },
       },
-      { status: 200 }
+      { 
+        status: 200,
+        headers: {
+          "Cache-Control": "no-store, no-cache, must-revalidate",
+        }
+      }
     );
   } catch (error: any) {
-    console.error("Create order error:", error);
+    console.error("[API] Create order error:", error);
+    
     return NextResponse.json(
-      { error: error.message || "Failed to create order" },
-      { status: 500 }
+      { 
+        success: false,
+        error: error.message || "Failed to create order" 
+      },
+      { 
+        status: 500,
+        headers: {
+          "Cache-Control": "no-store, no-cache, must-revalidate",
+        }
+      }
     );
   }
 }

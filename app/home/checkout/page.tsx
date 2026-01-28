@@ -148,11 +148,21 @@ function CheckoutContent() {
     }
   };
 
-  if (cartItems.length === 0) {
+  if (cartItems.length === 0 && !buyNowItem) {
     return (
       <main className="min-h-screen bg-linear-to-b from-green-50 to-green-100 text-slate-900 pt-16 sm:pt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-          <p className="text-center text-slate-600">Loading...</p>
+          <div className="text-center space-y-4">
+            <p className="text-slate-600">No items in cart.</p>
+            <Link
+              href="/home/products"
+              className="inline-block px-6 sm:px-8 py-3 sm:py-4 bg-green-600 text-white hover:bg-green-700 transition-colors"
+            >
+              <span className="text-xs sm:text-sm font-light tracking-widest">
+                BROWSE PRODUCTS
+              </span>
+            </Link>
+          </div>
         </div>
       </main>
     );
@@ -376,7 +386,12 @@ function CheckoutContent() {
                 <div id="payment-button" className="mt-6 sm:mt-8">
                   <RazorpayButton
                     amount={total}
-                    items={cartItems}
+                    items={cartItems.map(item => ({
+                      productId: item.productId,
+                      productName: item.productName,
+                      quantity: item.quantity,
+                      price: item.price,
+                    }))}
                     customerName={shippingAddress.fullName}
                     customerEmail={shippingAddress.email}
                     customerPhone={shippingAddress.phone}
