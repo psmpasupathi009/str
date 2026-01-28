@@ -28,8 +28,8 @@ import {
   Image as ImageIcon,
   GripVertical,
 } from "lucide-react";
-import ImageUpload from "@/componets/ui/image-upload";
-import MediaModal from "@/componets/ui/media-modal";
+import ImageUpload from "@/components/shared/image-upload";
+import MediaModal from "@/components/shared/media-modal";
 import { useAuth } from "@/lib/auth-context";
 import { useToast } from "@/lib/toast-context";
 

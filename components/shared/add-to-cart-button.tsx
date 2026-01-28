@@ -5,7 +5,7 @@ import { ShoppingCart } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import { useToast } from "@/lib/toast-context";
-import Button from "./button";
+import Button from "@/components/ui/button";
 
 interface AddToCartButtonProps {
   productId: string;

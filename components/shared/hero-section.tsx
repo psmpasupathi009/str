@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { Sparkles } from "lucide-react";
-import Button from "./button";
+import Button from "@/components/ui/button";
 import CategoryLogoCloud from "./category-logo-cloud";
 
 export default function HeroSection() {

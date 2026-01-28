@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import ProductsGrid from "@/componets/ui/products-grid";
+import ProductsGrid from "@/components/shared/products-grid";
 import { Search, Filter, X } from "lucide-react";
 
 type SortOption = "default" | "price-low" | "price-high" | "name-asc" | "name-desc";

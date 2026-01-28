@@ -1,11 +1,11 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Package, Percent, CheckCircle, XCircle } from "lucide-react";
-import BuyNowButton from "@/componets/ui/buy-now-button";
-import AddToCartButton from "@/componets/ui/add-to-cart-button";
-import ProductImageGallery from "@/componets/ui/product-image-gallery";
+import BuyNowButton from "@/components/shared/buy-now-button";
+import AddToCartButton from "@/components/shared/add-to-cart-button";
+import ProductImageGallery from "@/components/shared/product-image-gallery";
 import ReviewsSection from "./reviews-section";
-import ProductRating from "@/componets/ui/product-rating";
+import ProductRating from "@/components/shared/product-rating";
 import { prisma } from "@/lib/prisma";
 
 interface ProductPageProps {

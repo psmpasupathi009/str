@@ -4,7 +4,7 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { XCircle } from "lucide-react";
 import { Suspense } from "react";
-import Button from "@/componets/ui/button";
+import Button from "@/components/ui/button";
 
 function PaymentFailureContent() {
   const searchParams = useSearchParams();

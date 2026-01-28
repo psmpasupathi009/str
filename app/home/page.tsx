@@ -1,6 +1,6 @@
-import HeroSection from "@/componets/ui/hero-section";
-import BestProducts from "@/componets/ui/best-products";
-import CategorySection from "@/componets/ui/category-section";
+import HeroSection from "@/components/shared/hero-section";
+import BestProducts from "@/components/shared/best-products";
+import CategorySection from "@/components/shared/category-section";
 import { prisma } from "@/lib/prisma";
 
 async function getBestSellerProducts() {

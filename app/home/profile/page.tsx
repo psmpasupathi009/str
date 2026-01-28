@@ -5,7 +5,9 @@ import Link from "next/link";
 import { User, LogOut, Edit2, Save, X } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { useToast } from "@/lib/toast-context";
-import Button from "@/componets/ui/button";
+import Button from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export default function ProfilePage() {
   const { user, signOut, setUser } = useAuth();
@@ -181,56 +183,53 @@ export default function ProfilePage() {
                     size="sm"
                     icon={<X className="w-4 h-4" />}
                   >
-                    <X className="w-4 h-4" />
-                    <span className="text-xs sm:text-sm font-light tracking-wider">CANCEL</span>
-                  </button>
+                    CANCEL
+                  </Button>
                 </div>
               )}
             </div>
             <div className="space-y-3 sm:space-y-4">
-              <div>
-                <label className="text-xs sm:text-sm text-slate-600 font-light tracking-wider block mb-2">
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-xs sm:text-sm font-light tracking-wider uppercase">
                   EMAIL
-                </label>
-                <input
+                </Label>
+                <Input
+                  id="email"
                   type="email"
                   value={user.email || ""}
                   readOnly
-                  className="w-full bg-slate-100 border border-green-300 px-4 py-3 text-sm sm:text-base text-slate-600 focus:outline-none focus:border-green-500 transition-colors cursor-not-allowed opacity-70"
+                  disabled
+                  className="bg-slate-100 border-green-300 cursor-not-allowed opacity-70"
                 />
                 <p className="text-xs text-slate-500 mt-1">Email cannot be changed</p>
               </div>
-              <div>
-                <label className="text-xs sm:text-sm text-slate-600 font-light tracking-wider block mb-2">
+              <div className="space-y-2">
+                <Label htmlFor="name" className="text-xs sm:text-sm font-light tracking-wider uppercase">
                   FULL NAME *
-                </label>
-                <input
+                </Label>
+                <Input
+                  id="name"
                   type="text"
                   value={formData.name}
                   onChange={(e) => handleInputChange("name", e.target.value)}
                   disabled={!isEditing}
-                  className={`w-full bg-white border border-green-300 px-4 py-3 text-sm sm:text-base text-slate-900 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-colors ${
-                    !isEditing ? "cursor-not-allowed opacity-70 bg-slate-100" : ""
-                  }`}
+                  className={errors.name ? "border-red-300 focus:border-red-500" : "border-green-300 focus:border-green-500 focus:ring-green-200"}
                   placeholder="Enter your full name"
-                  style={{ color: isEditing ? 'rgb(15 23 42)' : 'rgb(15 23 42)', caretColor: isEditing ? 'rgb(14 165 233)' : 'transparent' }}
                 />
                 {errors.name && <p className="text-red-400 text-xs mt-1">{errors.name}</p>}
               </div>
-              <div>
-                <label className="text-xs sm:text-sm text-slate-600 font-light tracking-wider block mb-2">
+              <div className="space-y-2">
+                <Label htmlFor="phoneNumber" className="text-xs sm:text-sm font-light tracking-wider uppercase">
                   PHONE NUMBER
-                </label>
-                <input
+                </Label>
+                <Input
+                  id="phoneNumber"
                   type="tel"
                   value={formData.phoneNumber}
                   onChange={(e) => handleInputChange("phoneNumber", e.target.value.replace(/\D/g, ""))}
                   disabled={!isEditing}
-                  className={`w-full bg-white border border-green-300 px-4 py-3 text-sm sm:text-base text-slate-900 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-colors ${
-                    !isEditing ? "cursor-not-allowed opacity-70 bg-slate-100" : ""
-                  }`}
+                  className={errors.phoneNumber ? "border-red-300 focus:border-red-500" : "border-green-300 focus:border-green-500 focus:ring-green-200"}
                   placeholder="Enter your phone number"
-                  style={{ color: isEditing ? 'rgb(15 23 42)' : 'rgb(15 23 42)', caretColor: isEditing ? 'rgb(14 165 233)' : 'transparent' }}
                 />
                 {errors.phoneNumber && <p className="text-red-400 text-xs mt-1">{errors.phoneNumber}</p>}
                 {!errors.phoneNumber && (
@@ -272,10 +271,8 @@ export default function ProfilePage() {
                 variant="primary"
                 size="sm"
               >
-                <span className="text-xs sm:text-sm font-light tracking-wider">
-                  VIEW ALL ORDERS
-                </span>
-              </Link>
+                VIEW ALL ORDERS
+              </Button>
             </div>
             <p className="text-sm sm:text-base text-slate-600 font-light">
               View and track all your orders. Click the button above to see your complete order history.

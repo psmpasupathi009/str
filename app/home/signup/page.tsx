@@ -1,6 +1,6 @@
 "use client";
 
-import { AceternityAuthForm } from "@/componets/ui/aceternity-auth";
+import { AceternityAuthForm } from "@/components/shared/aceternity-auth";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useAuth } from "@/lib/auth-context";

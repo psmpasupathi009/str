@@ -4,9 +4,11 @@ import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, MapPin, User, Mail, Phone, Package } from "lucide-react";
-import RazorpayButton from "@/componets/ui/razorpay-button";
+import RazorpayButton from "@/components/shared/razorpay-button";
 import { useAuth } from "@/lib/auth-context";
-import Button from "@/componets/ui/button";
+import Button from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 interface CartItem {
   productId: string;
@@ -196,149 +198,149 @@ function CheckoutContent() {
               </h2>
 
               <div className="space-y-4 sm:space-y-5">
-                <div>
-                  <label className="text-xs sm:text-sm text-slate-600 font-light tracking-wider uppercase block mb-2">
+                <div className="space-y-2">
+                  <Label htmlFor="fullName" className="text-xs sm:text-sm font-light tracking-wider uppercase">
                     Full Name *
-                  </label>
+                  </Label>
                   <div className="relative">
-                    <User className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-gray-500 w-4 h-4 sm:w-5 sm:h-5 pointer-events-none" />
-                    <input
+                    <User className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-gray-500 w-4 h-4 sm:w-5 sm:h-5 pointer-events-none z-10" />
+                    <Input
+                      id="fullName"
                       type="text"
                       value={shippingAddress.fullName}
                       onChange={(e) => handleInputChange("fullName", e.target.value)}
-                      className="w-full bg-white border border-green-300 pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-200"
+                      className="pl-10 sm:pl-12 border-green-300 focus:border-green-500 focus:ring-green-200"
                       placeholder="John Doe"
-                      style={{ color: 'rgb(15 23 42)', caretColor: 'rgb(14 165 233)' }}
                     />
                   </div>
                   {errors.fullName && <p className="text-red-400 text-xs mt-1">{errors.fullName}</p>}
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
-                  <div>
-                    <label className="text-xs sm:text-sm text-slate-600 font-light tracking-wider uppercase block mb-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="email" className="text-xs sm:text-sm font-light tracking-wider uppercase">
                       Email *
-                    </label>
+                    </Label>
                     <div className="relative">
-                      <Mail className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4 sm:w-5 sm:h-5 pointer-events-none" />
-                      <input
+                      <Mail className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4 sm:w-5 sm:h-5 pointer-events-none z-10" />
+                      <Input
+                        id="email"
                         type="email"
                         value={shippingAddress.email}
                         onChange={(e) => handleInputChange("email", e.target.value)}
-                        className="w-full bg-white border border-green-300 pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-200"
+                        className="pl-10 sm:pl-12 border-green-300 focus:border-green-500 focus:ring-green-200"
                         placeholder="you@example.com"
-                        style={{ color: 'rgb(15 23 42)', caretColor: 'rgb(14 165 233)' }}
                       />
                     </div>
                     {errors.email && <p className="text-red-400 text-xs mt-1">{errors.email}</p>}
                   </div>
 
-                  <div>
-                    <label className="text-xs sm:text-sm text-slate-600 font-light tracking-wider uppercase block mb-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="phone" className="text-xs sm:text-sm font-light tracking-wider uppercase">
                       Phone *
-                    </label>
+                    </Label>
                     <div className="relative">
-                      <Phone className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4 sm:w-5 sm:h-5 pointer-events-none" />
-                      <input
+                      <Phone className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4 sm:w-5 sm:h-5 pointer-events-none z-10" />
+                      <Input
+                        id="phone"
                         type="tel"
                         value={shippingAddress.phone}
                         onChange={(e) => handleInputChange("phone", e.target.value.replace(/\D/g, ""))}
-                        className="w-full bg-white border border-green-300 pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-200"
+                        className="pl-10 sm:pl-12 border-green-300 focus:border-green-500 focus:ring-green-200"
                         placeholder="1234567890"
-                        style={{ color: 'rgb(15 23 42)', caretColor: 'rgb(14 165 233)' }}
                       />
                     </div>
                     {errors.phone && <p className="text-red-400 text-xs mt-1">{errors.phone}</p>}
                   </div>
                 </div>
 
-                <div>
-                  <label className="text-xs sm:text-sm text-slate-600 font-light tracking-wider uppercase block mb-2">
+                <div className="space-y-2">
+                  <Label htmlFor="addressLine1" className="text-xs sm:text-sm font-light tracking-wider uppercase">
                     Address Line 1 *
-                  </label>
-                  <input
+                  </Label>
+                  <Input
+                    id="addressLine1"
                     type="text"
                     value={shippingAddress.addressLine1}
                     onChange={(e) => handleInputChange("addressLine1", e.target.value)}
-                    className="w-full bg-white border border-green-300 px-3 sm:px-4 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-200"
+                    className="border-green-300 focus:border-green-500 focus:ring-green-200"
                     placeholder="Street address, P.O. box"
-                    style={{ color: 'rgb(15 23 42)', caretColor: 'rgb(14 165 233)' }}
                   />
                   {errors.addressLine1 && <p className="text-red-400 text-xs mt-1">{errors.addressLine1}</p>}
                 </div>
 
-                <div>
-                  <label className="text-xs sm:text-sm text-slate-600 font-light tracking-wider uppercase block mb-2">
+                <div className="space-y-2">
+                  <Label htmlFor="addressLine2" className="text-xs sm:text-sm font-light tracking-wider uppercase">
                     Address Line 2
-                  </label>
-                  <input
+                  </Label>
+                  <Input
+                    id="addressLine2"
                     type="text"
                     value={shippingAddress.addressLine2}
                     onChange={(e) => handleInputChange("addressLine2", e.target.value)}
-                    className="w-full bg-white border border-green-300 px-3 sm:px-4 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-200"
+                    className="border-green-300 focus:border-green-500 focus:ring-green-200"
                     placeholder="Apartment, suite, unit, building, floor, etc."
-                    style={{ color: 'rgb(15 23 42)', caretColor: 'rgb(14 165 233)' }}
                   />
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
-                  <div>
-                    <label className="text-xs sm:text-sm text-slate-600 font-light tracking-wider uppercase block mb-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="city" className="text-xs sm:text-sm font-light tracking-wider uppercase">
                       City *
-                    </label>
-                    <input
+                    </Label>
+                    <Input
+                      id="city"
                       type="text"
                       value={shippingAddress.city}
                       onChange={(e) => handleInputChange("city", e.target.value)}
-                      className="w-full bg-white border border-green-300 px-3 sm:px-4 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-200"
+                      className="border-green-300 focus:border-green-500 focus:ring-green-200"
                       placeholder="City"
-                      style={{ color: 'rgb(15 23 42)', caretColor: 'rgb(14 165 233)' }}
                     />
                     {errors.city && <p className="text-red-400 text-xs mt-1">{errors.city}</p>}
                   </div>
 
-                  <div>
-                    <label className="text-xs sm:text-sm text-slate-600 font-light tracking-wider uppercase block mb-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="state" className="text-xs sm:text-sm font-light tracking-wider uppercase">
                       State *
-                    </label>
-                    <input
+                    </Label>
+                    <Input
+                      id="state"
                       type="text"
                       value={shippingAddress.state}
                       onChange={(e) => handleInputChange("state", e.target.value)}
-                      className="w-full bg-white border border-green-300 px-3 sm:px-4 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-200"
+                      className="border-green-300 focus:border-green-500 focus:ring-green-200"
                       placeholder="State"
-                      style={{ color: 'rgb(15 23 42)', caretColor: 'rgb(14 165 233)' }}
                     />
                     {errors.state && <p className="text-red-400 text-xs mt-1">{errors.state}</p>}
                   </div>
 
-                  <div>
-                    <label className="text-xs sm:text-sm text-slate-600 font-light tracking-wider uppercase block mb-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="zipCode" className="text-xs sm:text-sm font-light tracking-wider uppercase">
                       ZIP Code *
-                    </label>
-                    <input
+                    </Label>
+                    <Input
+                      id="zipCode"
                       type="text"
                       value={shippingAddress.zipCode}
                       onChange={(e) => handleInputChange("zipCode", e.target.value)}
-                      className="w-full bg-white border border-green-300 px-3 sm:px-4 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-200"
+                      className="border-green-300 focus:border-green-500 focus:ring-green-200"
                       placeholder="ZIP"
-                      style={{ color: 'rgb(15 23 42)', caretColor: 'rgb(14 165 233)' }}
                     />
                     {errors.zipCode && <p className="text-red-400 text-xs mt-1">{errors.zipCode}</p>}
                   </div>
                 </div>
 
-                <div>
-                  <label className="text-xs sm:text-sm text-slate-600 font-light tracking-wider uppercase block mb-2">
+                <div className="space-y-2">
+                  <Label htmlFor="country" className="text-xs sm:text-sm font-light tracking-wider uppercase">
                     Country *
-                  </label>
-                  <input
+                  </Label>
+                  <Input
+                    id="country"
                     type="text"
                     value={shippingAddress.country}
                     onChange={(e) => handleInputChange("country", e.target.value)}
-                    className="w-full bg-white border border-green-300 px-3 sm:px-4 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-200"
+                    className="border-green-300 focus:border-green-500 focus:ring-green-200"
                     placeholder="Country"
-                    style={{ color: 'rgb(15 23 42)', caretColor: 'rgb(14 165 233)' }}
                   />
                   {errors.country && <p className="text-red-400 text-xs mt-1">{errors.country}</p>}
                 </div>

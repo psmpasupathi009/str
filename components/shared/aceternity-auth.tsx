@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { Mail, Lock, User, Phone, Shield, CheckCircle2, ArrowRight, Eye, EyeOff } from "lucide-react";
-import Button from "./button";
+import Button from "@/components/ui/button";
 
 interface AuthFormProps {
   type: "signin" | "signup";

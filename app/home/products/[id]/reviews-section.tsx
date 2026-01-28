@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import ProductReviews from "@/componets/ui/product-reviews";
-import ReviewForm from "@/componets/ui/review-form";
+import ProductReviews from "@/components/shared/product-reviews";
+import ReviewForm from "@/components/shared/review-form";
 
 interface ReviewsSectionProps {
   productId: string;

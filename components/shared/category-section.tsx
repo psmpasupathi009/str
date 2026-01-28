@@ -1,7 +1,7 @@
 "use client";
 
 import ProductCard from "./product-card";
-import Button from "./button";
+import Button from "@/components/ui/button";
 
 interface Product {
   id: string;

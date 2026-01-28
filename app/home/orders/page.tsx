@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Package, ArrowLeft, Calendar, MapPin, Eye, Truck } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
-import Button from "@/componets/ui/button";
+import Button from "@/components/ui/button";
 
 interface OrderItem {
   id: string;

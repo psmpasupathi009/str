@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { useState, useEffect, useCallback, useMemo } from "react";
 import Image from "next/image";
-import MediaModal from "@/componets/ui/media-modal";
+import MediaModal from "@/components/shared/media-modal";
 
 const ITEMS_PER_PAGE = 8;
 

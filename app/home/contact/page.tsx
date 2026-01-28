@@ -1,6 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import Button from "@/components/ui/button";
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -62,48 +66,58 @@ export default function ContactPage() {
               SEND A MESSAGE
             </h2>
             <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
-              <input
-                type="text"
-                placeholder="Your Name"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                required
-                className="w-full bg-white border border-green-300 px-4 py-3 text-sm sm:text-base text-slate-900 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-colors"
-                style={{ color: 'rgb(15 23 42)', caretColor: 'rgb(14 165 233)' }}
-              />
-              <input
-                type="email"
-                placeholder="Your Email"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                required
-                className="w-full bg-white border border-green-300 px-4 py-3 text-sm sm:text-base text-slate-900 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-colors"
-                style={{ color: 'rgb(15 23 42)', caretColor: 'rgb(14 165 233)' }}
-              />
-              <textarea
-                placeholder="Your Message"
-                rows={6}
-                value={formData.message}
-                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                required
-                className="w-full bg-white border border-green-300 px-4 py-3 text-sm sm:text-base text-slate-900 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-colors resize-none"
-                style={{ color: 'rgb(15 23 42)', caretColor: 'rgb(14 165 233)' }}
-              />
+              <div className="space-y-2">
+                <Label htmlFor="name">Your Name</Label>
+                <Input
+                  id="name"
+                  type="text"
+                  placeholder="Your Name"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  required
+                  className="border-green-300 focus:border-green-500 focus:ring-green-200"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="email">Your Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="Your Email"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  required
+                  className="border-green-300 focus:border-green-500 focus:ring-green-200"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="message">Your Message</Label>
+                <Textarea
+                  id="message"
+                  placeholder="Your Message"
+                  rows={6}
+                  value={formData.message}
+                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                  required
+                  className="border-green-300 focus:border-green-500 focus:ring-green-200 resize-none"
+                />
+              </div>
               {submitStatus === "success" && (
                 <p className="text-green-600 text-sm">Message sent successfully!</p>
               )}
               {submitStatus === "error" && (
                 <p className="text-red-600 text-sm">Failed to send message. Please try again.</p>
               )}
-              <button
+              <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full px-6 sm:px-8 py-3 sm:py-4 border border-green-600 hover:border-green-700 bg-green-600 text-white hover:bg-green-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                variant="primary"
+                size="md"
+                className="w-full"
+                isLoading={isSubmitting}
               >
-                <span className="text-xs sm:text-sm font-light tracking-widest">
-                  {isSubmitting ? "SENDING..." : "SEND MESSAGE"}
-                </span>
-              </button>
+                {isSubmitting ? "SENDING..." : "SEND MESSAGE"}
+              </Button>
             </form>
           </div>
         </div>

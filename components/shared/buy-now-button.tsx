@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
-import Button from "./button";
+import Button from "@/components/ui/button";
 
 interface BuyNowButtonProps {
   productId: string;

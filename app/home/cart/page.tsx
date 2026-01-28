@@ -2,10 +2,10 @@
 
 import Link from "next/link";
 import { ArrowLeft, ShoppingCart, Trash2 } from "lucide-react";
-import RazorpayButton from "@/componets/ui/razorpay-button";
+import RazorpayButton from "@/components/shared/razorpay-button";
 import { useAuth } from "@/lib/auth-context";
 import { useState, useEffect } from "react";
-import Button from "@/componets/ui/button";
+import Button from "@/components/ui/button";
 
 interface CartItem {
   productId: string;
