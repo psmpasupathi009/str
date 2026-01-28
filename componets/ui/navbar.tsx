@@ -94,15 +94,7 @@ export default function Navbar() {
               </span>
             </button>
 
-            {/* Logo - Centered */}
-            <Link href="/" className="flex flex-col items-center">
-              <div className="text-white text-xs sm:text-sm font-light tracking-wider text-center">
-                STN GOLDEN
-              </div>
-              <div className="text-white/90 text-[10px] sm:text-xs font-light tracking-widest mt-0.5">
-                HEALTHY FOODS
-              </div>
-            </Link>
+            
 
             {/* Right Side Icons */}
             <div className="flex items-center gap-3 sm:gap-6">
