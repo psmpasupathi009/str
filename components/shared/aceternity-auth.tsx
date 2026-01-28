@@ -79,7 +79,7 @@ const InputField = ({
           required={required}
           maxLength={maxLength}
           autoComplete={type === "email" ? "email" : type === "password" ? (fieldName.includes("confirm") ? "new-password" : "current-password") : "off"}
-          className={`w-full bg-white border ${error ? 'border-red-300' : 'border-green-300'} pl-10 sm:pl-11 ${showPasswordToggle ? 'pr-10 sm:pr-11' : 'pr-3'} py-2 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-200 transition-all duration-200`}
+          className={`w-full bg-white border ${error ? 'border-red-300' : 'border-slate-300'} pl-10 sm:pl-11 ${showPasswordToggle ? 'pr-10 sm:pr-11' : 'pr-3'} py-2 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-slate-500 focus:ring-1 focus:ring-slate-200 transition-all duration-200`}
           placeholder={placeholder}
           style={{
             color: 'rgb(15 23 42)',
@@ -539,7 +539,7 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
           value={formData.otp}
           onChange={handleOtpChange}
           maxLength={6}
-          className="w-full bg-white border border-green-300 focus:border-green-500 focus:ring-1 focus:ring-green-200 px-4 py-3 text-2xl text-center text-slate-900 tracking-[0.3em] focus:outline-none transition-all duration-200 font-mono font-light"
+          className="w-full bg-white border border-slate-300 focus:border-slate-500 focus:ring-1 focus:ring-slate-200 px-4 py-3 text-2xl text-center text-slate-900 tracking-[0.3em] focus:outline-none transition-all duration-200 font-mono font-light"
           placeholder="000000"
           autoFocus
           onFocus={() => setFocusedField("otp")}

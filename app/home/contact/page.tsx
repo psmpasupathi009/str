@@ -75,7 +75,7 @@ export default function ContactPage() {
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   required
-                  className="border-green-300 focus:border-green-500 focus:ring-green-200"
+                  className="bg-white border-slate-300 focus:border-slate-500 focus:ring-slate-200"
                 />
               </div>
               <div className="space-y-2">
@@ -87,7 +87,7 @@ export default function ContactPage() {
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   required
-                  className="border-green-300 focus:border-green-500 focus:ring-green-200"
+                  className="bg-white border-slate-300 focus:border-slate-500 focus:ring-slate-200"
                 />
               </div>
               <div className="space-y-2">
@@ -99,7 +99,7 @@ export default function ContactPage() {
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                   required
-                  className="border-green-300 focus:border-green-500 focus:ring-green-200 resize-none"
+                  className="border-slate-300 focus:border-slate-500 focus:ring-slate-200 resize-none"
                 />
               </div>
               {submitStatus === "success" && (

@@ -208,7 +208,7 @@ function ProductsPageContent() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search products..."
-                className="w-full pl-12 pr-4 py-3 border border-green-700 bg-white focus:outline-none focus:border-green-700 focus:ring-2 focus:ring-green-200 transition-colors text-sm sm:text-base"
+                className="w-full pl-12 pr-4 py-3 bg-white border border-slate-300 focus:outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200 transition-colors text-sm sm:text-base"
                 style={{ color: 'rgb(15 23 42)', caretColor: 'rgb(16 185 129)' }}
               />
             </div>
@@ -258,7 +258,7 @@ function ProductsPageContent() {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as SortOption)}
-                className="px-4 sm:px-6 py-2 sm:py-3 border border-green-700 focus:outline-none focus:border-green-700 focus:ring-2 focus:ring-green-200 bg-white text-slate-700 text-xs sm:text-sm font-light tracking-wider rounded"
+                className="px-4 sm:px-6 py-2 sm:py-3 border border-slate-300 focus:outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200 bg-white text-slate-700 text-xs sm:text-sm font-light tracking-wider rounded"
               >
                 <option value="default">Sort: Default</option>
                 <option value="price-low">Price: Low to High</option>

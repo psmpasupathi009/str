@@ -190,7 +190,7 @@ export default function ReviewForm({ productId, onReviewSubmitted }: ReviewFormP
               placeholder="Share your experience..."
               rows={4}
               maxLength={500}
-              className="w-full px-3 py-2 text-sm border border-green-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white text-slate-900 resize-none transition-all placeholder:text-slate-400 font-light"
+              className="w-full px-3 py-2 text-sm bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 text-slate-900 resize-none transition-all placeholder:text-slate-400 font-light"
             />
             <div className="absolute bottom-2 right-2 text-xs text-slate-400 font-light bg-white px-1.5 py-0.5 rounded">
               {comment.length}/500

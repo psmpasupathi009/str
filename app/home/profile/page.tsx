@@ -199,7 +199,7 @@ export default function ProfilePage() {
                   value={user.email || ""}
                   readOnly
                   disabled
-                  className="bg-slate-100 border-green-300 cursor-not-allowed opacity-70"
+                  className="bg-slate-100 border-slate-300 cursor-not-allowed opacity-70"
                 />
                 <p className="text-xs text-slate-500 mt-1">Email cannot be changed</p>
               </div>
@@ -213,7 +213,7 @@ export default function ProfilePage() {
                   value={formData.name}
                   onChange={(e) => handleInputChange("name", e.target.value)}
                   disabled={!isEditing}
-                  className={errors.name ? "border-red-300 focus:border-red-500" : "border-green-300 focus:border-green-500 focus:ring-green-200"}
+                  className={errors.name ? "bg-white border-red-300 focus:border-red-500" : "bg-white border-slate-300 focus:border-slate-500 focus:ring-slate-200"}
                   placeholder="Enter your full name"
                 />
                 {errors.name && <p className="text-red-400 text-xs mt-1">{errors.name}</p>}
@@ -228,7 +228,7 @@ export default function ProfilePage() {
                   value={formData.phoneNumber}
                   onChange={(e) => handleInputChange("phoneNumber", e.target.value.replace(/\D/g, ""))}
                   disabled={!isEditing}
-                  className={errors.phoneNumber ? "border-red-300 focus:border-red-500" : "border-green-300 focus:border-green-500 focus:ring-green-200"}
+                  className={errors.phoneNumber ? "bg-white border-red-300 focus:border-red-500" : "bg-white border-slate-300 focus:border-slate-500 focus:ring-slate-200"}
                   placeholder="Enter your phone number"
                 />
                 {errors.phoneNumber && <p className="text-red-400 text-xs mt-1">{errors.phoneNumber}</p>}

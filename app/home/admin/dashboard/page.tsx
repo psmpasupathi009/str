@@ -847,7 +847,7 @@ export default function AdminDashboardPage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search by Order ID, Email, or Name..."
-                className="w-full pl-10 pr-4 py-2 border border-green-300 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 text-sm"
+                className="w-full pl-10 pr-4 py-2 bg-white border border-slate-300 focus:outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200 text-sm"
                 style={{ color: 'rgb(15 23 42)', caretColor: 'rgb(14 165 233)' }}
               />
             </div>
@@ -855,7 +855,7 @@ export default function AdminDashboardPage() {
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-4 py-2 border border-green-300 focus:outline-none focus:border-green-500 text-sm"
+                className="px-4 py-2 bg-white border border-slate-300 focus:outline-none focus:border-slate-500 text-sm"
               >
                 <option value="all">All Status</option>
                 <option value="PENDING">Pending</option>
@@ -867,7 +867,7 @@ export default function AdminDashboardPage() {
               <select
                 value={paymentFilter}
                 onChange={(e) => setPaymentFilter(e.target.value)}
-                className="px-4 py-2 border border-green-300 focus:outline-none focus:border-green-500 text-sm"
+                className="px-4 py-2 bg-white border border-slate-300 focus:outline-none focus:border-slate-500 text-sm"
               >
                 <option value="all">All Payment</option>
                 <option value="PENDING">Pending</option>
@@ -965,7 +965,7 @@ export default function AdminDashboardPage() {
                           <select
                             value={order.orderStatus}
                             onChange={(e) => updateOrderStatus(order.id, e.target.value)}
-                            className="text-xs px-2 py-1 border border-green-300 focus:outline-none focus:border-green-500 rounded"
+                            className="text-xs px-2 py-1 border border-slate-300 focus:outline-none focus:border-slate-500 rounded"
                           >
                             <option value="PENDING">Pending</option>
                             <option value="PROCESSING">Processing</option>
@@ -1230,7 +1230,7 @@ export default function AdminDashboardPage() {
                       required
                       value={productFormData.name}
                       onChange={(e) => setProductFormData({ ...productFormData, name: e.target.value })}
-                      className="w-full px-3 py-2 border border-green-300 focus:outline-none focus:border-green-500 text-sm"
+                      className="w-full px-3 py-2 bg-white border border-slate-300 focus:outline-none focus:border-slate-500 text-sm"
                     />
                   </div>
                   <div>
@@ -1239,7 +1239,7 @@ export default function AdminDashboardPage() {
                       required
                       value={productFormData.categoryId}
                       onChange={(e) => setProductFormData({ ...productFormData, categoryId: e.target.value })}
-                      className="w-full px-3 py-2 border border-green-300 focus:outline-none focus:border-green-500 text-sm"
+                      className="w-full px-3 py-2 bg-white border border-slate-300 focus:outline-none focus:border-slate-500 text-sm"
                     >
                       <option value="">Select Category</option>
                       {categories.map((cat) => (
@@ -1254,7 +1254,7 @@ export default function AdminDashboardPage() {
                       required
                       value={productFormData.itemCode}
                       onChange={(e) => setProductFormData({ ...productFormData, itemCode: e.target.value })}
-                      className="w-full px-3 py-2 border border-green-300 focus:outline-none focus:border-green-500 text-sm"
+                      className="w-full px-3 py-2 bg-white border border-slate-300 focus:outline-none focus:border-slate-500 text-sm"
                     />
                   </div>
                   <div>
@@ -1265,7 +1265,7 @@ export default function AdminDashboardPage() {
                       value={productFormData.weight}
                       onChange={(e) => setProductFormData({ ...productFormData, weight: e.target.value })}
                       placeholder="e.g., 250 gms"
-                      className="w-full px-3 py-2 border border-green-300 focus:outline-none focus:border-green-500 text-sm"
+                      className="w-full px-3 py-2 bg-white border border-slate-300 focus:outline-none focus:border-slate-500 text-sm"
                     />
                   </div>
                   <div>
@@ -1276,7 +1276,7 @@ export default function AdminDashboardPage() {
                       required
                       value={productFormData.mrp}
                       onChange={(e) => setProductFormData({ ...productFormData, mrp: e.target.value })}
-                      className="w-full px-3 py-2 border border-green-300 focus:outline-none focus:border-green-500 text-sm"
+                      className="w-full px-3 py-2 bg-white border border-slate-300 focus:outline-none focus:border-slate-500 text-sm"
                     />
                   </div>
                   <div>
@@ -1287,7 +1287,7 @@ export default function AdminDashboardPage() {
                       required
                       value={productFormData.salePrice}
                       onChange={(e) => setProductFormData({ ...productFormData, salePrice: e.target.value })}
-                      className="w-full px-3 py-2 border border-green-300 focus:outline-none focus:border-green-500 text-sm"
+                      className="w-full px-3 py-2 bg-white border border-slate-300 focus:outline-none focus:border-slate-500 text-sm"
                     />
                   </div>
                   <div>
@@ -1297,7 +1297,7 @@ export default function AdminDashboardPage() {
                       step="0.01"
                       value={productFormData.gst}
                       onChange={(e) => setProductFormData({ ...productFormData, gst: e.target.value })}
-                      className="w-full px-3 py-2 border border-green-300 focus:outline-none focus:border-green-500 text-sm"
+                      className="w-full px-3 py-2 bg-white border border-slate-300 focus:outline-none focus:border-slate-500 text-sm"
                     />
                   </div>
                   <div>
@@ -1307,7 +1307,7 @@ export default function AdminDashboardPage() {
                       required
                       value={productFormData.hsnCode}
                       onChange={(e) => setProductFormData({ ...productFormData, hsnCode: e.target.value })}
-                      className="w-full px-3 py-2 border border-green-300 focus:outline-none focus:border-green-500 text-sm"
+                      className="w-full px-3 py-2 bg-white border border-slate-300 focus:outline-none focus:border-slate-500 text-sm"
                     />
                   </div>
                   <div className="sm:col-span-2">
@@ -1351,7 +1351,7 @@ export default function AdminDashboardPage() {
                           });
                         }}
                         placeholder="https://res.cloudinary.com/your-cloud/image/upload/..."
-                        className="w-full px-3 py-2 border border-green-300 focus:outline-none focus:border-green-500 text-sm"
+                        className="w-full px-3 py-2 bg-white border border-slate-300 focus:outline-none focus:border-slate-500 text-sm"
                       />
                     </div>
                   </div>
@@ -1361,7 +1361,7 @@ export default function AdminDashboardPage() {
                       value={productFormData.description}
                       onChange={(e) => setProductFormData({ ...productFormData, description: e.target.value })}
                       rows={3}
-                      className="w-full px-3 py-2 border border-green-300 focus:outline-none focus:border-green-500 text-sm"
+                      className="w-full px-3 py-2 bg-white border border-slate-300 focus:outline-none focus:border-slate-500 text-sm"
                     />
                   </div>
                   <div className="flex items-center gap-2">
@@ -1442,7 +1442,7 @@ export default function AdminDashboardPage() {
                     required
                     value={categoryFormData.name}
                     onChange={(e) => setCategoryFormData({ ...categoryFormData, name: e.target.value })}
-                    className="w-full px-3 py-2 border border-green-300 focus:outline-none focus:border-green-500 text-sm"
+                    className="w-full px-3 py-2 border border-slate-300 focus:outline-none focus:border-slate-500 text-sm"
                   />
                 </div>
                 <div>
@@ -1451,7 +1451,7 @@ export default function AdminDashboardPage() {
                     value={categoryFormData.description}
                     onChange={(e) => setCategoryFormData({ ...categoryFormData, description: e.target.value })}
                     rows={3}
-                    className="w-full px-3 py-2 border border-green-300 focus:outline-none focus:border-green-500 text-sm"
+                    className="w-full px-3 py-2 border border-slate-300 focus:outline-none focus:border-slate-500 text-sm"
                   />
                 </div>
                 <div>
@@ -1461,7 +1461,7 @@ export default function AdminDashboardPage() {
                     value={categoryFormData.image}
                     onChange={(e) => setCategoryFormData({ ...categoryFormData, image: e.target.value })}
                     placeholder="https://example.com/image.jpg"
-                    className="w-full px-3 py-2 border border-green-300 focus:outline-none focus:border-green-500 text-sm"
+                    className="w-full px-3 py-2 border border-slate-300 focus:outline-none focus:border-slate-500 text-sm"
                   />
                 </div>
                 <div className="flex gap-3 pt-4">
@@ -1539,7 +1539,7 @@ export default function AdminDashboardPage() {
                         <select
                           value={galleryFormData.type}
                           onChange={(e) => setGalleryFormData({ ...galleryFormData, type: e.target.value as "IMAGE" | "VIDEO", url: "" })}
-                          className="w-full bg-white border border-green-300 pl-12 pr-4 py-3 text-sm text-slate-900 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-200 appearance-none cursor-pointer"
+                          className="w-full bg-white border border-green-300 pl-12 pr-4 py-3 text-sm text-slate-900 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-slate-200 transition-all duration-200 appearance-none cursor-pointer"
                           required
                         >
                           <option value="IMAGE">Image</option>
@@ -1568,7 +1568,7 @@ export default function AdminDashboardPage() {
                                 handleMediaUpload(file);
                               }
                             }}
-                            className="w-full bg-white border-2 border-dashed border-green-300 rounded-xl px-4 py-6 text-sm text-slate-600 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-200 cursor-pointer hover:border-green-400 hover:bg-green-50/50 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-green-600 file:text-white hover:file:bg-green-700"
+                            className="w-full bg-white border-2 border-dashed border-slate-300 rounded-xl px-4 py-6 text-sm text-slate-600 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-slate-200 transition-all duration-200 cursor-pointer hover:border-slate-400 hover:bg-slate-50/50 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-green-600 file:text-white hover:file:bg-green-700"
                             disabled={uploadingMedia}
                           />
                           {uploadingMedia && (
@@ -1623,7 +1623,7 @@ export default function AdminDashboardPage() {
                             value={galleryFormData.url}
                             onChange={(e) => setGalleryFormData({ ...galleryFormData, url: e.target.value })}
                             placeholder={galleryFormData.type === "VIDEO" ? "Or enter video URL (YouTube, Vimeo, etc.)" : "Or enter image URL manually"}
-                            className="w-full bg-white border border-green-300 pl-12 pr-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-200"
+                            className="w-full bg-white border border-green-300 pl-12 pr-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-slate-200 transition-all duration-200"
                           />
                         </div>
                       </div>
@@ -1639,7 +1639,7 @@ export default function AdminDashboardPage() {
                         value={galleryFormData.title}
                         onChange={(e) => setGalleryFormData({ ...galleryFormData, title: e.target.value })}
                         placeholder="Enter a title for this media"
-                        className="w-full bg-white border border-green-300 px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-200"
+                        className="w-full bg-white border border-green-300 px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-slate-200 transition-all duration-200"
                       />
                     </div>
 
@@ -1653,7 +1653,7 @@ export default function AdminDashboardPage() {
                         onChange={(e) => setGalleryFormData({ ...galleryFormData, description: e.target.value })}
                         rows={4}
                         placeholder="Add a description for this media item"
-                        className="w-full bg-white border border-green-300 px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-200 resize-none"
+                        className="w-full bg-white border border-green-300 px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-slate-200 transition-all duration-200 resize-none"
                       />
                     </div>
                   </div>

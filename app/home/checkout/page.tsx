@@ -209,7 +209,7 @@ function CheckoutContent() {
                       type="text"
                       value={shippingAddress.fullName}
                       onChange={(e) => handleInputChange("fullName", e.target.value)}
-                      className="pl-10 sm:pl-12 border-green-300 focus:border-green-500 focus:ring-green-200"
+                      className="pl-10 sm:pl-12 bg-white border-slate-300 focus:border-slate-500 focus:ring-slate-200"
                       placeholder="John Doe"
                     />
                   </div>
@@ -228,7 +228,7 @@ function CheckoutContent() {
                         type="email"
                         value={shippingAddress.email}
                         onChange={(e) => handleInputChange("email", e.target.value)}
-                        className="pl-10 sm:pl-12 border-green-300 focus:border-green-500 focus:ring-green-200"
+                        className="pl-10 sm:pl-12 bg-white border-slate-300 focus:border-slate-500 focus:ring-slate-200"
                         placeholder="you@example.com"
                       />
                     </div>
@@ -246,7 +246,7 @@ function CheckoutContent() {
                         type="tel"
                         value={shippingAddress.phone}
                         onChange={(e) => handleInputChange("phone", e.target.value.replace(/\D/g, ""))}
-                        className="pl-10 sm:pl-12 border-green-300 focus:border-green-500 focus:ring-green-200"
+                        className="pl-10 sm:pl-12 bg-white border-slate-300 focus:border-slate-500 focus:ring-slate-200"
                         placeholder="1234567890"
                       />
                     </div>
@@ -263,7 +263,7 @@ function CheckoutContent() {
                     type="text"
                     value={shippingAddress.addressLine1}
                     onChange={(e) => handleInputChange("addressLine1", e.target.value)}
-                    className="border-green-300 focus:border-green-500 focus:ring-green-200"
+                    className="bg-white border-slate-300 focus:border-slate-500 focus:ring-slate-200"
                     placeholder="Street address, P.O. box"
                   />
                   {errors.addressLine1 && <p className="text-red-400 text-xs mt-1">{errors.addressLine1}</p>}
@@ -278,7 +278,7 @@ function CheckoutContent() {
                     type="text"
                     value={shippingAddress.addressLine2}
                     onChange={(e) => handleInputChange("addressLine2", e.target.value)}
-                    className="border-green-300 focus:border-green-500 focus:ring-green-200"
+                    className="bg-white border-slate-300 focus:border-slate-500 focus:ring-slate-200"
                     placeholder="Apartment, suite, unit, building, floor, etc."
                   />
                 </div>
@@ -293,7 +293,7 @@ function CheckoutContent() {
                       type="text"
                       value={shippingAddress.city}
                       onChange={(e) => handleInputChange("city", e.target.value)}
-                      className="border-green-300 focus:border-green-500 focus:ring-green-200"
+                      className="bg-white border-slate-300 focus:border-slate-500 focus:ring-slate-200"
                       placeholder="City"
                     />
                     {errors.city && <p className="text-red-400 text-xs mt-1">{errors.city}</p>}
@@ -308,7 +308,7 @@ function CheckoutContent() {
                       type="text"
                       value={shippingAddress.state}
                       onChange={(e) => handleInputChange("state", e.target.value)}
-                      className="border-green-300 focus:border-green-500 focus:ring-green-200"
+                      className="bg-white border-slate-300 focus:border-slate-500 focus:ring-slate-200"
                       placeholder="State"
                     />
                     {errors.state && <p className="text-red-400 text-xs mt-1">{errors.state}</p>}
@@ -323,7 +323,7 @@ function CheckoutContent() {
                       type="text"
                       value={shippingAddress.zipCode}
                       onChange={(e) => handleInputChange("zipCode", e.target.value)}
-                      className="border-green-300 focus:border-green-500 focus:ring-green-200"
+                      className="bg-white border-slate-300 focus:border-slate-500 focus:ring-slate-200"
                       placeholder="ZIP"
                     />
                     {errors.zipCode && <p className="text-red-400 text-xs mt-1">{errors.zipCode}</p>}
@@ -339,7 +339,7 @@ function CheckoutContent() {
                     type="text"
                     value={shippingAddress.country}
                     onChange={(e) => handleInputChange("country", e.target.value)}
-                    className="border-green-300 focus:border-green-500 focus:ring-green-200"
+                    className="bg-white border-slate-300 focus:border-slate-500 focus:ring-slate-200"
                     placeholder="Country"
                   />
                   {errors.country && <p className="text-red-400 text-xs mt-1">{errors.country}</p>}
