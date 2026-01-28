@@ -21,7 +21,10 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    return NextResponse.json({ categories }, { status: 200 });
+    const response = NextResponse.json({ categories }, { status: 200 });
+    // Add cache headers for better performance
+    response.headers.set("Cache-Control", "public, s-maxage=300, stale-while-revalidate=600");
+    return response;
   } catch (error: any) {
     console.error("Get categories error:", error);
     return NextResponse.json(

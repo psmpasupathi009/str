@@ -6,20 +6,31 @@ import Link from "next/link";
 import { ArrowLeft, Package, MapPin, User, Mail, Phone, Calendar, CreditCard, Truck, Download } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { useToast } from "@/lib/toast-context";
+import Invoice from "@/components/shared/invoice";
 
 interface OrderItem {
   id: string;
   productId: string;
   productName: string;
+  hsnCode: string | null;
   quantity: number;
   price: number;
+  gstRate: number | null;
+  gstAmount: number | null;
+  totalPrice: number;
 }
 
 interface Order {
   id: string;
   razorpayOrderId: string;
   razorpayPaymentId: string | null;
+  invoiceNumber: string | null;
   amount: number;
+  subtotal: number | null;
+  gstAmount: number | null;
+  cgstAmount: number | null;
+  sgstAmount: number | null;
+  igstAmount: number | null;
   currency: string;
   paymentStatus: string;
   orderStatus: string;
@@ -41,6 +52,7 @@ export default function OrderDetailsPage() {
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showInvoice, setShowInvoice] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -251,14 +263,51 @@ export default function OrderDetailsPage() {
 
               <div className="space-y-4 mb-6">
                 <div className="flex justify-between text-sm sm:text-base">
-                  <span className="text-slate-600 font-light">Items ({totalItems})</span>
+                  <span className="text-slate-600 font-light">Subtotal</span>
                   <span className="text-slate-900 font-light">
-                    ₹{order.amount.toLocaleString("en-IN", {
+                    ₹{(order.subtotal || order.amount).toLocaleString("en-IN", {
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
                     })}
                   </span>
                 </div>
+                {order.gstAmount && order.gstAmount > 0 && (
+                  <>
+                    {order.cgstAmount && order.cgstAmount > 0 && (
+                      <div className="flex justify-between text-sm sm:text-base">
+                        <span className="text-slate-600 font-light">CGST</span>
+                        <span className="text-slate-900 font-light">
+                          ₹{order.cgstAmount.toLocaleString("en-IN", {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          })}
+                        </span>
+                      </div>
+                    )}
+                    {order.sgstAmount && order.sgstAmount > 0 && (
+                      <div className="flex justify-between text-sm sm:text-base">
+                        <span className="text-slate-600 font-light">SGST</span>
+                        <span className="text-slate-900 font-light">
+                          ₹{order.sgstAmount.toLocaleString("en-IN", {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          })}
+                        </span>
+                      </div>
+                    )}
+                    {order.igstAmount && order.igstAmount > 0 && (
+                      <div className="flex justify-between text-sm sm:text-base">
+                        <span className="text-slate-600 font-light">IGST</span>
+                        <span className="text-slate-900 font-light">
+                          ₹{order.igstAmount.toLocaleString("en-IN", {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          })}
+                        </span>
+                      </div>
+                    )}
+                  </>
+                )}
                 <div className="flex justify-between text-sm sm:text-base">
                   <span className="text-slate-600 font-light">Shipping</span>
                   <span className="text-slate-900 font-light">Free</span>
@@ -332,18 +381,36 @@ export default function OrderDetailsPage() {
                   </span>
                 </Link>
                 <button
-                  onClick={() => window.print()}
+                  onClick={() => setShowInvoice(!showInvoice)}
                   className="w-full flex items-center justify-center gap-2 px-4 sm:px-6 py-3 border border-green-600 hover:border-green-700 bg-white hover:bg-green-50 text-green-600 hover:text-green-700 transition-all"
                 >
                   <Download className="w-4 h-4" />
                   <span className="text-xs sm:text-sm font-light tracking-wider">
-                    DOWNLOAD INVOICE
+                    {showInvoice ? "HIDE INVOICE" : "VIEW INVOICE"}
                   </span>
                 </button>
+                {showInvoice && (
+                  <button
+                    onClick={() => window.print()}
+                    className="w-full flex items-center justify-center gap-2 px-4 sm:px-6 py-3 border border-green-600 hover:border-green-700 bg-green-600 hover:bg-green-700 text-white transition-all mt-2"
+                  >
+                    <Download className="w-4 h-4" />
+                    <span className="text-xs sm:text-sm font-light tracking-wider">
+                      PRINT INVOICE
+                    </span>
+                  </button>
+                )}
               </div>
             </div>
           </div>
         </div>
+
+        {/* Invoice Section */}
+        {showInvoice && order && (
+          <div className="mt-8 border border-green-200 bg-white shadow-sm p-4 sm:p-6">
+            <Invoice order={order} />
+          </div>
+        )}
       </div>
     </main>
   );

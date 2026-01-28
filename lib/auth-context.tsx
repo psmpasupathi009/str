@@ -25,27 +25,44 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check for stored user on mount
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
+    // Prefer server-verified session (httpOnly cookie) over localStorage
+    const load = async () => {
       try {
-        setUser(JSON.parse(storedUser));
-      } catch (e) {
-        localStorage.removeItem("user");
-        localStorage.removeItem("token");
+        const res = await fetch("/api/auth/me", { cache: "no-store" });
+        const data = await res.json();
+        if (data?.user) {
+          setUser(data.user);
+          localStorage.setItem("user", JSON.stringify(data.user));
+        } else {
+          setUser(null);
+          localStorage.removeItem("user");
+          localStorage.removeItem("token");
+        }
+      } catch {
+        // Fallback to previous behavior if API not reachable
+        const storedUser = localStorage.getItem("user");
+        if (storedUser) {
+          try {
+            setUser(JSON.parse(storedUser));
+          } catch {
+            localStorage.removeItem("user");
+            localStorage.removeItem("token");
+          }
+        }
+      } finally {
+        setIsLoading(false);
       }
-    }
-    setIsLoading(false);
+    };
+    load();
   }, []);
 
   const signOut = () => {
+    fetch("/api/auth/signout", { method: "POST" }).catch(() => {});
     localStorage.removeItem("user");
     localStorage.removeItem("token");
     localStorage.removeItem("cart");
     setUser(null);
-    // Dispatch cart update event before redirect
     window.dispatchEvent(new Event("cartUpdated"));
-    // Redirect directly to home page
     window.location.href = "/home";
   };
 

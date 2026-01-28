@@ -59,9 +59,16 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
                 fill
                 className="object-cover group-hover:scale-110 transition-transform duration-500"
                 onError={(e) => {
-                  // Fallback to placeholder if image fails to load
+                  // Hide image and show placeholder div
                   const target = e.target as HTMLImageElement;
-                  target.src = "/placeholder-product.jpg";
+                  target.style.display = 'none';
+                  const parent = target.parentElement;
+                  if (parent) {
+                    const placeholder = document.createElement('div');
+                    placeholder.className = 'w-full h-full flex items-center justify-center bg-slate-200';
+                    placeholder.innerHTML = '<span class="text-slate-400 text-xs font-light">No Image</span>';
+                    parent.appendChild(placeholder);
+                  }
                 }}
               />
             ) : (

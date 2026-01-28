@@ -1,9 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getUserByEmail, verifyPassword } from "@/lib/auth";
-
-const generateToken = (userId: string, email: string) => {
-  return Buffer.from(JSON.stringify({ userId, email })).toString('base64');
-};
+import { signSession, SESSION_COOKIE_NAME } from "@/lib/session";
 
 export async function POST(request: NextRequest) {
   try {
@@ -51,16 +48,32 @@ export async function POST(request: NextRequest) {
 
     // Return user without sensitive data
     const { password: _, ...userWithoutSensitive } = { ...user, role: userRole };
-    const token = generateToken(user.id, user.email);
+    // Signed, httpOnly session cookie (prevents header spoofing & XSS token theft)
+    const sessionJwt = await signSession({
+      userId: user.id,
+      email: user.email,
+      role: userRole,
+    });
 
-    return NextResponse.json(
+    const res = NextResponse.json(
       {
         message: "Sign in successful",
         user: userWithoutSensitive,
-        token,
+        // kept for backward compatibility (client may still store it) but no longer used for auth
+        token: sessionJwt,
       },
       { status: 200 }
     );
+
+    res.cookies.set(SESSION_COOKIE_NAME, sessionJwt, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+    });
+
+    return res;
   } catch (error: any) {
     console.error("Signin error:", error);
     return NextResponse.json(

@@ -17,30 +17,32 @@ export default function Footer() {
 
         {/* Links Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6 sm:gap-8 mb-8 sm:mb-12">
-          {/* Column 1 */}
+          {/* Column 1 - Legal */}
           <div className="flex flex-col gap-3 sm:gap-4">
             <Link
-              href="/pre-owned"
+              href="/home/legal/terms"
               className="text-xs sm:text-sm font-light tracking-wider hover:text-white transition-colors"
             >
-              PRE-OWNED
+              TERMS & CONDITIONS
             </Link>
             <Link
-              href="/dealers"
+              href="/home/legal/privacy"
               className="text-xs sm:text-sm font-light tracking-wider hover:text-white transition-colors"
             >
-              FIND A DEALER
+              PRIVACY POLICY
             </Link>
             <Link
-              href="/privacy"
+              href="/home/legal/returns"
               className="text-xs sm:text-sm font-light tracking-wider hover:text-white transition-colors"
             >
-              PRIVACY
+              RETURN & REFUND POLICY
             </Link>
-            <div className="flex items-center gap-2 text-xs sm:text-sm font-light tracking-wider">
-              LANGUAGE
-              <span className="text-xs">🇬🇧</span>
-            </div>
+            <Link
+              href="/home/contact"
+              className="text-xs sm:text-sm font-light tracking-wider hover:text-white transition-colors"
+            >
+              CONTACT US
+            </Link>
           </div>
 
           {/* Column 2 */}
@@ -87,48 +89,42 @@ export default function Footer() {
             </Link>
           </div>
 
-          {/* Column 4 */}
+          {/* Column 4 - Customer Service */}
           <div className="flex flex-col gap-3 sm:gap-4">
             <Link
-              href="/legal"
+              href="/home/orders"
               className="text-xs sm:text-sm font-light tracking-wider hover:text-white transition-colors"
             >
-              LEGAL
+              MY ORDERS
             </Link>
             <Link
-              href="/faqs"
+              href="/home/cart"
               className="text-xs sm:text-sm font-light tracking-wider hover:text-white transition-colors"
             >
-              FAQS
+              SHOPPING CART
             </Link>
             <Link
-              href="/whispers"
+              href="/home/products"
               className="text-xs sm:text-sm font-light tracking-wider hover:text-white transition-colors"
             >
-              WHISPERS
+              PRODUCTS
             </Link>
           </div>
 
-          {/* Column 5 */}
+          {/* Column 5 - Company Info */}
           <div className="flex flex-col gap-3 sm:gap-4">
             <Link
-              href="/complaints"
+              href="/home/about"
               className="text-xs sm:text-sm font-light tracking-wider hover:text-white transition-colors"
             >
-              COMPLAINTS
+              ABOUT US
             </Link>
-            <Link
-              href="/home/contact"
-              className="text-xs sm:text-sm font-light tracking-wider hover:text-white transition-colors"
-            >
-              CONTACT
-            </Link>
-            <Link
-              href="/sustainability"
-              className="text-xs sm:text-sm font-light tracking-wider hover:text-white transition-colors"
-            >
-              SUSTAINABILITY
-            </Link>
+            <div className="text-xs sm:text-sm font-light tracking-wider text-green-100">
+              GST: 29XXXXXXXXXXXXXX
+            </div>
+            <div className="text-xs sm:text-sm font-light tracking-wider text-green-100">
+              © {new Date().getFullYear()} STN Golden
+            </div>
           </div>
         </div>
 

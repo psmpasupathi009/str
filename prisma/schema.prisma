@@ -59,6 +59,8 @@ enum OrderStatus {
   SHIPPED
   DELIVERED
   CANCELLED
+  RETURNED
+  REFUNDED
 }
 
 enum MediaType {
@@ -71,7 +73,13 @@ model Order {
   userId            String?       @db.ObjectId
   razorpayOrderId   String        @unique
   razorpayPaymentId String?
+  invoiceNumber     String?       @unique
   amount            Float
+  subtotal          Float?        // Amount before GST
+  gstAmount         Float?        // Total GST amount
+  cgstAmount        Float?        // CGST amount (for intra-state)
+  sgstAmount        Float?        // SGST amount (for intra-state)
+  igstAmount        Float?        // IGST amount (for inter-state)
   currency          String        @default("INR")
   paymentStatus     PaymentStatus @default(PENDING)
   orderStatus       OrderStatus   @default(PENDING)
@@ -80,6 +88,11 @@ model Order {
   customerEmail     String?
   customerPhone     String?
   shippingAddress   Json?
+  billingAddress    Json?         // Billing address (if different from shipping)
+  canReturn         Boolean       @default(true) // Can return within return period
+  canCancel         Boolean       @default(true) // Can cancel if not shipped
+  returnRequested   Boolean       @default(false)
+  cancellationRequested Boolean    @default(false)
   createdAt         DateTime      @default(now())
   updatedAt         DateTime      @updatedAt
 
@@ -92,8 +105,12 @@ model OrderItem {
   orderId     String @db.ObjectId
   productId   String
   productName String
+  hsnCode     String? // HSN code for GST
   quantity    Int    @default(1)
-  price       Float
+  price       Float   // Price per unit (before GST)
+  gstRate     Float?  // GST rate for this item
+  gstAmount   Float?  // GST amount for this item
+  totalPrice  Float   // Total price including GST (price * quantity + GST)
   order       Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
 
   @@index([orderId])

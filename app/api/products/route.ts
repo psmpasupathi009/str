@@ -71,7 +71,7 @@ export async function GET(request: NextRequest) {
       prisma.product.count({ where }),
     ]);
 
-    return createSuccessResponse({
+    const response = createSuccessResponse({
       products,
       pagination: {
         page,
@@ -80,6 +80,11 @@ export async function GET(request: NextRequest) {
         totalPages: Math.ceil(total / limit),
       },
     });
+
+    // Add cache headers for better performance
+    response.headers.set("Cache-Control", "public, s-maxage=60, stale-while-revalidate=300");
+    
+    return response;
   } catch (error) {
     return handleApiError(error, "Failed to fetch products");
   }

@@ -29,7 +29,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
   // Map database product to expected format
   // Combine main image with additional images, ensuring we have all 5 images
-  const productImage = product.image || "/placeholder-product.jpg";
+  const productImage = product.image || "";
   const additionalImages = product.images && product.images.length > 0 
     ? product.images.filter(img => img && img.trim().length > 0 && img !== productImage)
     : [];

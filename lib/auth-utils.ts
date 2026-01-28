@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 
 /**
- * Check if user is authenticated (has email in headers)
+ * Check if user is authenticated (verified by middleware)
  */
 export function getAuthenticatedUser(request: NextRequest): string | null {
-  return request.headers.get("x-user-email");
+  return request.headers.get("x-auth-email");
 }
 
 /**
@@ -38,7 +38,8 @@ export function requireAuth(request: NextRequest): string {
 export function requireAdmin(request: NextRequest): string {
   const userEmail = requireAuth(request);
   
-  if (!isAdmin(userEmail)) {
+  const role = request.headers.get("x-auth-role");
+  if (role !== "ADMIN") {
     throw new Error("Forbidden: Admin access required");
   }
   

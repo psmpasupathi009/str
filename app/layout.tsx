@@ -6,6 +6,7 @@ import Footer from "@/components/shared/footer";
 import ScrollToTop from "@/components/shared/scroll-to-top";
 import { AuthProvider } from "@/lib/auth-context";
 import { ToastProvider } from "@/lib/toast-context";
+import { QueryProvider } from "@/lib/query-client";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,16 +33,18 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen bg-green-50`}
       >
-        <AuthProvider>
-          <ToastProvider>
-            <Navbar />
-            <main className="flex-1 bg-green-50">
-              {children}
-            </main>
-            <Footer />
-            <ScrollToTop />
-          </ToastProvider>
-        </AuthProvider>
+        <QueryProvider>
+          <AuthProvider>
+            <ToastProvider>
+              <Navbar />
+              <main className="flex-1 bg-green-50">
+                {children}
+              </main>
+              <Footer />
+              <ScrollToTop />
+            </ToastProvider>
+          </AuthProvider>
+        </QueryProvider>
       </body>
     </html>
   );

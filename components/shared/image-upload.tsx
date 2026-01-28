@@ -140,7 +140,14 @@ export default function ImageUpload({
                     className="w-full h-full object-cover"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
-                      target.src = "/placeholder-product.jpg";
+                      target.style.display = 'none';
+                      const parent = target.parentElement;
+                      if (parent) {
+                        const placeholder = document.createElement('div');
+                        placeholder.className = 'w-full h-full flex items-center justify-center bg-slate-200';
+                        placeholder.innerHTML = '<span class="text-slate-400 text-xs">Image Error</span>';
+                        parent.appendChild(placeholder);
+                      }
                     }}
                   />
                   <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">

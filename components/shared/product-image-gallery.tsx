@@ -24,7 +24,7 @@ export default function ProductImageGallery({
   const [imageErrors, setImageErrors] = useState<Set<number>>(new Set());
   const [showZoom, setShowZoom] = useState(false);
 
-  const currentImage = allImages[selectedIndex] || "/placeholder-product.jpg";
+  const currentImage = allImages[selectedIndex] || "";
 
   const handleImageError = (index: number) => {
     setImageErrors((prev) => new Set(prev).add(index));

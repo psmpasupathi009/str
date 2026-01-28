@@ -27,11 +27,22 @@ import {
   Video,
   Image as ImageIcon,
   GripVertical,
+  Calendar,
+  Download,
+  FileText,
 } from "lucide-react";
 import ImageUpload from "@/components/shared/image-upload";
 import MediaModal from "@/components/shared/media-modal";
 import { useAuth } from "@/lib/auth-context";
 import { useToast } from "@/lib/toast-context";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import Button from "@/components/ui/button";
+import { format } from "date-fns";
 
 interface OrderItem {
   id: string;
@@ -82,9 +93,12 @@ export default function AdminDashboardPage() {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [paymentFilter, setPaymentFilter] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [startDate, setStartDate] = useState<string>("");
+  const [endDate, setEndDate] = useState<string>("");
   const [autoRefresh, setAutoRefresh] = useState(true);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [activeTab, setActiveTab] = useState<"orders" | "products" | "gallery">("orders");
+  const [generatingPDF, setGeneratingPDF] = useState(false);
   
   // Product management state
   const [products, setProducts] = useState<any[]>([]);
@@ -142,13 +156,13 @@ export default function AdminDashboardPage() {
     }
   }, [user, authLoading, router]);
 
-  // Auto-refresh every 5 seconds
+  // Auto-refresh every 30 seconds (reduced from 5 seconds to prevent excessive API calls)
   useEffect(() => {
     if (!autoRefresh || !user || user.role !== "ADMIN") return;
 
     const interval = setInterval(() => {
       fetchData(true);
-    }, 5000); // Refresh every 5 seconds
+    }, 30000); // Refresh every 30 seconds
 
     return () => clearInterval(interval);
   }, [autoRefresh, user]);
@@ -166,12 +180,16 @@ export default function AdminDashboardPage() {
         "x-user-email": user.email,
       };
 
+      // Build query string with date filters
+      const queryParams = new URLSearchParams();
+      if (statusFilter !== "all") queryParams.append("status", statusFilter);
+      if (paymentFilter !== "all") queryParams.append("paymentStatus", paymentFilter);
+      if (startDate) queryParams.append("startDate", startDate);
+      if (endDate) queryParams.append("endDate", endDate);
+
       // Fetch orders and stats in parallel
       const [ordersResponse, statsResponse] = await Promise.all([
-        fetch(
-          `/api/admin/orders?status=${statusFilter !== "all" ? statusFilter : ""}&paymentStatus=${paymentFilter !== "all" ? paymentFilter : ""}`,
-          { headers }
-        ),
+        fetch(`/api/admin/orders?${queryParams.toString()}`, { headers }),
         fetch("/api/admin/orders/stats", { headers }),
       ]);
 
@@ -209,7 +227,64 @@ export default function AdminDashboardPage() {
       setLoading(false);
       setRefreshing(false);
     }
-  }, [user, statusFilter, paymentFilter, searchQuery]);
+  }, [user, statusFilter, paymentFilter, searchQuery, startDate, endDate]);
+
+  // Group orders by date
+  const groupOrdersByDate = (orders: Order[]) => {
+    const grouped: { [key: string]: Order[] } = {};
+    orders.forEach((order) => {
+      const date = new Date(order.createdAt);
+      const dateKey = format(date, "yyyy-MM-dd");
+      if (!grouped[dateKey]) {
+        grouped[dateKey] = [];
+      }
+      grouped[dateKey].push(order);
+    });
+    return grouped;
+  };
+
+  const downloadShippingLabels = async () => {
+    if (!user?.email) return;
+
+    setGeneratingPDF(true);
+    try {
+      const queryParams = new URLSearchParams();
+      queryParams.append("status", "SHIPPED");
+      if (startDate) queryParams.append("startDate", startDate);
+      if (endDate) queryParams.append("endDate", endDate);
+
+      const headers = {
+        "x-user-email": user.email,
+      };
+
+      const response = await fetch(
+        `/api/admin/orders/shipping-labels?${queryParams.toString()}`,
+        { headers }
+      );
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || "Failed to generate PDF");
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `shipping-labels-${Date.now()}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+
+      showSuccess("Shipping labels PDF generated successfully!");
+    } catch (err: any) {
+      console.error("Error generating PDF:", err);
+      showError(err.message || "Failed to generate shipping labels");
+    } finally {
+      setGeneratingPDF(false);
+    }
+  };
 
   useEffect(() => {
     if (user?.role === "ADMIN") {
@@ -263,16 +338,23 @@ export default function AdminDashboardPage() {
     try {
       const response = await fetch("/api/gallery", {
         headers: { "x-user-email": user.email },
+        cache: "no-store",
       });
       const data = await response.json();
       if (response.ok) {
-        // Sort by order
-        const sortedItems = (data.gallery || []).sort((a: any, b: any) => (a.order || 0) - (b.order || 0));
+        // Sort by order and filter out any invalid items
+        const sortedItems = (data.gallery || [])
+          .filter((item: any) => item && item.id) // Filter out invalid items
+          .sort((a: any, b: any) => (a.order || 0) - (b.order || 0));
         setGalleryItems(sortedItems);
+      } else {
+        throw new Error(data.error || "Failed to fetch gallery");
       }
     } catch (err: any) {
       console.error("Error fetching gallery:", err);
-      showError("Failed to fetch gallery items");
+      showError(err.message || "Failed to fetch gallery items");
+      // Set empty array on error to prevent stale data
+      setGalleryItems([]);
     } finally {
       setLoadingGallery(false);
     }
@@ -556,26 +638,53 @@ export default function AdminDashboardPage() {
     // Update state immediately for instant feedback
     setGalleryItems(updatedItems);
 
-    // Update orders in database
+    // Update orders in database - only update items that changed position
     try {
-      const updatePromises = updatedItems.map((item, index) =>
-        fetch(`/api/gallery/${item.id}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            "x-user-email": user.email,
-          },
-          body: JSON.stringify({ order: index }),
-        })
-      );
+      const updatePromises = updatedItems.map(async (item, index) => {
+        // Only update if order actually changed
+        const originalItem = sortedItems.find(orig => orig.id === item.id);
+        if (originalItem && originalItem.order === index) {
+          return { success: true, id: item.id }; // No change needed
+        }
 
-      await Promise.all(updatePromises);
-      showSuccess("Gallery order updated successfully");
-      // Refresh to ensure consistency
+        try {
+          const response = await fetch(`/api/gallery/${item.id}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              "x-user-email": user.email,
+            },
+            body: JSON.stringify({ order: index }),
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            console.error(`Failed to update gallery item ${item.id}:`, errorData);
+            return { success: false, id: item.id, error: errorData.error || "Update failed" };
+          }
+
+          return { success: true, id: item.id };
+        } catch (fetchError: any) {
+          console.error(`Error updating gallery item ${item.id}:`, fetchError);
+          return { success: false, id: item.id, error: fetchError.message };
+        }
+      });
+
+      const results = await Promise.all(updatePromises);
+      const failed = results.filter(r => !r.success);
+      
+      if (failed.length > 0) {
+        console.warn("Some gallery items failed to update:", failed);
+        showError(`${failed.length} item(s) failed to update. Refreshing gallery...`);
+      } else {
+        showSuccess("Gallery order updated successfully");
+      }
+      
+      // Always refresh to ensure consistency
       fetchGallery();
     } catch (err: any) {
-      console.error("Error updating order:", err);
-      showError("Failed to update gallery order");
+      console.error("Error updating gallery order:", err);
+      showError("Failed to update gallery order. Refreshing...");
       // Revert on error
       fetchGallery();
     }
@@ -795,256 +904,366 @@ export default function AdminDashboardPage() {
             {/* Statistics Cards */}
         {stats && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
-            <div className="border border-green-200 bg-white shadow-sm p-4 sm:p-6">
-              <div className="flex items-center justify-between mb-2">
-                <p className="text-xs sm:text-sm text-slate-600 font-light">Total Orders</p>
+            <Card className="border-green-200">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-xs sm:text-sm font-light text-slate-600">Total Orders</CardTitle>
                 <Package className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />
-              </div>
-              <p className="text-2xl sm:text-3xl font-light text-slate-900">{stats.totalOrders}</p>
-              <p className="text-xs text-slate-500 mt-1">{stats.todayOrders} today</p>
-            </div>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl sm:text-3xl font-light text-slate-900">{stats.totalOrders}</div>
+                <p className="text-xs text-slate-500 mt-1">{stats.todayOrders} today</p>
+              </CardContent>
+            </Card>
 
-            <div className="border border-green-200 bg-white shadow-sm p-4 sm:p-6">
-              <div className="flex items-center justify-between mb-2">
-                <p className="text-xs sm:text-sm text-slate-600 font-light">Total Revenue</p>
+            <Card className="border-green-200">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-xs sm:text-sm font-light text-slate-600">Total Revenue</CardTitle>
                 <DollarSign className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />
-              </div>
-              <p className="text-2xl sm:text-3xl font-light text-slate-900">
-                ₹{stats.totalRevenue.toLocaleString("en-IN", { maximumFractionDigits: 0 })}
-              </p>
-              <p className="text-xs text-slate-500 mt-1">
-                ₹{stats.todayRevenue.toLocaleString("en-IN", { maximumFractionDigits: 0 })} today
-              </p>
-            </div>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl sm:text-3xl font-light text-slate-900">
+                  ₹{stats.totalRevenue.toLocaleString("en-IN", { maximumFractionDigits: 0 })}
+                </div>
+                <p className="text-xs text-slate-500 mt-1">
+                  ₹{stats.todayRevenue.toLocaleString("en-IN", { maximumFractionDigits: 0 })} today
+                </p>
+              </CardContent>
+            </Card>
 
-            <div className="border border-green-200 bg-white shadow-sm p-4 sm:p-6">
-              <div className="flex items-center justify-between mb-2">
-                <p className="text-xs sm:text-sm text-slate-600 font-light">Pending</p>
+            <Card className="border-green-200">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-xs sm:text-sm font-light text-slate-600">Pending</CardTitle>
                 <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-600" />
-              </div>
-              <p className="text-2xl sm:text-3xl font-light text-slate-900">{stats.pendingOrders}</p>
-              <p className="text-xs text-slate-500 mt-1">Processing: {stats.processingOrders}</p>
-            </div>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl sm:text-3xl font-light text-slate-900">{stats.pendingOrders}</div>
+                <p className="text-xs text-slate-500 mt-1">Processing: {stats.processingOrders}</p>
+              </CardContent>
+            </Card>
 
-            <div className="border border-green-200 bg-white shadow-sm p-4 sm:p-6">
-              <div className="flex items-center justify-between mb-2">
-                <p className="text-xs sm:text-sm text-slate-600 font-light">Shipped</p>
+            <Card className="border-green-200">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-xs sm:text-sm font-light text-slate-600">Shipped</CardTitle>
                 <Truck className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600" />
-              </div>
-              <p className="text-2xl sm:text-3xl font-light text-slate-900">{stats.shippedOrders}</p>
-              <p className="text-xs text-slate-500 mt-1">Delivered: {stats.deliveredOrders}</p>
-            </div>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl sm:text-3xl font-light text-slate-900">{stats.shippedOrders}</div>
+                <p className="text-xs text-slate-500 mt-1">Delivered: {stats.deliveredOrders}</p>
+              </CardContent>
+            </Card>
           </div>
         )}
 
         {/* Filters and Search */}
-        <div className="border border-green-200 bg-white shadow-sm p-4 sm:p-6 mb-6">
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search by Order ID, Email, or Name..."
-                className="w-full pl-10 pr-4 py-2 bg-white border border-slate-300 focus:outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200 text-sm"
-                style={{ color: 'rgb(15 23 42)', caretColor: 'rgb(14 165 233)' }}
-              />
+        <Card className="border-green-200 mb-6">
+          <CardContent className="p-4 sm:p-6">
+          <div className="space-y-4">
+            <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex-1 relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 z-10" />
+                <Input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search by Order ID, Email, or Name..."
+                  className="pl-10 bg-white border-slate-300 focus:border-slate-500 focus:ring-slate-200"
+                />
+              </div>
+              <div className="flex gap-3">
+                <Select value={statusFilter} onValueChange={setStatusFilter}>
+                  <SelectTrigger className="w-[140px] bg-white border-slate-300 text-slate-900 hover:bg-slate-50 shadow-sm">
+                    <SelectValue placeholder="All Status" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white border-slate-200 shadow-lg">
+                    <SelectItem value="all">All Status</SelectItem>
+                    <SelectItem value="PENDING">Pending</SelectItem>
+                    <SelectItem value="PROCESSING">Processing</SelectItem>
+                    <SelectItem value="SHIPPED">Shipped</SelectItem>
+                    <SelectItem value="DELIVERED">Delivered</SelectItem>
+                    <SelectItem value="CANCELLED">Cancelled</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Select value={paymentFilter} onValueChange={setPaymentFilter}>
+                  <SelectTrigger className="w-[140px] bg-white border-slate-300 text-slate-900 hover:bg-slate-50 shadow-sm">
+                    <SelectValue placeholder="All Payment" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white border-slate-200 shadow-lg">
+                    <SelectItem value="all">All Payment</SelectItem>
+                    <SelectItem value="PENDING">Pending</SelectItem>
+                    <SelectItem value="COMPLETED">Completed</SelectItem>
+                    <SelectItem value="FAILED">Failed</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
-            <div className="flex gap-3">
-              <select
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-4 py-2 bg-white border border-slate-300 focus:outline-none focus:border-slate-500 text-sm"
-              >
-                <option value="all">All Status</option>
-                <option value="PENDING">Pending</option>
-                <option value="PROCESSING">Processing</option>
-                <option value="SHIPPED">Shipped</option>
-                <option value="DELIVERED">Delivered</option>
-                <option value="CANCELLED">Cancelled</option>
-              </select>
-              <select
-                value={paymentFilter}
-                onChange={(e) => setPaymentFilter(e.target.value)}
-                className="px-4 py-2 bg-white border border-slate-300 focus:outline-none focus:border-slate-500 text-sm"
-              >
-                <option value="all">All Payment</option>
-                <option value="PENDING">Pending</option>
-                <option value="COMPLETED">Completed</option>
-                <option value="FAILED">Failed</option>
-              </select>
+            <div className="flex flex-col sm:flex-row gap-4 items-end">
+              <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="startDate" className="text-xs font-light tracking-wider uppercase">
+                    Start Date
+                  </Label>
+                  <Input
+                    id="startDate"
+                    type="date"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                    className="bg-white border-slate-300 focus:border-slate-500"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="endDate" className="text-xs font-light tracking-wider uppercase">
+                    End Date
+                  </Label>
+                  <Input
+                    id="endDate"
+                    type="date"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                    className="bg-white border-slate-300 focus:border-slate-500"
+                  />
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  onClick={() => {
+                    setStartDate("");
+                    setEndDate("");
+                  }}
+                  variant="outline"
+                  size="sm"
+                >
+                  Clear Dates
+                </Button>
+                <Button
+                  onClick={downloadShippingLabels}
+                  isLoading={generatingPDF}
+                  variant="secondary"
+                  size="sm"
+                  icon={<Download className="w-4 h-4" />}
+                >
+                  Download Labels
+                </Button>
+              </div>
             </div>
           </div>
-        </div>
+          </CardContent>
+        </Card>
 
-        {/* Orders Table */}
-        <div className="border border-green-200 bg-white shadow-sm overflow-x-auto">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-green-50 border-b border-green-200">
-                <tr>
-                  <th className="px-4 py-3 text-left text-xs sm:text-sm font-light tracking-wider text-slate-600">
-                    Order ID
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs sm:text-sm font-light tracking-wider text-slate-600">
-                    Customer
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs sm:text-sm font-light tracking-wider text-slate-600">
-                    Amount
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs sm:text-sm font-light tracking-wider text-slate-600">
-                    Status
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs sm:text-sm font-light tracking-wider text-slate-600">
-                    Payment
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs sm:text-sm font-light tracking-wider text-slate-600">
-                    Date
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs sm:text-sm font-light tracking-wider text-slate-600">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-green-100">
-                {orders.length === 0 ? (
-                  <tr>
-                    <td colSpan={7} className="px-4 py-8 text-center text-slate-500 font-light">
-                      No orders found
-                    </td>
-                  </tr>
-                ) : (
-                  orders.map((order) => (
-                    <tr key={order.id} className="hover:bg-green-50 transition-colors">
-                      <td className="px-4 py-3 text-xs sm:text-sm font-light text-slate-900">
-                        #{order.id.slice(-8).toUpperCase()}
-                      </td>
-                      <td className="px-4 py-3 text-xs sm:text-sm font-light text-slate-900">
-                        <div>
-                          <p>{order.customerName || "N/A"}</p>
-                          <p className="text-slate-500 text-xs">{order.customerEmail}</p>
-                        </div>
-                      </td>
-                      <td className="px-4 py-3 text-xs sm:text-sm font-light text-slate-900">
-                        ₹{order.amount.toLocaleString("en-IN", {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2,
-                        })}
-                      </td>
-                      <td className="px-4 py-3">
-                        <span
-                          className={`inline-block px-2 py-1 text-xs font-light rounded border ${getStatusColor(
-                            order.orderStatus
-                          )}`}
-                        >
-                          {order.orderStatus}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3">
-                        <span
-                          className={`inline-block px-2 py-1 text-xs font-light rounded border ${getStatusColor(
-                            order.paymentStatus
-                          )}`}
-                        >
-                          {order.paymentStatus}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 text-xs sm:text-sm font-light text-slate-600">
-                        {formatDate(order.createdAt)}
-                      </td>
-                      <td className="px-4 py-3">
-                        <div className="flex items-center gap-2">
-                          <button
-                            onClick={() => setSelectedOrder(order)}
-                            className="p-1.5 text-green-600 hover:bg-green-100 rounded transition-colors"
-                            title="View Details"
-                          >
-                            <Eye className="w-4 h-4" />
-                          </button>
-                          <select
-                            value={order.orderStatus}
-                            onChange={(e) => updateOrderStatus(order.id, e.target.value)}
-                            className="text-xs px-2 py-1 border border-slate-300 focus:outline-none focus:border-slate-500 rounded"
-                          >
-                            <option value="PENDING">Pending</option>
-                            <option value="PROCESSING">Processing</option>
-                            <option value="SHIPPED">Shipped</option>
-                            <option value="DELIVERED">Delivered</option>
-                            <option value="CANCELLED">Cancelled</option>
-                          </select>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
+        {/* Orders Table - Date-wise grouped */}
+        <div className="space-y-6">
+          {(() => {
+            const groupedOrders = groupOrdersByDate(orders);
+            const sortedDates = Object.keys(groupedOrders).sort((a, b) => b.localeCompare(a));
+
+            if (sortedDates.length === 0) {
+              return (
+                <div className="border border-green-200 bg-white shadow-sm p-8 text-center">
+                  <p className="text-slate-500 font-light">No orders found</p>
+                </div>
+              );
+            }
+
+            return sortedDates.map((dateKey) => {
+              const dateOrders = groupedOrders[dateKey];
+              const date = new Date(dateKey);
+              const formattedDate = format(date, "EEEE, MMMM dd, yyyy");
+
+              return (
+                <div key={dateKey} className="border border-green-200 bg-white shadow-sm">
+                  <div className="bg-slate-50 border-b border-green-200 px-4 py-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Calendar className="w-4 h-4 text-slate-600" />
+                        <h3 className="text-sm font-medium text-slate-900">{formattedDate}</h3>
+                        <span className="text-xs text-slate-500">({dateOrders.length} orders)</span>
+                      </div>
+                    </div>
+                  </div>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead className="text-xs sm:text-sm font-light">Order ID</TableHead>
+                        <TableHead className="text-xs sm:text-sm font-light">Customer</TableHead>
+                        <TableHead className="text-xs sm:text-sm font-light">Amount</TableHead>
+                        <TableHead className="text-xs sm:text-sm font-light">Status</TableHead>
+                        <TableHead className="text-xs sm:text-sm font-light">Payment</TableHead>
+                        <TableHead className="text-xs sm:text-sm font-light">Time</TableHead>
+                        <TableHead className="text-xs sm:text-sm font-light">Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {dateOrders.map((order) => (
+                        <TableRow key={order.id}>
+                          <TableCell className="text-xs sm:text-sm font-light">
+                            #{order.id.slice(-8).toUpperCase()}
+                          </TableCell>
+                          <TableCell className="text-xs sm:text-sm font-light">
+                            <div>
+                              <p>{order.customerName || "N/A"}</p>
+                              <p className="text-slate-500 text-xs">{order.customerEmail}</p>
+                            </div>
+                          </TableCell>
+                          <TableCell className="text-xs sm:text-sm font-light">
+                            ₹{order.amount.toLocaleString("en-IN", {
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 2,
+                            })}
+                          </TableCell>
+                          <TableCell>
+                            <span
+                              className={`inline-block px-2 py-1 text-xs font-light rounded border ${getStatusColor(
+                                order.orderStatus
+                              )}`}
+                            >
+                              {order.orderStatus}
+                            </span>
+                          </TableCell>
+                          <TableCell>
+                            <span
+                              className={`inline-block px-2 py-1 text-xs font-light rounded border ${getStatusColor(
+                                order.paymentStatus
+                              )}`}
+                            >
+                              {order.paymentStatus}
+                            </span>
+                          </TableCell>
+                          <TableCell className="text-xs sm:text-sm font-light text-slate-600">
+                            {format(new Date(order.createdAt), "HH:mm")}
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex items-center gap-2">
+                              <Button
+                                onClick={() => setSelectedOrder(order)}
+                                variant="ghost"
+                                size="sm"
+                                icon={<Eye className="w-4 h-4" />}
+                                className="h-8 w-8 p-0"
+                              />
+                              <Select
+                                value={order.orderStatus}
+                                onValueChange={(value) => updateOrderStatus(order.id, value)}
+                              >
+                                <SelectTrigger className="h-8 w-[120px] text-xs border-slate-300 bg-white text-slate-900 hover:bg-slate-50 shadow-sm">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent className="bg-white border-slate-200 shadow-lg">
+                                  <SelectItem value="PENDING">Pending</SelectItem>
+                                  <SelectItem value="PROCESSING">Processing</SelectItem>
+                                  <SelectItem value="SHIPPED">Shipped</SelectItem>
+                                  <SelectItem value="DELIVERED">Delivered</SelectItem>
+                                  <SelectItem value="CANCELLED">Cancelled</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              );
+            });
+          })()}
         </div>
 
         {/* Order Details Modal */}
-        {selectedOrder && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-light tracking-wide">Order Details</h2>
-                <button
-                  onClick={() => setSelectedOrder(null)}
-                  className="text-slate-500 hover:text-slate-700"
-                >
-                  <XCircle className="w-5 h-5" />
-                </button>
-              </div>
-              <div className="space-y-4">
-                <div>
-                  <p className="text-sm text-slate-600 font-light">Order ID</p>
-                  <p className="text-base font-light">{selectedOrder.id}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-slate-600 font-light">Customer</p>
-                  <p className="text-base font-light">
-                    {selectedOrder.customerName} ({selectedOrder.customerEmail})
-                  </p>
-                </div>
-                <div>
-                  <p className="text-sm text-slate-600 font-light">Items</p>
-                  <div className="space-y-2 mt-2">
-                    {selectedOrder.items.map((item) => (
-                      <div key={item.id} className="flex justify-between text-sm">
-                        <span>{item.productName} × {item.quantity}</span>
-                        <span>₹{(item.price * item.quantity).toLocaleString("en-IN")}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div>
-                  <p className="text-sm text-slate-600 font-light">Total Amount</p>
-                  <p className="text-lg font-light">
-                    ₹{selectedOrder.amount.toLocaleString("en-IN", {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                    })}
-                  </p>
-                </div>
-                {selectedOrder.shippingAddress && (
+        <Dialog open={!!selectedOrder} onOpenChange={(open) => !open && setSelectedOrder(null)}>
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+            {selectedOrder && (
+              <>
+                <DialogHeader>
+                  <DialogTitle className="text-xl font-light tracking-wide">Order Details</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4">
                   <div>
-                    <p className="text-sm text-slate-600 font-light">Shipping Address</p>
-                    <p className="text-sm font-light">
-                      {selectedOrder.shippingAddress.addressLine1}
-                      {selectedOrder.shippingAddress.addressLine2 && (
-                        <>, {selectedOrder.shippingAddress.addressLine2}</>
-                      )}
-                      <br />
-                      {selectedOrder.shippingAddress.city}, {selectedOrder.shippingAddress.state}{" "}
-                      {selectedOrder.shippingAddress.zipCode}
+                    <Label className="text-sm text-slate-600 font-light">Order ID</Label>
+                    <p className="text-base font-light mt-1">{selectedOrder.id}</p>
+                  </div>
+                  <div>
+                    <Label className="text-sm text-slate-600 font-light">Razorpay Order ID</Label>
+                    <p className="text-base font-light mt-1">{selectedOrder.razorpayOrderId}</p>
+                  </div>
+                  <div>
+                    <Label className="text-sm text-slate-600 font-light">Customer</Label>
+                    <p className="text-base font-light mt-1">
+                      {selectedOrder.customerName || "N/A"} ({selectedOrder.customerEmail || "N/A"})
+                    </p>
+                    {selectedOrder.customerPhone && (
+                      <p className="text-sm text-slate-500 mt-1">Phone: {selectedOrder.customerPhone}</p>
+                    )}
+                  </div>
+                  <div>
+                    <Label className="text-sm text-slate-600 font-light">Items</Label>
+                    <div className="space-y-2 mt-2">
+                      {selectedOrder.items.map((item) => (
+                        <div key={item.id} className="flex justify-between text-sm border-b border-slate-200 pb-2">
+                          <span>{item.productName} × {item.quantity}</span>
+                          <span>₹{(item.price * item.quantity).toLocaleString("en-IN", {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          })}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <Label className="text-sm text-slate-600 font-light">Total Amount</Label>
+                    <p className="text-lg font-light mt-1">
+                      ₹{selectedOrder.amount.toLocaleString("en-IN", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
                     </p>
                   </div>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
+                  {selectedOrder.shippingAddress && (
+                    <div>
+                      <Label className="text-sm text-slate-600 font-light">Shipping Address</Label>
+                      <div className="mt-2 p-3 bg-slate-50 rounded border border-slate-200">
+                        <p className="text-sm font-light">
+                          {selectedOrder.shippingAddress.fullName && (
+                            <><strong>{selectedOrder.shippingAddress.fullName}</strong><br /></>
+                          )}
+                          {selectedOrder.shippingAddress.addressLine1}
+                          {selectedOrder.shippingAddress.addressLine2 && (
+                            <>, {selectedOrder.shippingAddress.addressLine2}</>
+                          )}
+                          <br />
+                          {selectedOrder.shippingAddress.city}, {selectedOrder.shippingAddress.state}{" "}
+                          {selectedOrder.shippingAddress.zipCode}
+                          <br />
+                          {selectedOrder.shippingAddress.country}
+                          {selectedOrder.shippingAddress.phone && (
+                            <><br />Phone: {selectedOrder.shippingAddress.phone}</>
+                          )}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label className="text-sm text-slate-600 font-light">Order Status</Label>
+                      <p className="text-base font-light mt-1">{selectedOrder.orderStatus}</p>
+                    </div>
+                    <div>
+                      <Label className="text-sm text-slate-600 font-light">Payment Status</Label>
+                      <p className="text-base font-light mt-1">{selectedOrder.paymentStatus}</p>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label className="text-sm text-slate-600 font-light">Order Date</Label>
+                      <p className="text-sm font-light mt-1">{formatDate(selectedOrder.createdAt)}</p>
+                    </div>
+                    <div>
+                      <Label className="text-sm text-slate-600 font-light">Last Updated</Label>
+                      <p className="text-sm font-light mt-1">{formatDate(selectedOrder.updatedAt)}</p>
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
+          </DialogContent>
+        </Dialog>
           </>
         )}
 
@@ -1523,31 +1742,6 @@ export default function AdminDashboardPage() {
                   className="relative bg-white border border-green-200 rounded-2xl p-6 md:p-8 mb-6 shadow-lg shadow-green-100/50 space-y-6"
                 >
                   <div className="space-y-6">
-                    {/* Type Selection */}
-                    <div className="space-y-2">
-                      <label className="text-xs sm:text-sm text-slate-600 font-light tracking-wider uppercase block">
-                        Media Type
-                      </label>
-                      <div className="relative">
-                        <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
-                          {galleryFormData.type === "IMAGE" ? (
-                            <ImageIcon className="w-5 h-5 text-green-600" />
-                          ) : (
-                            <Video className="w-5 h-5 text-green-600" />
-                          )}
-                        </div>
-                        <select
-                          value={galleryFormData.type}
-                          onChange={(e) => setGalleryFormData({ ...galleryFormData, type: e.target.value as "IMAGE" | "VIDEO", url: "" })}
-                          className="w-full bg-white border border-green-300 pl-12 pr-4 py-3 text-sm text-slate-900 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-slate-200 transition-all duration-200 appearance-none cursor-pointer"
-                          required
-                        >
-                          <option value="IMAGE">Image</option>
-                          <option value="VIDEO">Video</option>
-                        </select>
-                      </div>
-                    </div>
-
                     {/* Media Upload/URL */}
                     <div className="space-y-2">
                       <label className="text-xs sm:text-sm text-slate-600 font-light tracking-wider uppercase block">
@@ -1567,15 +1761,40 @@ export default function AdminDashboardPage() {
                                 setGalleryFormData({ ...galleryFormData, type: detectedType });
                                 handleMediaUpload(file);
                               }
+                              // Reset input value to allow selecting same file again
+                              e.target.value = '';
                             }}
-                            className="w-full bg-white border-2 border-dashed border-slate-300 rounded-xl px-4 py-6 text-sm text-slate-600 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-slate-200 transition-all duration-200 cursor-pointer hover:border-slate-400 hover:bg-slate-50/50 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-green-600 file:text-white hover:file:bg-green-700"
+                            id="gallery-file-upload"
+                            className="hidden"
                             disabled={uploadingMedia}
                           />
-                          {uploadingMedia && (
-                            <div className="absolute inset-0 flex items-center justify-center bg-white/80 rounded-xl">
-                              <div className="w-6 h-6 border-4 border-green-600 border-t-transparent rounded-full animate-spin"></div>
-                            </div>
-                          )}
+                          <label
+                            htmlFor="gallery-file-upload"
+                            className={`flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-xl cursor-pointer transition-all duration-200 ${
+                              uploadingMedia
+                                ? 'border-slate-300 bg-slate-100 cursor-not-allowed'
+                                : 'border-green-400 bg-green-50/50 hover:border-green-500 hover:bg-green-50'
+                            }`}
+                          >
+                            {uploadingMedia ? (
+                              <div className="flex flex-col items-center gap-2">
+                                <div className="w-8 h-8 border-4 border-green-600 border-t-transparent rounded-full animate-spin"></div>
+                                <p className="text-sm text-slate-600 font-medium">Uploading...</p>
+                              </div>
+                            ) : (
+                              <div className="flex flex-col items-center gap-2">
+                                <div className="w-10 h-10 rounded-full bg-green-600 flex items-center justify-center">
+                                  <Plus className="w-6 h-6 text-white" />
+                                </div>
+                                <p className="text-sm font-semibold text-slate-700">
+                                  Click to upload image or video
+                                </p>
+                                <p className="text-xs text-slate-500">
+                                  Supports: JPG, PNG, MP4, MOV
+                                </p>
+                              </div>
+                            )}
+                          </label>
                         </div>
                         
                         {galleryFormData.url && (
@@ -1621,8 +1840,22 @@ export default function AdminDashboardPage() {
                           <input
                             type="url"
                             value={galleryFormData.url}
-                            onChange={(e) => setGalleryFormData({ ...galleryFormData, url: e.target.value })}
-                            placeholder={galleryFormData.type === "VIDEO" ? "Or enter video URL (YouTube, Vimeo, etc.)" : "Or enter image URL manually"}
+                            onChange={(e) => {
+                              const url = e.target.value;
+                              // Auto-detect type from URL if possible
+                              let detectedType = galleryFormData.type;
+                              if (url) {
+                                const urlLower = url.toLowerCase();
+                                if (urlLower.includes('youtube.com') || urlLower.includes('youtu.be') || 
+                                    urlLower.includes('vimeo.com') || urlLower.match(/\.(mp4|webm|ogg|mov)$/i)) {
+                                  detectedType = "VIDEO";
+                                } else if (urlLower.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i)) {
+                                  detectedType = "IMAGE";
+                                }
+                              }
+                              setGalleryFormData({ ...galleryFormData, url, type: detectedType });
+                            }}
+                            placeholder="Or enter image/video URL manually"
                             className="w-full bg-white border border-green-300 pl-12 pr-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-slate-200 transition-all duration-200"
                           />
                         </div>
@@ -1744,22 +1977,6 @@ export default function AdminDashboardPage() {
                           {/* Drag Handle */}
                           <div className="absolute top-2 right-2 p-1 bg-white/80 backdrop-blur-sm rounded-lg shadow-sm">
                             <GripVertical className="w-4 h-4 cursor-grab active:cursor-grabbing text-slate-500" />
-                          </div>
-
-                          {/* Type Badge */}
-                          <div className="mb-2">
-                            <span className={`inline-flex items-center gap-1 text-xs px-2 py-1 rounded-full font-medium ${
-                              item.type === "IMAGE" 
-                                ? "bg-blue-100 text-blue-700" 
-                                : "bg-purple-100 text-purple-700"
-                            }`}>
-                              {item.type === "IMAGE" ? (
-                                <ImageIcon className="w-3 h-3" />
-                              ) : (
-                                <Video className="w-3 h-3" />
-                              )}
-                              {item.type}
-                            </span>
                           </div>
 
                           {/* Media Preview */}

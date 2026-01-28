@@ -63,7 +63,7 @@ function ProductsPageContent() {
             name: p.name,
             description: p.description || "",
             price: p.salePrice,
-            image: p.image || "/placeholder-product.jpg",
+            image: p.image || "",
             category: p.category?.name || "",
             featured: p.featured,
             bestSeller: p.bestSeller,

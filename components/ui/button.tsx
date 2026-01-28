@@ -41,7 +41,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement>, Va
   asLink?: boolean;
   href?: string;
   icon?: ReactNode;
-  children: ReactNode;
+  children?: ReactNode;
 }
 
 export default function Button({
@@ -70,7 +70,7 @@ export default function Button({
       ) : (
         <>
           {icon && <span className="flex items-center justify-center shrink-0">{icon}</span>}
-          <span>{children}</span>
+          {children != null && <span>{children}</span>}
           {showArrow && (
             <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 shrink-0 group-hover:translate-x-1 transition-transform duration-200" />
           )}

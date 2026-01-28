@@ -4,9 +4,15 @@ import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Truck, Package, CheckCircle, Clock, MapPin, Calendar, Download, Sparkles, Star } from "lucide-react";
+import { ArrowLeft, Truck, Package, CheckCircle, Clock, MapPin, Calendar, Download, Sparkles, Star, Edit, Save } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { useToast } from "@/lib/toast-context";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import Button from "@/components/ui/button";
+import { format } from "date-fns";
 
 interface OrderItem {
   id: string;
@@ -46,12 +52,20 @@ export default function OrderTrackingPage() {
   const params = useParams();
   const orderId = params.orderId as string;
   const { user, isLoading: authLoading } = useAuth();
-  const { showError } = useToast();
+  const { showError, showSuccess: toastSuccess } = useToast();
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [confirming, setConfirming] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showTrackingForm, setShowTrackingForm] = useState(false);
+  const [updatingTracking, setUpdatingTracking] = useState(false);
+  const [trackingFormData, setTrackingFormData] = useState({
+    shippedDate: "",
+    trackingNumber: "",
+    orderStatus: "SHIPPED",
+    notes: "",
+  });
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -61,8 +75,8 @@ export default function OrderTrackingPage() {
 
     if (orderId?.trim()) {
       fetchOrder();
-      // Auto-refresh every 10 seconds for real-time updates
-      const interval = setInterval(fetchOrder, 10000);
+      // Auto-refresh every 30 seconds for real-time updates (reduced from 10 seconds)
+      const interval = setInterval(fetchOrder, 30000);
       return () => clearInterval(interval);
     } else if (!authLoading) {
       setError("Order ID is required");
@@ -111,8 +125,8 @@ export default function OrderTrackingPage() {
       }
 
       setOrder(data.order);
-      setShowSuccess(true);
-      setTimeout(() => setShowSuccess(false), 3000);
+      setShowSuccessModal(true);
+      setTimeout(() => setShowSuccessModal(false), 3000);
     } catch (err: any) {
       console.error("Error confirming delivery:", err);
       showError(err.message || "Failed to confirm delivery");
@@ -120,6 +134,46 @@ export default function OrderTrackingPage() {
       setConfirming(false);
     }
   };
+
+  const updateTracking = async () => {
+    if (!order || !user?.email) return;
+
+    setUpdatingTracking(true);
+    try {
+      const headers = {
+        "Content-Type": "application/json",
+        "x-user-email": user.email,
+      };
+
+      const response = await fetch(`/api/admin/orders/${order.id}/update-tracking`, {
+        method: "PUT",
+        headers,
+        body: JSON.stringify(trackingFormData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to update tracking");
+      }
+
+      setOrder(data.order);
+      setShowTrackingForm(false);
+      setTrackingFormData({
+        shippedDate: "",
+        trackingNumber: "",
+        orderStatus: "SHIPPED",
+        notes: "",
+      });
+      toastSuccess("Tracking updated successfully!");
+    } catch (err: any) {
+      console.error("Error updating tracking:", err);
+      showError(err.message || "Failed to update tracking");
+    } finally {
+      setUpdatingTracking(false);
+    }
+  };
+
 
   const getTrackingSteps = (): TrackingStep[] => {
     if (!order) return [];
@@ -438,6 +492,121 @@ export default function OrderTrackingPage() {
               </div>
             </motion.div>
 
+            {/* Admin Tracking Update Form */}
+            {user?.role === "ADMIN" && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.6 }}
+                className="border border-green-200 bg-white shadow-lg rounded-2xl p-6 sm:p-8"
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg sm:text-xl font-light text-slate-900 flex items-center gap-2">
+                    <Edit className="w-5 h-5" />
+                    UPDATE TRACKING
+                  </h3>
+                  <Dialog open={showTrackingForm} onOpenChange={setShowTrackingForm}>
+                    <DialogTrigger asChild>
+                      <Button variant="outline" size="sm" icon={<Edit className="w-4 h-4" />}>
+                        UPDATE
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-md">
+                      <DialogHeader>
+                        <DialogTitle>Update Order Tracking</DialogTitle>
+                      </DialogHeader>
+                      <div className="space-y-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="orderStatus">Order Status</Label>
+                          <Select
+                            value={trackingFormData.orderStatus}
+                            onValueChange={(value) => setTrackingFormData({ ...trackingFormData, orderStatus: value })}
+                          >
+                            <SelectTrigger className="bg-white border-slate-300">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="PENDING">Pending</SelectItem>
+                              <SelectItem value="PROCESSING">Processing</SelectItem>
+                              <SelectItem value="SHIPPED">Shipped</SelectItem>
+                              <SelectItem value="DELIVERED">Delivered</SelectItem>
+                              <SelectItem value="CANCELLED">Cancelled</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="shippedDate">Shipped Date</Label>
+                          <Input
+                            id="shippedDate"
+                            type="datetime-local"
+                            value={trackingFormData.shippedDate}
+                            onChange={(e) => setTrackingFormData({ ...trackingFormData, shippedDate: e.target.value })}
+                            className="bg-white border-slate-300"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="trackingNumber">Tracking Number</Label>
+                          <Input
+                            id="trackingNumber"
+                            type="text"
+                            value={trackingFormData.trackingNumber}
+                            onChange={(e) => setTrackingFormData({ ...trackingFormData, trackingNumber: e.target.value })}
+                            placeholder="Enter tracking number"
+                            className="bg-white border-slate-300"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="notes">Notes</Label>
+                          <Input
+                            id="notes"
+                            type="text"
+                            value={trackingFormData.notes}
+                            onChange={(e) => setTrackingFormData({ ...trackingFormData, notes: e.target.value })}
+                            placeholder="Additional notes"
+                            className="bg-white border-slate-300"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label className="text-sm font-light">Order Items</Label>
+                          <div className="space-y-2 max-h-40 overflow-y-auto border border-slate-200 rounded p-2">
+                            {order.items.map((item) => (
+                              <div key={item.id} className="flex items-center justify-between text-sm">
+                                <span>{item.productName} × {item.quantity}</span>
+                                <span className="text-slate-500">Selected</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                        <div className="flex gap-2 pt-4">
+                          <Button
+                            onClick={updateTracking}
+                            isLoading={updatingTracking}
+                            variant="primary"
+                            size="md"
+                            className="flex-1"
+                            icon={<Save className="w-4 h-4" />}
+                          >
+                            {updatingTracking ? "UPDATING..." : "UPDATE TRACKING"}
+                          </Button>
+                          <Button
+                            onClick={() => setShowTrackingForm(false)}
+                            variant="outline"
+                            size="md"
+                          >
+                            CANCEL
+                          </Button>
+                        </div>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+                <div className="text-sm text-slate-600 font-light">
+                  <p>Current Status: <span className="font-medium">{order.orderStatus}</span></p>
+                  <p className="mt-1">Last Updated: {formatDate(order.updatedAt)}</p>
+                </div>
+              </motion.div>
+            )}
+
             {/* Delivery Confirmation Button */}
             {canConfirmDelivery && (
               <motion.div
@@ -457,25 +626,15 @@ export default function OrderTrackingPage() {
                     <p className="text-sm sm:text-base text-slate-600 font-light mb-4">
                       If you have received your order, please confirm delivery to update the order status.
                     </p>
-                    <motion.button
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
+                    <Button
                       onClick={confirmDelivery}
-                      disabled={confirming}
-                      className="px-6 sm:px-8 py-3 bg-linear-to-r from-green-600 to-green-600 text-white hover:from-green-700 hover:to-green-700 transition-all rounded-lg shadow-lg shadow-green-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                      isLoading={confirming}
+                      variant="primary"
+                      size="md"
+                      icon={<CheckCircle className="w-4 h-4" />}
                     >
-                      {confirming ? (
-                        <>
-                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                          <span className="text-sm font-light tracking-wider">CONFIRMING...</span>
-                        </>
-                      ) : (
-                        <>
-                          <CheckCircle className="w-4 h-4" />
-                          <span className="text-sm font-light tracking-wider">CONFIRM DELIVERY</span>
-                        </>
-                      )}
-                    </motion.button>
+                      {confirming ? "CONFIRMING..." : "CONFIRM DELIVERY"}
+                    </Button>
                   </div>
                 </div>
               </motion.div>
@@ -483,7 +642,7 @@ export default function OrderTrackingPage() {
 
             {/* Success Message */}
             <AnimatePresence>
-              {showSuccess && (
+              {showSuccessModal && (
                 <motion.div
                   initial={{ opacity: 0, y: -20 }}
                   animate={{ opacity: 1, y: 0 }}
