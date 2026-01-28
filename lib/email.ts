@@ -13,14 +13,14 @@ const transporter = nodemailer.createTransport({
 
 export async function sendOTPEmail(email: string, otp: string, type: OTPType) {
   const subject = type === OTPType.SIGNUP 
-    ? 'Verify Your Email - STR E-Commerce'
-    : 'Reset Your Password - STR E-Commerce';
+    ? 'Verify Your Email - STN Golden Healthy Foods'
+    : 'Reset Your Password - STN Golden Healthy Foods';
   
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #000; color: #fff;">
       <div style="text-align: center; margin-bottom: 30px;">
-        <h1 style="color: #fff; font-weight: 300; letter-spacing: 0.2em;">STR</h1>
-        <p style="color: #999; font-size: 12px; letter-spacing: 0.1em;">E-COMMERCE</p>
+        <h1 style="color: #fff; font-weight: 300; letter-spacing: 0.1em; font-size: 24px;">STN GOLDEN</h1>
+        <p style="color: #999; font-size: 12px; letter-spacing: 0.1em;">HEALTHY FOODS</p>
       </div>
       
       <div style="background-color: #111; padding: 30px; border: 1px solid #333; border-radius: 8px;">
@@ -53,7 +53,7 @@ export async function sendOTPEmail(email: string, otp: string, type: OTPType) {
       
       <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #333;">
         <p style="color: #666; font-size: 11px;">
-          © ${new Date().getFullYear()} STR E-Commerce. All rights reserved.
+          © ${new Date().getFullYear()} STN Golden Healthy Foods. All rights reserved.
         </p>
       </div>
     </div>

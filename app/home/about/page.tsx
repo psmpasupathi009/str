@@ -120,7 +120,7 @@ export default function AboutPage() {
           className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center"
         >
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light tracking-tight mb-4 sm:mb-6 text-slate-900">
-            ABOUT STR
+            ABOUT STN GOLDEN HEALTHY FOODS
           </h1>
           <p className="text-lg sm:text-xl text-slate-600 font-light max-w-2xl mx-auto">
             Premium quality food products — oils, idly, masala powders & ready-to-eat items.
@@ -175,7 +175,7 @@ export default function AboutPage() {
             className="max-w-3xl mx-auto space-y-5 text-slate-700 leading-relaxed"
           >
             {[
-              "STR delivers premium cooking oils, idly mixes, masala powders, and ready-to-eat products. We focus on quality, taste, and trust in every pack.",
+              "STN Golden Healthy Foods delivers premium cooking oils, idly mixes, masala powders, and ready-to-eat products. We focus on quality, taste, and trust in every pack.",
               "We bring traditional recipes and trusted ingredients together so you can cook with confidence. Our range fits home kitchens and modern lifestyles.",
               "Explore our oils, masalas, and ready-to-eat options—crafted for flavour, consistency, and everyday goodness.",
             ].map((paragraph, i) => (

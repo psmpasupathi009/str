@@ -21,7 +21,7 @@ export default function Testimonials() {
       designation: "Fashion Enthusiast",
       content: (
         <p>
-          "The quality and craftsmanship of STR products is unmatched. Each
+          "The quality and craftsmanship of STN Golden Healthy Foods products is unmatched. Each
           piece tells a story of excellence."
         </p>
       ),
@@ -33,7 +33,7 @@ export default function Testimonials() {
       content: (
         <p>
           "A confluence of exceptional and extraordinary narratives, as
-          revealed by STR's design philosophy."
+          revealed by STN Golden Healthy Foods' design philosophy."
         </p>
       ),
     },
@@ -49,7 +49,7 @@ export default function Testimonials() {
             <span className="font-extralight">THOUSANDS</span>
           </h2>
           <p className="text-sm sm:text-base text-slate-600 font-light tracking-wide max-w-2xl mx-auto px-4">
-            Here's what some of our customers have to say about STR.
+            Here's what some of our customers have to say about STN Golden Healthy Foods.
           </p>
         </div>
         <div className="flex justify-center px-4">

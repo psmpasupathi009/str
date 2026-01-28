@@ -3,7 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { Mail, Lock, User, Phone, Shield, CheckCircle2, ArrowRight } from "lucide-react";
+import { Mail, Lock, User, Phone, Shield, CheckCircle2, ArrowRight, Eye, EyeOff } from "lucide-react";
 
 interface AuthFormProps {
   type: "signin" | "signup";
@@ -25,6 +25,12 @@ const InputField = ({
   fieldName,
   maxLength,
   isFocused,
+  showPasswordToggle = false,
+  isPasswordVisible = false,
+  onTogglePassword,
+  error,
+  onFocus,
+  onBlur,
 }: {
   label: string;
   type: string;
@@ -36,33 +42,43 @@ const InputField = ({
   fieldName: string;
   maxLength?: number;
   isFocused: boolean;
+  showPasswordToggle?: boolean;
+  isPasswordVisible?: boolean;
+  onTogglePassword?: () => void;
+  error?: string;
+  onFocus?: () => void;
+  onBlur?: () => void;
 }) => {
+  const inputType = showPasswordToggle && isPasswordVisible ? "text" : type;
+  
   return (
-    <div className="space-y-2">
+    <div className="space-y-1.5">
       <label 
         htmlFor={fieldName} 
-        className="text-xs sm:text-sm text-slate-600 font-light tracking-wider uppercase block"
+        className="text-xs text-slate-600 font-light tracking-wider uppercase block"
       >
         {label}
       </label>
       <div className="relative" style={{ zIndex: 60 }}>
         <div 
-          className={`absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 pointer-events-none transition-colors duration-200 ${
+          className={`absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none transition-colors duration-200 ${
             isFocused ? 'text-green-600' : 'text-slate-400'
           }`}
           style={{ zIndex: 1 }}
         >
-          <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
+          <Icon className="w-4 h-4" />
         </div>
         <input
           id={fieldName}
-          type={type}
+          type={inputType}
           value={value}
           onChange={onChange}
+          onFocus={onFocus}
+          onBlur={onBlur}
           required={required}
           maxLength={maxLength}
-          autoComplete={type === "email" ? "email" : type === "password" ? "current-password" : "off"}
-          className="w-full bg-white border border-green-300 pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-200"
+          autoComplete={type === "email" ? "email" : type === "password" ? (fieldName.includes("confirm") ? "new-password" : "current-password") : "off"}
+          className={`w-full bg-white border ${error ? 'border-red-300' : 'border-green-300'} pl-9 ${showPasswordToggle ? 'pr-9' : 'pr-3'} py-2 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-200 transition-all duration-200`}
           placeholder={placeholder}
           style={{
             color: 'rgb(15 23 42)',
@@ -71,7 +87,24 @@ const InputField = ({
             zIndex: 60,
           }}
         />
+        {showPasswordToggle && (
+          <button
+            type="button"
+            onClick={onTogglePassword}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-green-600 transition-colors"
+            style={{ zIndex: 61 }}
+          >
+            {isPasswordVisible ? (
+              <EyeOff className="w-4 h-4" />
+            ) : (
+              <Eye className="w-4 h-4" />
+            )}
+          </button>
+        )}
       </div>
+      {error && (
+        <p className="text-xs text-red-500 font-light">{error}</p>
+      )}
     </div>
   );
 };
@@ -82,13 +115,19 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
     email: "",
     phoneNumber: "",
     password: "",
+    confirmPassword: "",
     name: "",
     otp: "",
   });
   const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const [isSendingOTP, setIsSendingOTP] = useState(false);
   const [forgotPassword, setForgotPassword] = useState(false);
   const [focusedField, setFocusedField] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [passwordError, setPasswordError] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
 
   const handleAPIError = (err: any, defaultMessage: string) => {
     setError(err.message || defaultMessage);
@@ -97,6 +136,16 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
   const sendOTP = async (otpType: "SIGNUP" | "FORGOT_PASSWORD") => {
     setIsSendingOTP(true);
     setError("");
+    setSuccessMessage("");
+    
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setError("Please enter a valid email address");
+      setIsSendingOTP(false);
+      return;
+    }
+    
     try {
       const endpoint = type === "signup" ? "/api/auth/signup" : "/api/auth/send-otp";
       const body = type === "signup" 
@@ -112,6 +161,8 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Failed to send OTP");
       
+      // Show success message
+      setSuccessMessage(`OTP sent successfully to ${formData.email}`);
       setStep("otp");
     } catch (err: any) {
       handleAPIError(err, "Failed to send OTP");
@@ -127,6 +178,7 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
     }
 
     setError("");
+    setSuccessMessage("");
     try {
       const response = await fetch("/api/auth/verify-otp", {
         method: "POST",
@@ -137,9 +189,17 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "OTP verification failed");
 
+      // Clear success message and move to next step
+      setSuccessMessage("");
       if (otpType === "SIGNUP") {
         setStep("password");
       } else {
+        // Clear password fields when entering reset step
+        setFormData(prev => ({ ...prev, password: "", confirmPassword: "" }));
+        setPasswordError("");
+        setConfirmPasswordError("");
+        setShowPassword(false);
+        setShowConfirmPassword(false);
         setStep("reset");
       }
     } catch (err: any) {
@@ -147,13 +207,39 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
     }
   };
 
+  const validatePassword = (password: string): string => {
+    if (password.length < 6) {
+      return "Password must be at least 6 characters";
+    }
+    return "";
+  };
+
+  const validateConfirmPassword = (password: string, confirmPassword: string): string => {
+    if (!confirmPassword) {
+      return "Please confirm your password";
+    }
+    if (password !== confirmPassword) {
+      return "Passwords do not match";
+    }
+    return "";
+  };
+
   const createAccount = async () => {
-    if (formData.password.length < 6) {
-      setError("Password must be at least 6 characters");
+    const passwordErr = validatePassword(formData.password);
+    const confirmPasswordErr = validateConfirmPassword(formData.password, formData.confirmPassword);
+    
+    setPasswordError(passwordErr);
+    setConfirmPasswordError(confirmPasswordErr);
+    
+    if (passwordErr || confirmPasswordErr) {
+      setError(passwordErr || confirmPasswordErr);
       return;
     }
 
     setError("");
+    setPasswordError("");
+    setConfirmPasswordError("");
+    
     try {
       const response = await fetch("/api/auth/create-account", {
         method: "POST",
@@ -182,12 +268,21 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
   };
 
   const resetPassword = async () => {
-    if (formData.password.length < 6) {
-      setError("Password must be at least 6 characters");
+    const passwordErr = validatePassword(formData.password);
+    const confirmPasswordErr = validateConfirmPassword(formData.password, formData.confirmPassword);
+    
+    setPasswordError(passwordErr);
+    setConfirmPasswordError(confirmPasswordErr);
+    
+    if (passwordErr || confirmPasswordErr) {
+      setError(passwordErr || confirmPasswordErr);
       return;
     }
 
     setError("");
+    setPasswordError("");
+    setConfirmPasswordError("");
+    
     try {
       const response = await fetch("/api/auth/reset-password", {
         method: "POST",
@@ -217,16 +312,31 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
     if (error) {
       setError("");
     }
+    if (successMessage) {
+      setSuccessMessage("");
+    }
 
     if (step === "form" && type === "signup") {
       if (!formData.email || !formData.name) {
         setError("Email and name are required");
         return;
       }
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email)) {
+        setError("Please enter a valid email address");
+        return;
+      }
       await sendOTP("SIGNUP");
     } else if (step === "form" && type === "signin") {
       if (!formData.email || !formData.password) {
         setError("Email and password are required");
+        return;
+      }
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email)) {
+        setError("Please enter a valid email address");
         return;
       }
       try {
@@ -253,7 +363,7 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
     if (step === "otp") return "Enter the 6-digit code sent to your email";
     if (step === "password") return "Choose a strong password to secure your account";
     if (step === "reset") return "Enter your new password";
-    return type === "signin" ? "Welcome back to STR" : "Create your account to get started";
+    return type === "signin" ? "Welcome back to STN Golden Healthy Foods" : "Create your account to get started";
   };
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -269,7 +379,26 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
   };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prev => ({ ...prev, password: e.target.value }));
+    const newPassword = e.target.value;
+    setFormData(prev => ({ ...prev, password: newPassword }));
+    
+    // Clear errors when user starts typing
+    if (passwordError) {
+      setPasswordError("");
+    }
+    if (confirmPasswordError && formData.confirmPassword) {
+      const confirmErr = validateConfirmPassword(newPassword, formData.confirmPassword);
+      setConfirmPasswordError(confirmErr);
+    }
+  };
+
+  const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newConfirmPassword = e.target.value;
+    setFormData(prev => ({ ...prev, confirmPassword: newConfirmPassword }));
+    
+    // Validate immediately
+    const confirmErr = validateConfirmPassword(formData.password, newConfirmPassword);
+    setConfirmPasswordError(confirmErr);
   };
 
   const handleOtpChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -277,7 +406,7 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
   };
 
   const renderFormStep = () => (
-    <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5 md:space-y-6" style={{ position: 'relative', zIndex: 50 }}>
+    <form onSubmit={handleSubmit} className="space-y-3.5" style={{ position: 'relative', zIndex: 50 }}>
       <InputField
         label="Email Address"
         type="email"
@@ -288,6 +417,8 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
         required
         fieldName="email"
         isFocused={focusedField === "email"}
+        onFocus={() => setFocusedField("email")}
+        onBlur={() => setFocusedField(null)}
       />
 
       {type === "signup" && (
@@ -302,6 +433,8 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
             required
             fieldName="name"
             isFocused={focusedField === "name"}
+            onFocus={() => setFocusedField("name")}
+            onBlur={() => setFocusedField(null)}
           />
           <InputField
             label="Phone Number"
@@ -312,6 +445,8 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
             icon={Phone}
             fieldName="phoneNumber"
             isFocused={focusedField === "phoneNumber"}
+            onFocus={() => setFocusedField("phoneNumber")}
+            onBlur={() => setFocusedField(null)}
           />
         </>
       )}
@@ -328,12 +463,17 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
             required
             fieldName="password"
             isFocused={focusedField === "password"}
+            showPasswordToggle={true}
+            isPasswordVisible={showPassword}
+            onTogglePassword={() => setShowPassword(!showPassword)}
+            onFocus={() => setFocusedField("password")}
+            onBlur={() => setFocusedField(null)}
           />
-          <div className="text-right -mt-2">
+          <div className="text-right -mt-1">
             <button
               type="button"
               onClick={handleForgotPassword}
-              className="text-xs sm:text-sm text-slate-600 font-light tracking-wider uppercase"
+              className="text-xs text-slate-600 font-light tracking-wider uppercase hover:text-green-600 transition-colors"
             >
               Forgot Password?
             </button>
@@ -347,9 +487,19 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            className="p-3 sm:p-4 bg-red-500/10 border border-red-500/30 text-red-300 text-xs sm:text-sm font-light"
+            className="p-3 bg-red-500/10 border border-red-500/30 text-red-500 text-xs font-light"
           >
             {error}
+          </motion.div>
+        )}
+        {successMessage && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            className="p-3 bg-green-500/10 border border-green-500/30 text-green-600 text-xs font-light"
+          >
+            {successMessage}
           </motion.div>
         )}
       </AnimatePresence>
@@ -357,7 +507,7 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
       <button
         type="submit"
         disabled={isLoading || isSendingOTP}
-        className="w-full bg-white text-black py-2.5 sm:py-3 md:py-4 px-4 sm:px-6 md:px-8 font-light tracking-widest text-xs sm:text-sm uppercase transition-opacity duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full bg-white text-black py-2.5 px-4 font-light tracking-widest text-xs uppercase transition-opacity duration-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-green-50 border border-green-300"
       >
         {isLoading || isSendingOTP ? (
           <span className="flex items-center justify-center gap-2">
@@ -379,15 +529,15 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
   );
 
   const renderOTPStep = () => (
-    <div className="space-y-4 sm:space-y-5 md:space-y-6" style={{ position: 'relative', zIndex: 50 }}>
-      <div className="text-center mb-6 sm:mb-8">
-        <div className="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 mx-auto mb-3 sm:mb-4 rounded-full bg-green-100 border border-green-300 flex items-center justify-center">
-          <Shield className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 text-green-600" />
+    <div className="space-y-4" style={{ position: 'relative', zIndex: 50 }}>
+      <div className="text-center mb-5">
+        <div className="w-14 h-14 mx-auto mb-3 rounded-full bg-green-100 border border-green-300 flex items-center justify-center">
+          <Shield className="w-7 h-7 text-green-600" />
         </div>
-        <p className="text-xs sm:text-sm md:text-base text-slate-600 font-light">
+        <p className="text-xs text-slate-600 font-light">
           Enter the 6-digit code sent to
         </p>
-        <p className="text-xs sm:text-sm md:text-base text-slate-900 font-light mt-1">
+        <p className="text-xs text-slate-900 font-light mt-1">
           {formData.email}
         </p>
       </div>
@@ -398,7 +548,7 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
           value={formData.otp}
           onChange={handleOtpChange}
           maxLength={6}
-          className="w-full bg-white border border-green-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 px-4 sm:px-6 py-3 sm:py-4 md:py-5 text-2xl sm:text-3xl md:text-4xl text-center text-slate-900 tracking-[0.3em] sm:tracking-[0.5em] focus:outline-none transition-all duration-200 font-mono font-light"
+          className="w-full bg-white border border-green-300 focus:border-green-500 focus:ring-1 focus:ring-green-200 px-4 py-3 text-2xl text-center text-slate-900 tracking-[0.3em] focus:outline-none transition-all duration-200 font-mono font-light"
           placeholder="000000"
           autoFocus
           onFocus={() => setFocusedField("otp")}
@@ -425,7 +575,7 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
         )}
       </AnimatePresence>
 
-      <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 md:gap-4">
+      <div className="flex flex-col sm:flex-row gap-2">
         <button
           type="button"
           onClick={() => {
@@ -434,7 +584,7 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
             setError("");
             setForgotPassword(false);
           }}
-          className="flex-1 bg-white border border-green-300 text-slate-700 hover:bg-green-50 hover:border-green-400 py-2.5 sm:py-3 md:py-4 px-4 sm:px-6 font-light tracking-widest text-xs sm:text-sm uppercase transition-all duration-200"
+          className="flex-1 bg-white border border-green-300 text-slate-700 hover:bg-green-50 hover:border-green-400 py-2.5 px-4 font-light tracking-widest text-xs uppercase transition-all duration-200"
         >
           BACK
         </button>
@@ -442,7 +592,7 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
           type="button"
           onClick={() => verifyOTP(type === "signup" ? "SIGNUP" : "FORGOT_PASSWORD")}
           disabled={isLoading || formData.otp.length !== 6}
-          className="flex-1 bg-white text-black py-2.5 sm:py-3 md:py-4 px-4 sm:px-6 font-light tracking-widest text-xs sm:text-sm uppercase transition-opacity duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex-1 bg-white text-black py-2.5 px-4 font-light tracking-widest text-xs uppercase transition-opacity duration-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-green-50 border border-green-300"
         >
           {isLoading ? (
             <span className="flex items-center justify-center gap-2">
@@ -465,7 +615,7 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
   );
 
   const renderPasswordStep = () => (
-    <div className="space-y-4 sm:space-y-5 md:space-y-6" style={{ position: 'relative', zIndex: 50 }}>
+    <div className="space-y-3.5" style={{ position: 'relative', zIndex: 50 }}>
       <InputField
         label="Create Password"
         type="password"
@@ -476,9 +626,32 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
         required
         fieldName="password"
         isFocused={focusedField === "password"}
+        showPasswordToggle={true}
+        isPasswordVisible={showPassword}
+        onTogglePassword={() => setShowPassword(!showPassword)}
+        error={passwordError}
+        onFocus={() => setFocusedField("password")}
+        onBlur={() => setFocusedField(null)}
+      />
+      <InputField
+        label="Confirm Password"
+        type="password"
+        value={formData.confirmPassword}
+        onChange={handleConfirmPasswordChange}
+        placeholder="Confirm your password"
+        icon={Lock}
+        required
+        fieldName="confirmPassword"
+        isFocused={focusedField === "confirmPassword"}
+        showPasswordToggle={true}
+        isPasswordVisible={showConfirmPassword}
+        onTogglePassword={() => setShowConfirmPassword(!showConfirmPassword)}
+        error={confirmPasswordError}
+        onFocus={() => setFocusedField("confirmPassword")}
+        onBlur={() => setFocusedField(null)}
       />
       <div className="flex items-center gap-2 text-xs text-slate-600 font-light">
-        <Shield className="w-3 h-3 sm:w-4 sm:h-4" />
+        <Shield className="w-3 h-3" />
         <span>Password must be at least 6 characters long</span>
       </div>
 
@@ -495,23 +668,27 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
         )}
       </AnimatePresence>
 
-      <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 md:gap-4">
+      <div className="flex flex-col sm:flex-row gap-2">
         <button
           type="button"
           onClick={() => {
             setStep("otp");
-            setFormData(prev => ({ ...prev, password: "" }));
+            setFormData(prev => ({ ...prev, password: "", confirmPassword: "" }));
             setError("");
+            setPasswordError("");
+            setConfirmPasswordError("");
+            setShowPassword(false);
+            setShowConfirmPassword(false);
           }}
-          className="flex-1 bg-white border border-green-300 text-slate-700 hover:bg-green-50 hover:border-green-400 py-2.5 sm:py-3 md:py-4 px-4 sm:px-6 font-light tracking-widest text-xs sm:text-sm uppercase transition-all duration-200"
+          className="flex-1 bg-white border border-green-300 text-slate-700 hover:bg-green-50 hover:border-green-400 py-2.5 px-4 font-light tracking-widest text-xs uppercase transition-all duration-200"
         >
           BACK
         </button>
         <button
           type="button"
           onClick={createAccount}
-          disabled={isLoading || !formData.password || formData.password.length < 6}
-          className="flex-1 bg-white text-black py-2.5 sm:py-3 md:py-4 px-4 sm:px-6 font-light tracking-widest text-xs sm:text-sm uppercase transition-opacity duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={isLoading || !formData.password || formData.password.length < 6 || !formData.confirmPassword || formData.password !== formData.confirmPassword}
+          className="flex-1 bg-white text-black py-2.5 px-4 font-light tracking-widest text-xs uppercase transition-opacity duration-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-green-50 border border-green-300"
         >
           {isLoading ? (
             <span className="flex items-center justify-center gap-2">
@@ -534,7 +711,7 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
   );
 
   const renderResetStep = () => (
-    <div className="space-y-4 sm:space-y-5 md:space-y-6" style={{ position: 'relative', zIndex: 50 }}>
+    <div className="space-y-3.5" style={{ position: 'relative', zIndex: 50 }}>
       <InputField
         label="New Password"
         type="password"
@@ -545,9 +722,32 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
         required
         fieldName="password"
         isFocused={focusedField === "password"}
+        showPasswordToggle={true}
+        isPasswordVisible={showPassword}
+        onTogglePassword={() => setShowPassword(!showPassword)}
+        error={passwordError}
+        onFocus={() => setFocusedField("password")}
+        onBlur={() => setFocusedField(null)}
+      />
+      <InputField
+        label="Confirm Password"
+        type="password"
+        value={formData.confirmPassword}
+        onChange={handleConfirmPasswordChange}
+        placeholder="Confirm your new password"
+        icon={Lock}
+        required
+        fieldName="confirmPassword"
+        isFocused={focusedField === "confirmPassword"}
+        showPasswordToggle={true}
+        isPasswordVisible={showConfirmPassword}
+        onTogglePassword={() => setShowConfirmPassword(!showConfirmPassword)}
+        error={confirmPasswordError}
+        onFocus={() => setFocusedField("confirmPassword")}
+        onBlur={() => setFocusedField(null)}
       />
       <div className="flex items-center gap-2 text-xs text-slate-600 font-light">
-        <Shield className="w-3 h-3 sm:w-4 sm:h-4" />
+        <Shield className="w-3 h-3" />
         <span>Password must be at least 6 characters long</span>
       </div>
 
@@ -557,7 +757,7 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            className="p-3 sm:p-4 bg-red-500/10 border border-red-500/30 text-red-300 text-xs sm:text-sm font-light"
+            className="p-3 bg-red-500/10 border border-red-500/30 text-red-500 text-xs font-light"
           >
             {error}
           </motion.div>
@@ -567,8 +767,8 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
       <button
         type="button"
         onClick={resetPassword}
-        disabled={isLoading || !formData.password || formData.password.length < 6}
-        className="w-full bg-white text-black py-2.5 sm:py-3 md:py-4 px-4 sm:px-6 md:px-8 font-light tracking-widest text-xs sm:text-sm uppercase transition-opacity duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+        disabled={isLoading || !formData.password || formData.password.length < 6 || !formData.confirmPassword || formData.password !== formData.confirmPassword}
+        className="w-full bg-white text-black py-2.5 px-4 font-light tracking-widest text-xs uppercase transition-opacity duration-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-green-50 border border-green-300"
       >
         {isLoading ? (
           <span className="flex items-center justify-center gap-2">
@@ -590,21 +790,21 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
   );
 
   return (
-    <div className="min-h-screen bg-linear-to-b from-green-50 to-green-50 text-slate-900 pt-20 sm:pt-24 md:pt-28 pb-6 sm:pb-8 md:pb-12 relative" style={{ zIndex: 1 }}>
-      <div className="max-w-md mx-auto px-3 sm:px-4 md:px-6 relative" style={{ zIndex: 40 }}>
+    <div className="min-h-screen bg-linear-to-b from-green-50 to-green-50 text-slate-900 pt-24 sm:pt-28 md:pt-32 lg:pt-36 pb-8 sm:pb-12 relative" style={{ zIndex: 1 }}>
+      <div className="w-full max-w-md mx-auto px-4 sm:px-6 relative py-4 sm:py-6" style={{ zIndex: 40 }}>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="border border-green-200 bg-white shadow-xl p-4 sm:p-6 md:p-8 lg:p-10 relative"
+          className="border border-green-200 bg-white shadow-lg p-6 sm:p-8 relative"
           style={{ zIndex: 40 }}
         >
           {/* Header */}
-          <div className="mb-6 sm:mb-8 md:mb-10 text-center">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light tracking-wider mb-2 sm:mb-3 md:mb-4">
+          <div className="mb-6 text-center">
+            <h1 className="text-2xl font-light tracking-wider mb-2">
               {getStepTitle()}
             </h1>
-            <p className="text-xs sm:text-sm md:text-base text-slate-600 font-light tracking-wide">
+            <p className="text-xs text-slate-600 font-light tracking-wide">
               {getStepDescription()}
             </p>
           </div>
@@ -659,12 +859,12 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
 
           {/* Footer Link */}
           {step === "form" && (
-            <div className="mt-6 sm:mt-8 text-center">
-              <p className="text-xs sm:text-sm text-slate-600 font-light tracking-wide">
+            <div className="mt-5 text-center">
+              <p className="text-xs text-slate-600 font-light tracking-wide">
                 {type === "signin" ? "Don't have an account? " : "Already have an account? "}
                 <Link
                   href={type === "signin" ? "/home/signup" : "/home/signin"}
-                  className="text-green-600 font-light tracking-wider underline decoration-green-400 underline-offset-4 hover:text-green-700"
+                  className="text-green-600 font-light tracking-wider underline decoration-green-400 underline-offset-4 hover:text-green-700 transition-colors"
                 >
                   {type === "signin" ? "SIGN UP" : "SIGN IN"}
                 </Link>

@@ -10,10 +10,7 @@ export default function Footer() {
         {/* Logo Section */}
         <div className="flex flex-col items-center mb-8 sm:mb-12">
           <div className="text-white text-2xl sm:text-3xl font-light tracking-[0.2em] sm:tracking-[0.3em] mb-2">
-            STR
-          </div>
-          <div className="text-green-100 text-xs sm:text-sm font-light tracking-widest">
-            E-COMMERCE
+            STN GOLDEN HEALTHY FOODS
           </div>
           <div className="w-full max-w-4xl h-px bg-green-300/20 mt-6 sm:mt-8"></div>
         </div>

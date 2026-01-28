@@ -94,7 +94,17 @@ export default function Navbar() {
               </span>
             </button>
 
-            
+            {/* Company Name - Center */}
+            <Link
+              href="/"
+              className="flex-1 flex items-center justify-center text-white hover:text-green-100 transition-colors"
+            >
+              <div className="text-center">
+                <h1 className="text-base sm:text-lg md:text-xl font-light tracking-wider">
+                  STN
+                </h1>
+              </div>
+            </Link>
 
             {/* Right Side Icons */}
             <div className="flex items-center gap-3 sm:gap-6">
