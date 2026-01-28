@@ -28,14 +28,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="bg-green-50">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen bg-green-50`}
       >
         <AuthProvider>
           <ToastProvider>
             <Navbar />
-            {children}
+            <main className="flex-1 bg-green-50">
+              {children}
+            </main>
             <Footer />
             <ScrollToTop />
           </ToastProvider>

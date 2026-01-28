@@ -81,7 +81,7 @@ export default async function Home() {
   ]);
 
   return (
-    <main className="min-h-screen bg-linear-to-b from-green-50 to-green-50">
+    <div className="min-h-screen bg-linear-to-b from-green-50 to-green-50">
       <HeroSection />
       {bestProducts.length > 0 && <BestProducts products={bestProducts} />}
       {categoriesWithProducts.map((categoryData: any) => {
@@ -97,6 +97,6 @@ export default async function Home() {
         }
         return null;
       })}
-    </main>
+    </div>
   );
 }

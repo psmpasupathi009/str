@@ -5,7 +5,7 @@ import { Youtube, Facebook, Instagram, Linkedin, Twitter } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="bg-green-600 text-white border-t border-green-300/20">
+    <footer className="bg-green-800/95 backdrop-blur-sm text-white border-t border-green-700/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 md:py-16">
         {/* Logo Section */}
         <div className="flex flex-col items-center mb-8 sm:mb-12">
