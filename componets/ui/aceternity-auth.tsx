@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { Mail, Lock, User, Phone, Shield, CheckCircle2, ArrowRight, Eye, EyeOff } from "lucide-react";
+import Button from "./button";
 
 interface AuthFormProps {
   type: "signin" | "signup";
@@ -62,11 +63,11 @@ const InputField = ({
       <div className="relative" style={{ zIndex: 60 }}>
         <div 
           className={`absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none transition-colors duration-200 ${
-            isFocused ? 'text-green-600' : 'text-slate-400'
+            isFocused ? 'text-green-600' : 'text-slate-600'
           }`}
-          style={{ zIndex: 1 }}
+          style={{ zIndex: 10 }}
         >
-          <Icon className="w-4 h-4" />
+          <Icon className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
         </div>
         <input
           id={fieldName}
@@ -78,7 +79,7 @@ const InputField = ({
           required={required}
           maxLength={maxLength}
           autoComplete={type === "email" ? "email" : type === "password" ? (fieldName.includes("confirm") ? "new-password" : "current-password") : "off"}
-          className={`w-full bg-white border ${error ? 'border-red-300' : 'border-green-300'} pl-9 ${showPasswordToggle ? 'pr-9' : 'pr-3'} py-2 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-200 transition-all duration-200`}
+          className={`w-full bg-white border ${error ? 'border-red-300' : 'border-green-300'} pl-10 sm:pl-11 ${showPasswordToggle ? 'pr-10 sm:pr-11' : 'pr-3'} py-2 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-200 transition-all duration-200`}
           placeholder={placeholder}
           style={{
             color: 'rgb(15 23 42)',
@@ -91,13 +92,14 @@ const InputField = ({
           <button
             type="button"
             onClick={onTogglePassword}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-green-600 transition-colors"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-600 hover:text-green-600 active:text-green-700 transition-colors z-10 p-1"
             style={{ zIndex: 61 }}
+            aria-label={isPasswordVisible ? "Hide password" : "Show password"}
           >
             {isPasswordVisible ? (
-              <EyeOff className="w-4 h-4" />
+              <EyeOff className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
             ) : (
-              <Eye className="w-4 h-4" />
+              <Eye className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
             )}
           </button>
         )}
@@ -504,27 +506,16 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
         )}
       </AnimatePresence>
 
-      <button
+      <Button
         type="submit"
-        disabled={isLoading || isSendingOTP}
-        className="w-full bg-white text-black py-2.5 px-4 font-light tracking-widest text-xs uppercase transition-opacity duration-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-green-50 border border-green-300"
+        isLoading={isLoading || isSendingOTP}
+        variant="secondary"
+        size="md"
+        showArrow={!isLoading && !isSendingOTP}
+        className="w-full"
       >
-        {isLoading || isSendingOTP ? (
-          <span className="flex items-center justify-center gap-2">
-            <motion.div
-              className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full"
-              animate={{ rotate: 360 }}
-              transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
-            />
-            PROCESSING...
-          </span>
-        ) : (
-          <span className="flex items-center justify-center gap-2">
-            {type === "signin" ? "SIGN IN" : "CONTINUE"}
-            <ArrowRight className="w-4 h-4" />
-          </span>
-        )}
-      </button>
+        {type === "signin" ? "SIGN IN" : "CONTINUE"}
+      </Button>
     </form>
   );
 
@@ -532,7 +523,7 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
     <div className="space-y-4" style={{ position: 'relative', zIndex: 50 }}>
       <div className="text-center mb-5">
         <div className="w-14 h-14 mx-auto mb-3 rounded-full bg-green-100 border border-green-300 flex items-center justify-center">
-          <Shield className="w-7 h-7 text-green-600" />
+          <Shield className="w-7 h-7 sm:w-8 sm:h-8 text-green-600" />
         </div>
         <p className="text-xs text-slate-600 font-light">
           Enter the 6-digit code sent to
@@ -576,7 +567,7 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
       </AnimatePresence>
 
       <div className="flex flex-col sm:flex-row gap-2">
-        <button
+        <Button
           type="button"
           onClick={() => {
             setStep("form");
@@ -584,32 +575,24 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
             setError("");
             setForgotPassword(false);
           }}
-          className="flex-1 bg-white border border-green-300 text-slate-700 hover:bg-green-50 hover:border-green-400 py-2.5 px-4 font-light tracking-widest text-xs uppercase transition-all duration-200"
+          variant="outline"
+          size="md"
+          className="flex-1"
         >
           BACK
-        </button>
-        <button
+        </Button>
+        <Button
           type="button"
           onClick={() => verifyOTP(type === "signup" ? "SIGNUP" : "FORGOT_PASSWORD")}
-          disabled={isLoading || formData.otp.length !== 6}
-          className="flex-1 bg-white text-black py-2.5 px-4 font-light tracking-widest text-xs uppercase transition-opacity duration-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-green-50 border border-green-300"
+          isLoading={isLoading}
+          disabled={formData.otp.length !== 6}
+          variant="secondary"
+          size="md"
+          icon={!isLoading ? <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" /> : undefined}
+          className="flex-1"
         >
-          {isLoading ? (
-            <span className="flex items-center justify-center gap-2">
-              <motion.div
-                className="w-4 h-4 border-2 border-green-200 border-t-green-600 rounded-full"
-                animate={{ rotate: 360 }}
-                transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
-              />
-              VERIFYING...
-            </span>
-          ) : (
-            <span className="flex items-center justify-center gap-2">
-              VERIFY
-              <CheckCircle2 className="w-4 h-4" />
-            </span>
-          )}
-        </button>
+          VERIFY
+        </Button>
       </div>
     </div>
   );
@@ -651,7 +634,7 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
         onBlur={() => setFocusedField(null)}
       />
       <div className="flex items-center gap-2 text-xs text-slate-600 font-light">
-        <Shield className="w-3 h-3" />
+        <Shield className="w-3 h-3 sm:w-4 sm:h-4 text-green-600 shrink-0" />
         <span>Password must be at least 6 characters long</span>
       </div>
 
@@ -669,7 +652,7 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
       </AnimatePresence>
 
       <div className="flex flex-col sm:flex-row gap-2">
-        <button
+        <Button
           type="button"
           onClick={() => {
             setStep("otp");
@@ -680,32 +663,24 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
             setShowPassword(false);
             setShowConfirmPassword(false);
           }}
-          className="flex-1 bg-white border border-green-300 text-slate-700 hover:bg-green-50 hover:border-green-400 py-2.5 px-4 font-light tracking-widest text-xs uppercase transition-all duration-200"
+          variant="outline"
+          size="md"
+          className="flex-1"
         >
           BACK
-        </button>
-        <button
+        </Button>
+        <Button
           type="button"
           onClick={createAccount}
-          disabled={isLoading || !formData.password || formData.password.length < 6 || !formData.confirmPassword || formData.password !== formData.confirmPassword}
-          className="flex-1 bg-white text-black py-2.5 px-4 font-light tracking-widest text-xs uppercase transition-opacity duration-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-green-50 border border-green-300"
+          isLoading={isLoading}
+          disabled={!formData.password || formData.password.length < 6 || !formData.confirmPassword || formData.password !== formData.confirmPassword}
+          variant="secondary"
+          size="md"
+          icon={!isLoading ? <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" /> : undefined}
+          className="flex-1"
         >
-          {isLoading ? (
-            <span className="flex items-center justify-center gap-2">
-              <motion.div
-                className="w-4 h-4 border-2 border-green-200 border-t-green-600 rounded-full"
-                animate={{ rotate: 360 }}
-                transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
-              />
-              CREATING...
-            </span>
-          ) : (
-            <span className="flex items-center justify-center gap-2">
-              CREATE ACCOUNT
-              <CheckCircle2 className="w-4 h-4" />
-            </span>
-          )}
-        </button>
+          CREATE ACCOUNT
+        </Button>
       </div>
     </div>
   );
@@ -747,7 +722,7 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
         onBlur={() => setFocusedField(null)}
       />
       <div className="flex items-center gap-2 text-xs text-slate-600 font-light">
-        <Shield className="w-3 h-3" />
+        <Shield className="w-3 h-3 sm:w-4 sm:h-4 text-green-600 shrink-0" />
         <span>Password must be at least 6 characters long</span>
       </div>
 
@@ -764,28 +739,18 @@ export function AceternityAuthForm({ type, onSubmit, isLoading }: AuthFormProps)
         )}
       </AnimatePresence>
 
-      <button
+      <Button
         type="button"
         onClick={resetPassword}
-        disabled={isLoading || !formData.password || formData.password.length < 6 || !formData.confirmPassword || formData.password !== formData.confirmPassword}
-        className="w-full bg-white text-black py-2.5 px-4 font-light tracking-widest text-xs uppercase transition-opacity duration-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-green-50 border border-green-300"
+        isLoading={isLoading}
+        disabled={!formData.password || formData.password.length < 6 || !formData.confirmPassword || formData.password !== formData.confirmPassword}
+        variant="secondary"
+        size="md"
+        icon={!isLoading ? <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" /> : undefined}
+        className="w-full"
       >
-        {isLoading ? (
-          <span className="flex items-center justify-center gap-2">
-            <motion.div
-              className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full"
-              animate={{ rotate: 360 }}
-              transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
-            />
-            RESETTING...
-          </span>
-        ) : (
-          <span className="flex items-center justify-center gap-2">
-            RESET PASSWORD
-            <CheckCircle2 className="w-4 h-4" />
-          </span>
-        )}
-      </button>
+        RESET PASSWORD
+      </Button>
     </div>
   );
 

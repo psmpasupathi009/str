@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Package, ArrowLeft, Calendar, MapPin, Eye, Truck } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
+import Button from "@/componets/ui/button";
 
 interface OrderItem {
   id: string;
@@ -159,14 +160,14 @@ export default function OrdersPage() {
             <p className="text-sm sm:text-base text-slate-600 font-light mb-6">
               Start shopping to see your order history here.
             </p>
-            <Link
+            <Button
+              asLink
               href="/home/products"
-              className="inline-block px-6 sm:px-8 py-3 sm:py-4 bg-green-600 text-white hover:bg-green-700 transition-colors"
+              variant="primary"
+              size="md"
             >
-              <span className="text-xs sm:text-sm font-light tracking-widest">
-                START SHOPPING
-              </span>
-            </Link>
+              START SHOPPING
+            </Button>
           </div>
         ) : (
           <div className="space-y-4 sm:space-y-6">
@@ -237,24 +238,24 @@ export default function OrdersPage() {
                       </div>
                     </div>
                     <div className="flex gap-2 sm:gap-3">
-                      <Link
+                      <Button
+                        asLink
                         href={`/home/orders/${order.id}`}
-                        className="flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 border border-green-600 hover:border-green-700 bg-white hover:bg-green-50 text-green-600 hover:text-green-700 transition-all"
+                        variant="outline"
+                        size="sm"
+                        icon={<Eye className="w-4 h-4" />}
                       >
-                        <Eye className="w-4 h-4" />
-                        <span className="text-xs sm:text-sm font-light tracking-wider">
-                          VIEW DETAILS
-                        </span>
-                      </Link>
-                      <Link
+                        VIEW DETAILS
+                      </Button>
+                      <Button
+                        asLink
                         href={`/home/orders/${order.id}/track`}
-                        className="flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 bg-green-600 text-white hover:bg-green-700 transition-colors"
+                        variant="primary"
+                        size="sm"
+                        icon={<Truck className="w-4 h-4" />}
                       >
-                        <Truck className="w-4 h-4" />
-                        <span className="text-xs sm:text-sm font-light tracking-wider">
-                          TRACK
-                        </span>
-                      </Link>
+                        TRACK
+                      </Button>
                     </div>
                   </div>
                 </div>

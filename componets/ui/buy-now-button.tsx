@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
+import Button from "./button";
 
 interface BuyNowButtonProps {
   productId: string;
@@ -37,13 +38,13 @@ export default function BuyNowButton({
   };
 
   return (
-    <button
+    <Button
       onClick={handleBuyNow}
+      variant="primary"
+      size="md"
       className={className}
     >
-      <span className="text-xs sm:text-sm font-light tracking-widest">
-        BUY NOW
-      </span>
-    </button>
+      BUY NOW
+    </Button>
   );
 }

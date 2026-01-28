@@ -5,6 +5,7 @@ import { ArrowLeft, ShoppingCart, Trash2 } from "lucide-react";
 import RazorpayButton from "@/componets/ui/razorpay-button";
 import { useAuth } from "@/lib/auth-context";
 import { useState, useEffect } from "react";
+import Button from "@/componets/ui/button";
 
 interface CartItem {
   productId: string;
@@ -84,14 +85,14 @@ export default function CartPage() {
             <p className="text-lg sm:text-xl text-slate-600 font-light tracking-wide mb-4 sm:mb-6">
               Your cart is empty
             </p>
-            <Link
+            <Button
+              asLink
               href="/home/products"
-              className="px-6 sm:px-8 py-3 sm:py-4 border border-green-600 hover:border-green-700 bg-green-600 text-white hover:bg-green-700 transition-all"
+              variant="primary"
+              size="md"
             >
-              <span className="text-xs sm:text-sm font-light tracking-widest">
-                BROWSE PRODUCTS
-              </span>
-            </Link>
+              BROWSE PRODUCTS
+            </Button>
           </div>
         ) : (
           <div className="space-y-6 sm:space-y-8">
@@ -138,14 +139,15 @@ export default function CartPage() {
                 <span className="text-lg sm:text-xl font-light tracking-wide">TOTAL</span>
                 <span className="text-xl sm:text-2xl font-light">₹{total.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
               </div>
-              <Link
+              <Button
+                asLink
                 href="/home/checkout"
-                className="w-full px-6 sm:px-8 py-3 sm:py-4 bg-green-600 text-white hover:bg-green-700 transition-colors text-center block"
+                variant="primary"
+                size="md"
+                className="w-full"
               >
-                <span className="text-xs sm:text-sm font-light tracking-widest">
-                  PROCEED TO CHECKOUT
-                </span>
-              </Link>
+                PROCEED TO CHECKOUT
+              </Button>
             </div>
           </div>
         )}

@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { ArrowRight, Sparkles } from "lucide-react";
-import Link from "next/link";
+import { Sparkles } from "lucide-react";
+import Button from "./button";
 import CategoryLogoCloud from "./category-logo-cloud";
 
 export default function HeroSection() {
@@ -83,14 +83,17 @@ export default function HeroSection() {
 
           {/* CTA Button - Responsive */}
           <div className="pt-1 sm:pt-1.5 md:pt-2">
-            <Link href="/home/products">
-              <button className="group relative inline-flex items-center gap-2 sm:gap-2.5 px-5 sm:px-7 md:px-9 py-2 sm:py-2.5 md:py-3 rounded-lg sm:rounded-xl md:rounded-2xl bg-linear-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 text-white font-semibold text-xs sm:text-sm md:text-base tracking-wide shadow-2xl hover:shadow-green-500/50 transition-all duration-300 overflow-hidden">
-                <span className="relative z-10 flex items-center gap-1.5 sm:gap-2">
-                  Shop Now
-                  <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 group-hover:translate-x-1 transition-transform duration-300" />
-                </span>
-              </button>
-            </Link>
+            <Button
+              asLink
+              href="/home/products"
+              variant="primary"
+              size="lg"
+              showArrow
+              rounded
+              className="shadow-2xl hover:shadow-green-500/50"
+            >
+              Shop Now
+            </Button>
           </div>
 
           {/* Category Logo Cloud - Compact spacing */}

@@ -1,8 +1,7 @@
 "use client";
 
 import ProductCard from "./product-card";
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import Button from "./button";
 
 interface Product {
   id: string;
@@ -38,15 +37,15 @@ export default function CategorySection({
               Discover our curated selection of {category.toLowerCase()} products.
             </p>
           </div>
-          <Link
+          <Button
+            asLink
             href={`/home/products?category=${category.toLowerCase()}`}
-            className="inline-flex items-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 border border-green-600 hover:border-green-700 bg-green-600 text-white hover:bg-green-700 transition-all group"
+            variant="primary"
+            size="md"
+            showArrow
           >
-            <span className="text-xs sm:text-sm font-light tracking-widest">
-              VIEW ALL
-            </span>
-            <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
-          </Link>
+            VIEW ALL
+          </Button>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">

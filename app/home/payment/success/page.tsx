@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { CheckCircle } from "lucide-react";
 import { Suspense, useEffect } from "react";
+import Button from "@/componets/ui/button";
 
 function PaymentSuccessContent() {
   const searchParams = useSearchParams();
@@ -52,31 +53,31 @@ function PaymentSuccessContent() {
 
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 pt-4 sm:pt-6">
             {orderId && (
-              <Link
+              <Button
+                asLink
                 href={`/home/orders/${orderId}`}
-                className="px-6 sm:px-8 py-3 sm:py-4 border border-green-600 hover:border-green-700 bg-green-600 text-white hover:bg-green-700 transition-all"
+                variant="primary"
+                size="md"
               >
-                <span className="text-xs sm:text-sm font-light tracking-widest">
-                  VIEW ORDER DETAILS
-                </span>
-              </Link>
+                VIEW ORDER DETAILS
+              </Button>
             )}
-            <Link
+            <Button
+              asLink
               href="/home/products"
-              className="px-6 sm:px-8 py-3 sm:py-4 border border-green-600 hover:border-green-700 bg-white hover:bg-green-50 text-green-600 hover:text-green-700 transition-all"
+              variant="outline"
+              size="md"
             >
-              <span className="text-xs sm:text-sm font-light tracking-widest">
-                CONTINUE SHOPPING
-              </span>
-            </Link>
-            <Link
+              CONTINUE SHOPPING
+            </Button>
+            <Button
+              asLink
               href="/home/orders"
-              className="px-6 sm:px-8 py-3 sm:py-4 bg-green-600 text-white hover:bg-green-700 transition-colors"
+              variant="primary"
+              size="md"
             >
-              <span className="text-xs sm:text-sm font-light tracking-widest">
-                VIEW ALL ORDERS
-              </span>
-            </Link>
+              VIEW ALL ORDERS
+            </Button>
           </div>
         </div>
       </div>

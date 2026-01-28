@@ -6,6 +6,7 @@ import Link from "next/link";
 import { ArrowLeft, MapPin, User, Mail, Phone, Package } from "lucide-react";
 import RazorpayButton from "@/componets/ui/razorpay-button";
 import { useAuth } from "@/lib/auth-context";
+import Button from "@/componets/ui/button";
 
 interface CartItem {
   productId: string;
@@ -154,14 +155,14 @@ function CheckoutContent() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
           <div className="text-center space-y-4">
             <p className="text-slate-600">No items in cart.</p>
-            <Link
+            <Button
+              asLink
               href="/home/products"
-              className="inline-block px-6 sm:px-8 py-3 sm:py-4 bg-green-600 text-white hover:bg-green-700 transition-colors"
+              variant="primary"
+              size="md"
             >
-              <span className="text-xs sm:text-sm font-light tracking-widest">
-                BROWSE PRODUCTS
-              </span>
-            </Link>
+              BROWSE PRODUCTS
+            </Button>
           </div>
         </div>
       </main>
@@ -402,12 +403,16 @@ function CheckoutContent() {
                   />
                 </div>
               ) : (
-                <button
-                  onClick={handleProceedToPayment}
-                  className="w-full mt-6 sm:mt-8 px-6 sm:px-8 py-3 sm:py-4 bg-white text-black font-light tracking-widest text-xs sm:text-sm uppercase transition-opacity duration-200"
-                >
-                  PROCEED TO PAYMENT
-                </button>
+                <div className="mt-6 sm:mt-8">
+                  <Button
+                    onClick={handleProceedToPayment}
+                    variant="secondary"
+                    size="md"
+                    className="w-full"
+                  >
+                    PROCEED TO PAYMENT
+                  </Button>
+                </div>
               )}
             </div>
           </div>

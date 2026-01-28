@@ -5,6 +5,7 @@ import Link from "next/link";
 import { User, LogOut, Edit2, Save, X } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { useToast } from "@/lib/toast-context";
+import Button from "@/componets/ui/button";
 
 export default function ProfilePage() {
   const { user, signOut, setUser } = useAuth();
@@ -137,13 +138,14 @@ export default function ProfilePage() {
               <p className="text-sm sm:text-base text-slate-600 font-light">Manage your account</p>
             </div>
           </div>
-          <button
+          <Button
             onClick={handleLogout}
-            className="flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 border border-green-600 hover:border-green-700 bg-green-600 text-white hover:bg-green-700 transition-all"
+            variant="primary"
+            size="sm"
+            icon={<LogOut className="w-4 h-4 sm:w-5 sm:h-5" />}
           >
-            <LogOut className="w-4 h-4 sm:w-5 sm:h-5" />
-            <span className="text-xs sm:text-sm font-light tracking-wider">LOGOUT</span>
-          </button>
+            LOGOUT
+          </Button>
         </div>
 
         <div className="space-y-6 sm:space-y-8">
@@ -153,29 +155,31 @@ export default function ProfilePage() {
                 ACCOUNT INFORMATION
               </h2>
               {!isEditing ? (
-                <button
+                <Button
                   onClick={handleEdit}
-                  className="flex items-center gap-2 px-3 sm:px-4 py-2 border border-green-300 hover:border-green-500 bg-white hover:bg-green-50 transition-all"
+                  variant="outline"
+                  size="sm"
+                  icon={<Edit2 className="w-4 h-4" />}
                 >
-                  <Edit2 className="w-4 h-4" />
-                  <span className="text-xs sm:text-sm font-light tracking-wider">EDIT</span>
-                </button>
+                  EDIT
+                </Button>
               ) : (
                 <div className="flex items-center gap-2">
-                  <button
+                  <Button
                     onClick={handleSave}
-                    disabled={isSaving}
-                    className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-green-600 text-white hover:bg-green-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    isLoading={isSaving}
+                    variant="primary"
+                    size="sm"
+                    icon={<Save className="w-4 h-4" />}
                   >
-                    <Save className="w-4 h-4" />
-                    <span className="text-xs sm:text-sm font-light tracking-wider">
-                      {isSaving ? "SAVING..." : "SAVE"}
-                    </span>
-                  </button>
-                  <button
+                    {isSaving ? "SAVING..." : "SAVE"}
+                  </Button>
+                  <Button
                     onClick={handleCancel}
                     disabled={isSaving}
-                    className="flex items-center gap-2 px-3 sm:px-4 py-2 border border-green-300 hover:border-green-500 bg-white hover:bg-green-50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    variant="outline"
+                    size="sm"
+                    icon={<X className="w-4 h-4" />}
                   >
                     <X className="w-4 h-4" />
                     <span className="text-xs sm:text-sm font-light tracking-wider">CANCEL</span>
@@ -242,14 +246,14 @@ export default function ProfilePage() {
                 <h2 className="text-lg sm:text-xl font-light tracking-wide text-slate-900">
                   ADMIN DASHBOARD
                 </h2>
-                <Link
+                <Button
+                  asLink
                   href="/home/admin/dashboard"
-                  className="px-4 sm:px-6 py-2 border border-green-600 hover:border-green-700 bg-green-600 text-white hover:bg-green-700 transition-all"
+                  variant="primary"
+                  size="sm"
                 >
-                  <span className="text-xs sm:text-sm font-light tracking-wider">
-                    OPEN DASHBOARD
-                  </span>
-                </Link>
+                  OPEN DASHBOARD
+                </Button>
               </div>
               <p className="text-sm sm:text-base text-slate-600 font-light">
                 Access the admin dashboard to manage orders, track real-time updates, and view statistics.
@@ -262,9 +266,11 @@ export default function ProfilePage() {
               <h2 className="text-lg sm:text-xl font-light tracking-wide text-slate-900">
                 ORDER HISTORY
               </h2>
-              <Link
+              <Button
+                asLink
                 href="/home/orders"
-                className="px-4 sm:px-6 py-2 border border-green-600 hover:border-green-700 bg-green-600 text-white hover:bg-green-700 transition-all"
+                variant="primary"
+                size="sm"
               >
                 <span className="text-xs sm:text-sm font-light tracking-wider">
                   VIEW ALL ORDERS

@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { XCircle } from "lucide-react";
 import { Suspense } from "react";
+import Button from "@/componets/ui/button";
 
 function PaymentFailureContent() {
   const searchParams = useSearchParams();
@@ -31,22 +32,22 @@ function PaymentFailureContent() {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 pt-4 sm:pt-6">
-            <Link
+            <Button
+              asLink
               href="/home/cart"
-              className="px-6 sm:px-8 py-3 sm:py-4 border border-green-600 hover:border-green-700 bg-green-600 text-white hover:bg-green-700 transition-all"
+              variant="primary"
+              size="md"
             >
-              <span className="text-xs sm:text-sm font-light tracking-widest">
-                BACK TO CART
-              </span>
-            </Link>
-            <Link
+              BACK TO CART
+            </Button>
+            <Button
+              asLink
               href="/home/products"
-              className="px-6 sm:px-8 py-3 sm:py-4 bg-green-600 text-white hover:bg-green-700 transition-colors"
+              variant="primary"
+              size="md"
             >
-              <span className="text-xs sm:text-sm font-light tracking-widest">
-                CONTINUE SHOPPING
-              </span>
-            </Link>
+              CONTINUE SHOPPING
+            </Button>
           </div>
         </div>
       </div>

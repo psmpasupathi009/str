@@ -5,6 +5,7 @@ import { ShoppingCart } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import { useToast } from "@/lib/toast-context";
+import Button from "./button";
 
 interface AddToCartButtonProps {
   productId: string;
@@ -90,15 +91,15 @@ export default function AddToCartButton({
   };
 
   return (
-    <button
+    <Button
       onClick={handleAddToCart}
-      disabled={isAdding}
-      className={`${className} ${isAdding ? "opacity-50 cursor-not-allowed" : ""}`}
+      isLoading={isAdding}
+      variant="primary"
+      size="md"
+      className={className}
     >
       <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5" />
-      <span className="text-xs sm:text-sm font-light tracking-widest">
-        {isAdding ? "ADDING..." : "ADD TO CART"}
-      </span>
-    </button>
+      {isAdding ? "ADDING..." : "ADD TO CART"}
+    </Button>
   );
 }

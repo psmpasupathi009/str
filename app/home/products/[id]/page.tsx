@@ -159,13 +159,13 @@ export default async function ProductPage({ params }: ProductPageProps) {
                   productId={product.id}
                   productName={product.name}
                   price={product.salePrice}
-                  className="flex-1 flex items-center justify-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 border border-green-600 hover:border-green-700 bg-green-600 text-white hover:bg-green-700 transition-all group"
+                  className="flex-1"
                 />
                 <BuyNowButton
                   productId={product.id}
                   productName={product.name}
                   price={product.salePrice}
-                  className="flex-1 sm:flex-none px-6 sm:px-8 py-3 sm:py-4 border border-green-600 hover:border-green-700 bg-green-600 text-white hover:bg-green-700 transition-all"
+                  className="flex-1 sm:flex-none"
                 />
               </div>
             ) : (
