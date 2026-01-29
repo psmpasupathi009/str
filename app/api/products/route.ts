@@ -1,4 +1,5 @@
 import { NextRequest } from "next/server";
+import { revalidateTag } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin, createErrorResponse, createSuccessResponse, handleApiError } from "@/lib/auth-utils";
 import type { Prisma } from "@prisma/client";
@@ -168,6 +169,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    revalidateTag("storefront", "max");
     return createSuccessResponse(
       { product },
       "Product created successfully",

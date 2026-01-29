@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { prisma } from "@/lib/prisma";
 
 // GET /api/categories/[id] - Get a single category
@@ -105,6 +106,7 @@ export async function PUT(
       data: updateData,
     });
 
+    revalidateTag("storefront", "max");
     return NextResponse.json(
       { category, message: "Category updated successfully" },
       { status: 200 }
@@ -173,6 +175,7 @@ export async function DELETE(
       where: { id },
     });
 
+    revalidateTag("storefront", "max");
     return NextResponse.json(
       { message: "Category deleted successfully" },
       { status: 200 }

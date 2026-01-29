@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin, createErrorResponse, createSuccessResponse, handleApiError } from "@/lib/auth-utils";
 import type { Prisma } from "@prisma/client";
@@ -134,6 +135,7 @@ export async function PUT(
       },
     });
 
+    revalidateTag("storefront", "max");
     return createSuccessResponse(
       { product },
       "Product updated successfully"
@@ -187,6 +189,7 @@ export async function DELETE(
       where: { id },
     });
 
+    revalidateTag("storefront", "max");
     return createSuccessResponse(
       {},
       "Product deleted successfully"

@@ -4,34 +4,23 @@ import { useState, useMemo, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import ProductsGrid from "@/components/shared/products-grid";
 import { Search, Filter, X } from "lucide-react";
+import { useStorefront, type StorefrontProduct } from "@/lib/hooks/use-storefront";
 
 type SortOption = "default" | "price-low" | "price-high" | "name-asc" | "name-desc";
-
-interface Product {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  image: string;
-  category?: string;
-  featured?: boolean;
-  bestSeller?: boolean;
-  inStock?: boolean;
-}
 
 function ProductsPageContent() {
   const searchParams = useSearchParams();
   const categoryParam = searchParams.get("category");
-  
+
+  const { data, isLoading, isError, error, refetch } = useStorefront();
+  const products: StorefrontProduct[] = data?.products ?? [];
+  const categories = data?.categories ?? [];
+
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<SortOption>("default");
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 10000]);
   const [showFilters, setShowFilters] = useState(false);
-  const [products, setProducts] = useState<Product[]>([]);
-  const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   // Set initial category from URL
   useEffect(() => {
@@ -40,59 +29,13 @@ function ProductsPageContent() {
     }
   }, [categoryParam]);
 
+  // Set price range when storefront data loads
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setError(null);
-        const [productsRes, categoriesRes] = await Promise.all([
-          fetch("/api/products?limit=1000&inStock=true"),
-          fetch("/api/categories"),
-        ]);
-
-        if (!productsRes.ok) {
-          throw new Error("Failed to fetch products");
-        }
-
-        const productsData = await productsRes.json();
-        const categoriesData = await categoriesRes.json();
-
-        if (productsData.products) {
-          // Map database products to expected format
-          const mappedProducts: Product[] = productsData.products.map((p: any) => ({
-            id: p.id,
-            name: p.name,
-            description: p.description || "",
-            price: p.salePrice,
-            image: p.image || "",
-            category: p.category?.name || "",
-            featured: p.featured,
-            bestSeller: p.bestSeller,
-            inStock: p.inStock,
-          }));
-          setProducts(mappedProducts);
-
-          // Calculate price range
-          if (mappedProducts.length > 0) {
-            const prices = mappedProducts.map((p) => p.price);
-            const min = Math.min(...prices);
-            const max = Math.max(...prices);
-            setPriceRange([min, max]);
-          }
-        }
-
-        if (categoriesRes.ok && categoriesData.categories) {
-          setCategories(categoriesData.categories);
-        }
-      } catch (err: any) {
-        console.error("Error fetching products:", err);
-        setError(err.message || "Failed to load products. Please try again later.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
+    if (data?.products && data.products.length > 0) {
+      const prices = data.products.map((p) => p.price);
+      setPriceRange([Math.min(...prices), Math.max(...prices)]);
+    }
+  }, [data?.products]);
 
   // Get all products filtered by category
   const categoryProducts = useMemo(() => {
@@ -156,7 +99,7 @@ function ProductsPageContent() {
 
   const hasActiveFilters = searchQuery.trim() !== "" || priceRange[0] > 0 || priceRange[1] < maxPrice || sortBy !== "default";
 
-  if (loading) {
+  if (isLoading) {
     return (
       <main className="min-h-screen bg-linear-to-b from-green-100 to-green-200 pt-16 sm:pt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
@@ -171,15 +114,15 @@ function ProductsPageContent() {
     );
   }
 
-  if (error) {
+  if (isError && error) {
     return (
       <main className="min-h-screen bg-linear-to-b from-green-100 to-green-200 pt-16 sm:pt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
           <div className="text-center py-20 border border-red-200 bg-red-50 rounded-lg">
             <p className="text-red-600 font-light text-lg mb-2">Error Loading Products</p>
-            <p className="text-red-500 font-light text-sm mb-4">{error}</p>
+            <p className="text-red-500 font-light text-sm mb-4">{error instanceof Error ? error.message : "Failed to load products."}</p>
             <button
-              onClick={() => window.location.reload()}
+              onClick={() => refetch()}
               className="px-6 py-2 border border-red-600 text-red-600 hover:bg-red-50 transition-colors rounded text-sm font-light"
             >
               Retry

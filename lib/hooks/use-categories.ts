@@ -9,9 +9,7 @@ interface Category {
 }
 
 async function fetchCategories(): Promise<Category[]> {
-  const response = await fetch("/api/categories", {
-    next: { revalidate: 300 }, // Revalidate every 5 minutes
-  });
+  const response = await fetch("/api/categories");
 
   if (!response.ok) {
     throw new Error("Failed to fetch categories");

@@ -41,9 +41,7 @@ async function fetchProducts(params?: {
   if (params?.search) queryParams.set("search", params.search);
   if (params?.limit) queryParams.set("limit", String(params.limit));
 
-  const response = await fetch(`/api/products?${queryParams.toString()}`, {
-    next: { revalidate: 60 }, // Revalidate every 60 seconds
-  });
+  const response = await fetch(`/api/products?${queryParams.toString()}`);
 
   if (!response.ok) {
     throw new Error("Failed to fetch products");

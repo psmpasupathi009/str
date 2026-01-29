@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { prisma } from "@/lib/prisma";
 
 // GET /api/categories - Get all categories
@@ -88,6 +89,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    revalidateTag("storefront", "max");
     return NextResponse.json(
       { category, message: "Category created successfully" },
       { status: 201 }

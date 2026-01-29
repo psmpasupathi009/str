@@ -1,39 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-
-interface Category {
-  id: string;
-  name: string;
-  image?: string | null;
-}
+import { useCategories } from "@/lib/hooks/use-categories";
 
 export default function CategoryLogoCloud() {
-  const [categories, setCategories] = useState<Category[]>([]);
+  const { data: categories = [], isLoading } = useCategories();
+  const displayCategories = categories.slice(0, 9);
 
-  useEffect(() => {
-    async function fetchCategories() {
-      try {
-        const response = await fetch("/api/categories");
-        const data = await response.json();
-        if (data.categories) {
-          // Take first 9 categories
-          const cats = data.categories.slice(0, 9);
-          setCategories(cats);
-        }
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-      }
-    }
-    fetchCategories();
-  }, []);
-
-  if (categories.length === 0) return null;
+  if (isLoading || displayCategories.length === 0) return null;
 
   // Duplicate categories multiple times for seamless infinite scroll
-  const duplicatedCategories = [...categories, ...categories];
+  const duplicatedCategories = [...displayCategories, ...displayCategories];
 
   return (
     <div className="relative w-full overflow-hidden py-2 sm:py-2.5 md:py-3">
