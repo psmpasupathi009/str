@@ -21,6 +21,14 @@ export async function middleware(request: NextRequest) {
     pathname.startsWith("/api/upload") ||
     pathname.startsWith("/api/orders");
 
+  // Public read-only APIs: allow GET without session (for products page, category list)
+  const isPublicReadApi =
+    (pathname.startsWith("/api/products") || pathname.startsWith("/api/categories")) &&
+    request.method === "GET";
+  if (isPublicReadApi) {
+    return NextResponse.next();
+  }
+
   // Allow public routes without session
   if (!isAdminRoute && !isAuthRequiredApi) {
     return NextResponse.next();
